@@ -1,1 +1,53 @@
-# init
+name: 買取価格を1時間おきに自動更新（24時間監査）
+
+on:
+  schedule:
+    - cron: '0 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: update-prices
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: 価格を取得して scan_db.json を更新
+        run: python3 update_prices.py --delay 0.3
+      - name: 差分があればコミットして push（1日1回）
+        if: github.event_name == 'workflow_dispatch' || (github.event_name == 'schedule' && startsWith(github.event.schedule, '0 1 '))
+        run: |
+          if git diff --quiet -- scan_db.json; then
+            exit 0
+          fi
+          git config user.name "kaitori-price-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add scan_db.json
+          git commit -m "価格を自動更新 $(TZ=Asia/Tokyo date +%Y-%m-%d)"
+          git push || { git pull --rebase --autostash && git push; }
+      - uses: actions/configure-pages@v5
+      - name: 公開するファイルをまとめる
+        run: |
+          mkdir -p _site
+          cp -a index.html scan_db.json _site/
+          for f in index-*.html; do
+            if [ -e "$f" ]; then cp -a "$f" "_site/"; fi
+          done
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - uses: actions/deploy-pages@v4
