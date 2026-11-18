@@ -28,7 +28,9 @@ import urllib.parse
 import urllib.request
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parent
+if not (ROOT / "scan_db.json").exists() and (ROOT.parent / "scan_db.json").exists():
+    ROOT = ROOT.parent          # scripts/ 配下に置いた場合にも対応
 DB_PATH = ROOT / "scan_db.json"
 JST = dt.timezone(dt.timedelta(hours=9))
 
