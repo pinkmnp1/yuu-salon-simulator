@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0a0b12">
+<title>ゆうサロン公式 | MNP利益＆ポイント換金シミュレーター</title>
+<style>
+:root{
+  --bg:#0a0b12;
+  --bg2:#0e1020;
+  --card:rgba(22,25,42,.78);
+  --card2:rgba(30,34,56,.72);
+  --line:rgba(120,140,255,.18);
+  --line2:rgba(0,229,255,.35);
+  --txt:#eef1ff;
+  --muted:#9aa3c7;
+  --cyan:#00e5ff;
+  --violet:#8b5cff;
+  --green:#2bff88;
+  --yellow:#ffd23f;
+  --red:#ff4d6d;
+  --pink:#ff5cc8;
+  --radius:20px;
+  --shadow:0 18px 50px rgba(0,0,0,.55);
+  --mono:"SFMono-Regular",ui-monospace,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+[hidden]{display:none !important}
+html,body{margin:0;padding:0}
+body{
+  background:
+    radial-gradient(900px 600px at 8% -8%, rgba(139,92,255,.30), transparent 62%),
+    radial-gradient(760px 520px at 100% 0%, rgba(0,229,255,.20), transparent 60%),
+    radial-gradient(700px 700px at 50% 110%, rgba(255,92,200,.14), transparent 60%),
+    linear-gradient(180deg,#0a0b12 0%,#0b0d18 45%,#08090f 100%);
+  background-attachment:fixed;
+  color:var(--txt);
+  font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP","Yu Gothic",system-ui,sans-serif;
+  font-size:15px;
+  line-height:1.55;
+  min-height:100vh;
+  padding:0 0 env(safe-area-inset-bottom);
+  overflow-x:hidden;
+}
+.wrap{max-width:780px;margin:0 auto;padding:22px 16px 56px}
+
+/* ---------- header ---------- */
+.brand{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.brand .logo{
+  width:38px;height:38px;border-radius:12px;flex:none;
+  background:linear-gradient(135deg,var(--cyan),var(--violet) 60%,var(--pink));
+  display:grid;place-items:center;font-weight:800;font-size:17px;color:#08090f;
+  box-shadow:0 0 22px rgba(0,229,255,.45);
+}
+.brand .tag{
+  font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);
+}
+.brand .tag b{color:var(--cyan);letter-spacing:.06em}
+h1{
+  font-size:clamp(20px,5.6vw,28px);line-height:1.25;margin:0 0 6px;font-weight:800;letter-spacing:-.01em;
+}
+h1 .neon{
+  background:linear-gradient(92deg,var(--cyan),var(--violet) 55%,var(--pink));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 0 18px rgba(139,92,255,.45));
+}
+.sub{color:var(--muted);font-size:12.5px;margin:0 0 18px}
+
+/* ---------- tabs ---------- */
+.tabs{
+  display:flex;gap:6px;padding:6px;border-radius:16px;
+  background:rgba(12,14,26,.85);border:1px solid var(--line);
+  position:sticky;top:8px;z-index:20;
+  -webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);
+  box-shadow:0 10px 30px rgba(0,0,0,.45);
+  margin-bottom:18px;
+}
+.tab{
+  flex:1;appearance:none;border:0;cursor:pointer;
+  padding:11px 8px;border-radius:11px;font-size:13.5px;font-weight:700;
+  color:var(--muted);background:transparent;transition:.22s;font-family:inherit;
+  display:flex;align-items:center;justify-content:center;gap:6px;
+}
+.tab .ico{font-size:15px}
+.tab[aria-selected="true"]{
+  color:#05060c;
+  background:linear-gradient(135deg,var(--cyan),#6ee7ff 40%,var(--violet));
+  box-shadow:0 0 22px rgba(0,229,255,.35);
+}
+.panel[hidden]{display:none}
+
+/* ---------- cards ---------- */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:16px;margin-bottom:14px;box-shadow:var(--shadow);
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+}
+.card-title{
+  display:flex;align-items:center;gap:8px;font-size:12px;font-weight:800;
+  letter-spacing:.1em;color:var(--muted);text-transform:uppercase;margin:0 0 12px;
+}
+.card-title::before{content:"";width:3px;height:14px;border-radius:2px;background:linear-gradient(var(--cyan),var(--violet))}
+
+/* ---------- segmented ---------- */
+.seg{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.seg button{
+  flex:1 1 auto;min-width:64px;appearance:none;cursor:pointer;font-family:inherit;
+  padding:9px 10px;border-radius:10px;font-size:13px;font-weight:700;
+  color:var(--muted);background:rgba(255,255,255,.04);border:1px solid var(--line);
+  transition:.18s;
+}
+.seg button[aria-pressed="true"]{
+  color:#05060c;background:linear-gradient(135deg,var(--cyan),#7ef0ff);
+  border-color:transparent;box-shadow:0 0 16px rgba(0,229,255,.32);
+}
+
+/* ---------- fields ---------- */
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+@media(max-width:430px){.grid{grid-template-columns:1fr}}
+.field{display:flex;flex-direction:column;gap:5px}
+.field label{font-size:12px;color:var(--muted);font-weight:600;display:flex;align-items:center;gap:5px}
+.field label .hint{font-size:10.5px;color:rgba(154,163,199,.65);font-weight:500}
+.input-box{
+  display:flex;align-items:center;gap:6px;
+  background:rgba(8,10,20,.85);border:1px solid var(--line);border-radius:12px;
+  padding:0 11px;transition:.18s;
+}
+.input-box:focus-within{
+  border-color:var(--line2);box-shadow:0 0 0 3px rgba(0,229,255,.14);
+}
+.input-box input{
+  flex:1;min-width:0;width:100%;border:0;background:transparent;color:var(--txt);
+  font-family:var(--mono);font-size:16px;font-weight:600;padding:11px 0;outline:none;
+  text-align:right;
+}
+.input-box .unit{font-size:11.5px;color:var(--muted);font-weight:700;flex:none}
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+input[type=number]{-moz-appearance:textfield;appearance:textfield}
+
+.tip{
+  margin:12px 0 0;padding:10px 12px;border-radius:12px;font-size:11.5px;line-height:1.6;
+  color:#cfd6ff;background:rgba(139,92,255,.10);border:1px solid rgba(139,92,255,.25);
+}
+.tip b{color:#e7dcff}
+
+/* ---------- results ---------- */
+.results{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:14px}
+@media(max-width:430px){.results{grid-template-columns:1fr}}
+.res{
+  position:relative;overflow:hidden;border-radius:18px;padding:14px 15px;
+  background:linear-gradient(150deg,rgba(30,34,58,.95),rgba(16,18,32,.95));
+  border:1px solid var(--line);box-shadow:var(--shadow);
+}
+.res::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(120px 60px at 100% 0%,rgba(0,229,255,.14),transparent 70%);
+}
+.res.main{grid-column:1/-1;border-color:rgba(0,229,255,.42);
+  background:linear-gradient(150deg,rgba(0,229,255,.12),rgba(139,92,255,.14) 55%,rgba(20,22,38,.96));
+  box-shadow:0 20px 60px rgba(0,229,255,.16),var(--shadow);
+}
+.res .k{font-size:11.5px;color:var(--muted);font-weight:700;letter-spacing:.04em;margin-bottom:2px}
+.res .v{
+  font-family:var(--mono);font-weight:800;letter-spacing:-.02em;line-height:1.1;
+  font-size:clamp(24px,7.4vw,38px);white-space:nowrap;
+  font-variant-numeric:tabular-nums;
+}
+.res.main .v{font-size:clamp(30px,10vw,50px)}
+.res .v .yen{font-size:.52em;font-weight:700;margin-left:2px;opacity:.8}
+.res .s{font-size:11px;color:var(--muted);margin-top:4px}
+.pos{color:var(--green);text-shadow:0 0 18px rgba(43,255,136,.35)}
+.neg{color:var(--red);text-shadow:0 0 18px rgba(255,77,109,.32)}
+.neutral{color:var(--txt)}
+.flash{animation:flash .45s ease}
+@keyframes flash{0%{filter:brightness(1.55)}100%{filter:brightness(1)}}
+
+/* ---------- badge ---------- */
+.badge{
+  display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:999px;
+  font-size:12px;font-weight:800;letter-spacing:.02em;margin-top:8px;
+}
+.badge.green{color:#04170c;background:linear-gradient(135deg,#2bff88,#8bffc0);box-shadow:0 0 20px rgba(43,255,136,.45)}
+.badge.yellow{color:#1c1600;background:linear-gradient(135deg,#ffd23f,#ffe98a);box-shadow:0 0 20px rgba(255,210,63,.42)}
+.badge.red{color:#2a0008;background:linear-gradient(135deg,#ff4d6d,#ff9bb0);box-shadow:0 0 20px rgba(255,77,109,.42)}
+.badge.none{color:var(--muted);background:rgba(255,255,255,.06);border:1px solid var(--line)}
+
+/* ---------- breakdown ---------- */
+details.break{margin-top:2px}
+details.break summary{
+  cursor:pointer;list-style:none;font-size:12.5px;font-weight:700;color:var(--cyan);
+  padding:9px 2px;display:flex;align-items:center;gap:6px;
+}
+details.break summary::-webkit-details-marker{display:none}
+details.break summary::before{content:"▸";transition:.2s;display:inline-block}
+details.break[open] summary::before{transform:rotate(90deg)}
+table{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:4px}
+th,td{padding:7px 4px;border-bottom:1px solid rgba(120,140,255,.12);text-align:right}
+th:first-child,td:first-child{text-align:left;color:var(--muted);font-weight:600}
+td{font-family:var(--mono);font-weight:600}
+tr.sum td{border-bottom:0;padding-top:10px;font-weight:800}
+tr.sum td:first-child{color:var(--txt)}
+
+/* ---------- buttons ---------- */
+.actions{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.btn{
+  appearance:none;font-family:inherit;cursor:pointer;font-weight:800;font-size:13px;
+  padding:11px 16px;border-radius:12px;border:1px solid var(--line);
+  background:rgba(255,255,255,.05);color:var(--txt);transition:.18s;flex:1 1 auto;
+}
+.btn:hover{border-color:var(--line2);background:rgba(0,229,255,.10)}
+.btn.primary{
+  background:linear-gradient(135deg,var(--cyan),var(--violet));color:#05060c;border-color:transparent;
+  box-shadow:0 0 22px rgba(139,92,255,.35);
+}
+.btn:active{transform:scale(.985)}
+
+/* ---------- footer ---------- */
+.foot{margin-top:22px;text-align:center;font-size:11px;color:rgba(154,163,199,.7);line-height:1.7}
+.foot .nm{color:var(--cyan);font-weight:800;letter-spacing:.08em}
+.toast{
+  position:fixed;left:50%;bottom:26px;transform:translate(-50%,20px);
+  background:rgba(10,12,22,.96);border:1px solid var(--line2);color:var(--txt);
+  padding:11px 18px;border-radius:999px;font-size:12.5px;font-weight:700;
+  box-shadow:0 14px 40px rgba(0,0,0,.6);opacity:0;pointer-events:none;transition:.25s;z-index:99;
+}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="brand">
+    <div class="logo">ゆ</div>
+    <div class="tag">OFFICIAL TOOL<br><b>ゆうサロン</b></div>
+  </div>
+
+  <h1><span class="neon">MNP利益＆ポイント換金</span><br>シミュレーター</h1>
+  <p class="sub">数字を動かすだけで、手残りがその場で確定。</p>
+
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" id="tab-mnp" aria-controls="panel-mnp" aria-selected="true" data-tab="mnp">
+      <span class="ico">📱</span> MNP純利益
+    </button>
+    <button class="tab" role="tab" id="tab-pt" aria-controls="panel-pt" aria-selected="false" data-tab="pt">
+      <span class="ico">💎</span> ポイント換金
+    </button>
+  </div>
+
+  <!-- ================= TAB 1 : MNP ================= -->
+  <section class="panel" id="panel-mnp" role="tabpanel" aria-labelledby="tab-mnp">
+    <div class="card">
+      <p class="card-title">条件入力</p>
+
+      <div class="seg" id="carrierSeg" role="group" aria-label="キャリア">
+        <button data-carrier="docomo" aria-pressed="false">ドコモ</button>
+        <button data-carrier="au" aria-pressed="false">au</button>
+        <button data-carrier="uq" aria-pressed="true">UQ</button>
+        <button data-carrier="ymobile" aria-pressed="false">ワイモバ</button>
+        <button data-carrier="sb" aria-pressed="false">SB</button>
+      </div>
+
+      <div class="grid">
+        <div class="field">
+          <label for="i-lines">回線数 <span class="hint">1〜</span></label>
+          <div class="input-box"><input id="i-lines" type="number" inputmode="numeric" min="1" step="1" value="3"><span class="unit">回線</span></div>
+        </div>
+        <div class="field">
+          <label for="i-cb">キャッシュバック <span class="hint">/回線</span></label>
+          <div class="input-box"><input id="i-cb" type="number" inputmode="numeric" min="0" step="1000" value="32000"><span class="unit">円</span></div>
+        </div>
+        <div class="field">
+          <label for="i-buy">端末買取額 <span class="hint">/台</span></label>
+          <div class="input-box"><input id="i-buy" type="number" inputmode="numeric" min="0" step="1000" value="30000"><span class="unit">円</span></div>
+        </div>
+        <div class="field">
+          <label for="i-dev">端末購入代 <span class="hint">/台</span></label>
+          <div class="input-box"><input id="i-dev" type="number" inputmode="numeric" min="0" step="1000" value="22000"><span class="unit">円</span></div>
+        </div>
+        <div class="field">
+          <label for="i-fee">事務手数料 <span class="hint">/回線</span></label>
+          <div class="input-box"><input id="i-fee" type="number" inputmode="numeric" min="0" step="100" value="3850"><span class="unit">円</span></div>
+        </div>
+        <div class="field">
+          <label for="i-other">その他経費 <span class="hint">/回線</span></label>
+          <div class="input-box"><input id="i-other" type="number" inputmode="numeric" min="0" step="500" value="0"><span class="unit">円</span></div>
+        </div>
+        <div class="field">
+          <label for="i-months">維持期間</label>
+          <div class="input-box"><input id="i-months" type="number" inputmode="numeric" min="0" step="1" value="6"><span class="unit">ヶ月</span></div>
+        </div>
+        <div class="field">
+          <label for="i-monthly">月額維持費 <span class="hint">/回線・月</span></label>
+          <div class="input-box"><input id="i-monthly" type="number" inputmode="numeric" min="0" step="100" value="2000"><span class="unit">円</span></div>
+        </div>
+        <div class="field">
+          <label for="i-dep">預託金 <span class="hint">/回線・返還あり</span></label>
+          <div class="input-box"><input id="i-dep" type="number" inputmode="numeric" min="0" step="10000" value="0"><span class="unit">円</span></div>
+        </div>
+      </div>
+
+      <p class="tip" id="carrierTip"></p>
+    </div>
+
+    <div class="results" aria-live="polite">
+      <div class="res main">
+        <div class="k">全回線 合計 純利益</div>
+        <div class="v neutral" id="r-total">—</div>
+        <div class="s" id="r-total-sub">&nbsp;</div>
+      </div>
+      <div class="res">
+        <div class="k">1回線あたり 純利益</div>
+        <div class="v neutral" id="r-per">—</div>
+        <div class="s" id="r-per-sub">&nbsp;</div>
+      </div>
+      <div class="res">
+        <div class="k">利益率</div>
+        <div class="v neutral" id="r-rate">—</div>
+        <div class="s">売上（CB＋買取）比</div>
+      </div>
+      <div class="res">
+        <div class="k">損益分岐 買取額</div>
+        <div class="v neutral" id="r-be">—</div>
+        <div class="s" id="r-be-sub">1台あたりの下限</div>
+      </div>
+      <div class="res">
+        <div class="k">初期必要資金</div>
+        <div class="v neutral" id="r-up">—</div>
+        <div class="s" id="r-up-sub">預託金は解約後に返還</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <details class="break" id="mnpBreak">
+        <summary>内訳を開く</summary>
+        <table>
+          <tbody>
+            <tr><th>キャッシュバック 合計</th><td id="b-cb">—</td></tr>
+            <tr><th>端末買取 合計</th><td id="b-buy">—</td></tr>
+            <tr><th>端末購入代 合計</th><td id="b-dev">—</td></tr>
+            <tr><th>事務手数料 合計</th><td id="b-fee">—</td></tr>
+            <tr><th>維持費 合計（月額×期間）</th><td id="b-maint">—</td></tr>
+            <tr><th>その他経費 合計</th><td id="b-other">—</td></tr>
+            <tr class="sum"><th>純利益</th><td id="b-profit">—</td></tr>
+          </tbody>
+        </table>
+      </details>
+      <div class="actions">
+        <button class="btn primary" id="copy-mnp">結果をコピー</button>
+        <button class="btn" id="reset-mnp">リセット</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= TAB 2 : POINT ================= -->
+  <section class="panel" id="panel-pt" role="tabpanel" aria-labelledby="tab-pt" hidden>
+    <div class="card">
+      <p class="card-title">条件入力</p>
+
+      <div class="seg" id="ptModeSeg" role="group" aria-label="還元の入れ方">
+        <button data-mode="rate" aria-pressed="true">還元率（%）で入れる</button>
+        <button data-mode="pt" aria-pressed="false">ポイント（pt）で入れる</button>
+      </div>
+
+      <div class="grid">
+        <div class="field">
+          <label for="p-price">販売価格（税込）</label>
+          <div class="input-box"><input id="p-price" type="number" inputmode="numeric" min="0" step="100" value="110000"><span class="unit">円</span></div>
+        </div>
+        <div class="field" id="wrap-rate">
+          <label for="p-rate">ポイント還元率</label>
+          <div class="input-box"><input id="p-rate" type="number" inputmode="decimal" min="0" step="0.5" value="10"><span class="unit">%</span></div>
+        </div>
+        <div class="field" id="wrap-pt" hidden>
+          <label for="p-pt">ポイント還元</label>
+          <div class="input-box"><input id="p-pt" type="number" inputmode="numeric" min="0" step="100" value="11000"><span class="unit">pt</span></div>
+        </div>
+        <div class="field">
+          <label for="p-used">ポイント消化分 <span class="hint">支払いに充当</span></label>
+          <div class="input-box"><input id="p-used" type="number" inputmode="numeric" min="0" step="100" value="0"><span class="unit">円</span></div>
+        </div>
+        <div class="field">
+          <label for="p-buy">買取額</label>
+          <div class="input-box"><input id="p-buy" type="number" inputmode="numeric" min="0" step="100" value="99000"><span class="unit">円</span></div>
+        </div>
+        <div class="field">
+          <label for="p-fees">手数料・送料</label>
+          <div class="input-box"><input id="p-fees" type="number" inputmode="numeric" min="0" step="100" value="1000"><span class="unit">円</span></div>
+        </div>
+      </div>
+      <p class="tip">実質換金率＝（買取額−手数料）÷<b>現金支出</b>（販売価格−消化ポイント）。<b>85%以上</b>なら即決ラインです。</p>
+    </div>
+
+    <div class="results" aria-live="polite">
+      <div class="res main">
+        <div class="k">実質換金率</div>
+        <div class="v neutral" id="p-out-rate">—</div>
+        <div><span class="badge none" id="p-badge">—</span></div>
+      </div>
+      <div class="res">
+        <div class="k">実質の現金手残り</div>
+        <div class="v neutral" id="p-out-cash">—</div>
+        <div class="s" id="p-out-cash-sub">&nbsp;</div>
+      </div>
+      <div class="res">
+        <div class="k">損益</div>
+        <div class="v neutral" id="p-out-pl">—</div>
+        <div class="s" id="p-out-pl-sub">&nbsp;</div>
+      </div>
+      <div class="res">
+        <div class="k">ポイント込み総合換金率</div>
+        <div class="v neutral" id="p-out-total">—</div>
+        <div class="s">ポイント収支を1円=1円で評価</div>
+      </div>
+      <div class="res">
+        <div class="k">実質負担額</div>
+        <div class="v neutral" id="p-out-pay">—</div>
+        <div class="s" id="p-out-pay-sub">販売価格−消化ポイント</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <details class="break">
+        <summary>内訳を開く</summary>
+        <table>
+          <tbody>
+            <tr><th>獲得ポイント</th><td id="q-pt">—</td></tr>
+            <tr><th>消化ポイント</th><td id="q-used">—</td></tr>
+            <tr><th>現金支出</th><td id="q-cashout">—</td></tr>
+            <tr><th>買取額（手数料込）</th><td id="q-buy">—</td></tr>
+            <tr><th>ポイント収支（獲得−消化）</th><td id="q-left">—</td></tr>
+            <tr class="sum"><th>現金手残り</th><td id="q-left-cash">—</td></tr>
+          </tbody>
+        </table>
+      </details>
+      <div class="actions">
+        <button class="btn primary" id="copy-pt">結果をコピー</button>
+        <button class="btn" id="reset-pt">リセット</button>
+      </div>
+    </div>
+  </section>
+
+  <div class="foot">
+    <div class="nm">ゆうサロン OFFICIAL TOOL</div>
+    参考値です。最終判断は店頭の施策表と買取相場で。<br>
+    短期解約・名義貸し・SIM転売は各社規約違反です。
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite">コピーしました</div>
+
+<script>
+/* === CALC CORE START === */
+var YS = {};
+
+YS.CARRIERS = {
+  docomo: {
+    name: "ドコモ", fee: 3850, monthly: 3000,
+    tip: "<b>ドコモ</b>：事務手数料3,850円。審査により1回線5〜10万円の預託金（ショップ店頭で現金一括・解約後2〜3ヶ月で返還）がかかる場合あり。"
+  },
+  au: {
+    name: "au", fee: 3850, monthly: 3000,
+    tip: "<b>au</b>：事務手数料3,850円。KDDI系は累計5回線・直近90日2回線の名義枠と、短期解約時の預託金（最大10万円）判定に注意。"
+  },
+  uq: {
+    name: "UQ mobile", fee: 3850, monthly: 2000,
+    tip: "<b>UQ</b>：事務手数料3,850円。SIM単体の店頭還元が乗りやすく、維持費も最安クラス。店舗で還元額と振込時期を先に確定。"
+  },
+  ymobile: {
+    name: "ワイモバイル", fee: 3850, monthly: 2000,
+    tip: "<b>ワイモバ</b>：事務手数料3,850円。キャンペーンはシンプル3＋増量オプション等の条件充足が前提。ソフトバンク系の総合ブラックに注意。"
+  },
+  sb: {
+    name: "ソフトバンク", fee: 3850, monthly: 4000,
+    tip: "<b>ソフトバンク</b>：事務手数料3,850円。短期解約は総合ブラックの対象になりやすく、維持期間の厳守が前提。"
+  }
+};
+
+YS.num = function (v, def) {
+  var n = parseFloat(v);
+  if (isNaN(n) || !isFinite(n)) { return def === undefined ? 0 : def; }
+  return n;
+};
+YS.nonNeg = function (v) { var n = YS.num(v, 0); return n < 0 ? 0 : n; };
+YS.round = function (v) { return Math.round(v); };
+
+/* ---- MNP ---- */
+YS.calcMnp = function (inp) {
+  var lines = Math.max(1, Math.round(YS.num(inp.lines, 1)));
+  var cb = YS.nonNeg(inp.cb);
+  var buyback = YS.nonNeg(inp.buyback);
+  var device = YS.nonNeg(inp.device);
+  var fee = YS.nonNeg(inp.fee);
+  var other = YS.nonNeg(inp.other);
+  var months = YS.nonNeg(inp.months);
+  var monthly = YS.nonNeg(inp.monthly);
+  var deposit = YS.nonNeg(inp.deposit);
+
+  var maint = monthly * months;
+  var income = cb + buyback;
+  var cost = device + fee + other + maint;
+  var per = income - cost;
+  var total = per * lines;
+  var totalIncome = income * lines;
+  var totalCost = cost * lines;
+  var margin = totalIncome > 0 ? (total / totalIncome) * 100 : 0;
+  var breakeven = cost - cb;              // 1台あたり損益分岐買取額
+  var upfront = (device + fee + other + deposit) * lines;
+
+  return {
+    lines: lines,
+    cbTotal: cb * lines,
+    buyTotal: buyback * lines,
+    devTotal: device * lines,
+    feeTotal: fee * lines,
+    otherTotal: other * lines,
+    maintTotal: maint * lines,
+    maintPer: maint,
+    depositTotal: deposit * lines,
+    incomePer: income,
+    costPer: cost,
+    profitPer: per,
+    profitTotal: total,
+    incomeTotal: totalIncome,
+    costTotal: totalCost,
+    margin: margin,
+    breakeven: breakeven,
+    upfront: upfront,
+    upfrontExDeposit: upfront - deposit * lines
+  };
+};
+
+/* ---- POINT ---- */
+YS.calcPoint = function (inp) {
+  var price = YS.nonNeg(inp.price);
+  var mode = inp.mode === "pt" ? "pt" : "rate";
+  var points = mode === "pt" ? YS.nonNeg(inp.pt) : price * YS.nonNeg(inp.rate) / 100;
+  var used = YS.nonNeg(inp.used);
+  if (used > price) { used = price; }
+  var buyback = YS.nonNeg(inp.buyback);
+  var fees = YS.nonNeg(inp.fees);
+
+  var cashOut = price - used;
+  var netBuy = buyback - fees;
+  var denom = cashOut > 0 ? cashOut : price;
+  var rate = denom > 0 ? (netBuy / denom) * 100 : 0;
+  var cashLeft = netBuy - cashOut;
+  var leftPoints = points - used;
+  var totalRate = price > 0 ? ((netBuy + leftPoints) / price) * 100 : 0;
+
+  var badge = "none";
+  if (denom > 0) {
+    if (rate >= 85) { badge = "green"; }
+    else if (rate >= 80) { badge = "yellow"; }
+    else { badge = "red"; }
+  }
+
+  return {
+    price: price,
+    mode: mode,
+    points: points,
+    used: used,
+    cashOut: cashOut,
+    buyback: buyback,
+    fees: fees,
+    netBuy: netBuy,
+    rate: rate,
+    cashLeft: cashLeft,
+    leftPoints: leftPoints,
+    totalRate: totalRate,
+    badge: badge,
+    allPoints: cashOut === 0
+  };
+};
+/* === CALC CORE END === */
+
+/* ---------- helpers ---------- */
+function yen(n) {
+  var v = Math.round(n);
+  var s = Math.abs(v).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  return (v < 0 ? "-" : "") + s;
+}
+function yenMarkup(n) {
+  var v = Math.round(n);
+  var cls = v > 0 ? "pos" : (v < 0 ? "neg" : "neutral");
+  return { text: yen(v) + '<span class="yen">円</span>', cls: cls };
+}
+function setV(id, html, cls, flash) {
+  var el = document.getElementById(id);
+  if (!el) { return; }
+  if (el.innerHTML !== html) {
+    el.innerHTML = html;
+    if (flash) {
+      el.classList.remove("flash");
+      void el.offsetWidth;
+      el.classList.add("flash");
+    }
+  }
+  el.classList.remove("pos", "neg", "neutral");
+  el.classList.add(cls);
+}
+function $(id) { return document.getElementById(id); }
+function val(id) { return $(id) ? $(id).value : ""; }
+function setVal(id, v) { if ($(id)) { $(id).value = v; } }
+
+var toastTimer = null;
+function toast(msg) {
+  var t = $("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function () { t.classList.remove("show"); }, 1800);
+}
+function copyText(text) {
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(function () {
+      toast("コピーしました");
+    }, function () { fallbackCopy(text); });
+  } else {
+    fallbackCopy(text);
+  }
+}
+function fallbackCopy(text) {
+  var ta = document.createElement("textarea");
+  ta.value = text;
+  ta.setAttribute("readonly", "");
+  ta.style.position = "fixed";
+  ta.style.opacity = "0";
+  document.body.appendChild(ta);
+  ta.select();
+  try { document.execCommand("copy"); toast("コピーしました"); }
+  catch (e) { toast("コピーできませんでした"); }
+  document.body.removeChild(ta);
+}
+
+/* ---------- tabs ---------- */
+var tabs = document.querySelectorAll(".tab");
+for (var ti = 0; ti < tabs.length; ti++) {
+  tabs[ti].addEventListener("click", function () {
+    var name = this.getAttribute("data-tab");
+    for (var i = 0; i < tabs.length; i++) {
+      var on = tabs[i] === this;
+      tabs[i].setAttribute("aria-selected", on ? "true" : "false");
+      $("panel-" + tabs[i].getAttribute("data-tab")).hidden = !on;
+    }
+    if (name === "mnp") { renderMnp(); } else { renderPoint(); }
+  });
+}
+
+/* ---------- MNP ---------- */
+var carrier = "uq";
+var mnpState = null;
+
+function carrierTip() {
+  $("carrierTip").innerHTML = YS.CARRIERS[carrier].tip;
+}
+function applyCarrierPreset() {
+  var c = YS.CARRIERS[carrier];
+  setVal("i-fee", c.fee);
+  setVal("i-monthly", c.monthly);
+  carrierTip();
+}
+
+var carrierBtns = document.querySelectorAll("#carrierSeg button");
+for (var ci = 0; ci < carrierBtns.length; ci++) {
+  carrierBtns[ci].addEventListener("click", function () {
+    carrier = this.getAttribute("data-carrier");
+    for (var i = 0; i < carrierBtns.length; i++) {
+      carrierBtns[i].setAttribute("aria-pressed", carrierBtns[i] === this ? "true" : "false");
+    }
+    applyCarrierPreset();
+    renderMnp(true);
+  });
+}
+
+function readMnp() {
+  return {
+    lines: val("i-lines"),
+    cb: val("i-cb"),
+    buyback: val("i-buy"),
+    device: val("i-dev"),
+    fee: val("i-fee"),
+    other: val("i-other"),
+    months: val("i-months"),
+    monthly: val("i-monthly"),
+    deposit: val("i-dep")
+  };
+}
+
+function renderMnp(flash) {
+  var r = YS.calcMnp(readMnp());
+  mnpState = r;
+
+  setV("r-total", yenMarkup(r.profitTotal).text, yenMarkup(r.profitTotal).cls, flash);
+  $("r-total-sub").innerHTML = r.lines + "回線 × " + yen(r.profitPer) + "円";
+
+  setV("r-per", yenMarkup(r.profitPer).text, yenMarkup(r.profitPer).cls, flash);
+  $("r-per-sub").innerHTML = "売上 " + yen(r.incomePer) + "円 ／ 経費 " + yen(r.costPer) + "円";
+
+  var rateCls = r.margin > 0 ? "pos" : (r.margin < 0 ? "neg" : "neutral");
+  setV("r-rate", r.margin.toFixed(1) + '<span class="yen">%</span>', rateCls, flash);
+
+  if (r.breakeven > 0) {
+    setV("r-be", yenMarkup(r.breakeven).text, "neutral", flash);
+    $("r-be-sub").innerHTML = "これを下回ると赤字";
+  } else {
+    setV("r-be", '0<span class="yen">円</span>', "pos", flash);
+    $("r-be-sub").innerHTML = "買取0円でも " + yen(-r.breakeven) + "円 黒字";
+  }
+
+  setV("r-up", yenMarkup(r.upfront).text, "neutral", flash);
+  $("r-up-sub").innerHTML = r.depositTotal > 0
+    ? "うち預託金 " + yen(r.depositTotal) + "円は返還"
+    : "端末代＋手数料＋諸経費";
+
+  $("b-cb").textContent = yen(r.cbTotal) + " 円";
+  $("b-buy").textContent = yen(r.buyTotal) + " 円";
+  $("b-dev").textContent = "−" + yen(r.devTotal) + " 円";
+  $("b-fee").textContent = "−" + yen(r.feeTotal) + " 円";
+  $("b-maint").textContent = "−" + yen(r.maintTotal) + " 円";
+  $("b-other").textContent = "−" + yen(r.otherTotal) + " 円";
+  $("b-profit").textContent = yen(r.profitTotal) + " 円";
+}
+
+var mnpInputs = ["i-lines", "i-cb", "i-buy", "i-dev", "i-fee", "i-other", "i-months", "i-monthly", "i-dep"];
+for (var mi = 0; mi < mnpInputs.length; mi++) {
+  (function (id) {
+    var el = $(id);
+    el.addEventListener("input", function () { renderMnp(false); });
+    el.addEventListener("change", function () { renderMnp(false); });
+    el.addEventListener("focus", function () { el.select(); });
+  })(mnpInputs[mi]);
+}
+
+$("reset-mnp").addEventListener("click", function () {
+  var d = { "i-lines": 3, "i-cb": 32000, "i-buy": 30000, "i-dev": 22000, "i-fee": 3850, "i-other": 0, "i-months": 6, "i-monthly": 2000, "i-dep": 0 };
+  for (var k in d) { if (d.hasOwnProperty(k)) { setVal(k, d[k]); } }
+  carrier = "uq";
+  for (var i = 0; i < carrierBtns.length; i++) {
+    carrierBtns[i].setAttribute("aria-pressed", carrierBtns[i].getAttribute("data-carrier") === "uq" ? "true" : "false");
+  }
+  applyCarrierPreset();
+  renderMnp(true);
+});
+
+$("copy-mnp").addEventListener("click", function () {
+  var r = mnpState;
+  if (!r) { return; }
+  var c = YS.CARRIERS[carrier].name;
+  var txt = "【" + c + " MNP収支】" + r.lines + "回線\n" +
+    "純利益 " + yen(r.profitTotal) + "円（1回線 " + yen(r.profitPer) + "円・利益率 " + r.margin.toFixed(1) + "%）\n" +
+    "CB " + yen(r.cbTotal) + " / 買取 " + yen(r.buyTotal) + " / 端末代 " + yen(r.devTotal) +
+    " / 手数料 " + yen(r.feeTotal) + " / 維持費 " + yen(r.maintTotal) + "\n" +
+    "損益分岐買取 " + yen(r.breakeven) + "円／台・初期資金 " + yen(r.upfront) + "円";
+  copyText(txt);
+});
+
+/* ---------- POINT ---------- */
+var ptMode = "rate";
+var ptState = null;
+
+var ptBtns = document.querySelectorAll("#ptModeSeg button");
+for (var pi = 0; pi < ptBtns.length; pi++) {
+  ptBtns[pi].addEventListener("click", function () {
+    ptMode = this.getAttribute("data-mode");
+    for (var i = 0; i < ptBtns.length; i++) {
+      ptBtns[i].setAttribute("aria-pressed", ptBtns[i] === this ? "true" : "false");
+    }
+    $("wrap-rate").hidden = ptMode !== "rate";
+    $("wrap-pt").hidden = ptMode !== "pt";
+    if (ptMode === "pt") {
+      var p = YS.nonNeg(val("p-price"));
+      var rate = YS.nonNeg(val("p-rate"));
+      setVal("p-pt", Math.round(p * rate / 100));
+    }
+    renderPoint(true);
+  });
+}
+
+function readPoint() {
+  return {
+    price: val("p-price"),
+    mode: ptMode,
+    rate: val("p-rate"),
+    pt: val("p-pt"),
+    used: val("p-used"),
+    buyback: val("p-buy"),
+    fees: val("p-fees")
+  };
+}
+
+function renderPoint(flash) {
+  var r = YS.calcPoint(readPoint());
+  ptState = r;
+
+  if (r.price <= 0) {
+    setV("p-out-rate", "—", "neutral", false);
+  } else {
+    setV("p-out-rate", r.rate.toFixed(1) + '<span class="yen">%</span>',
+      r.badge === "green" ? "pos" : (r.badge === "red" ? "neg" : "neutral"), flash);
+  }
+
+  var b = $("p-badge");
+  b.className = "badge " + r.badge;
+  if (r.badge === "green") { b.textContent = "◎ 85%以上・即決ライン"; }
+  else if (r.badge === "yellow") { b.textContent = "△ 80〜84.9%・条件次第"; }
+  else if (r.badge === "red") { b.textContent = "✕ 80%未満・見送り"; }
+  else { b.textContent = "—"; }
+
+  setV("p-out-cash", yenMarkup(r.cashLeft).text, yenMarkup(r.cashLeft).cls, flash);
+  $("p-out-cash-sub").innerHTML = r.allPoints
+    ? "ポイントのみ決済（現金支出0円）"
+    : "現金支出 " + yen(r.cashOut) + "円";
+
+  var cls = r.cashLeft > 0 ? "pos" : (r.cashLeft < 0 ? "neg" : "neutral");
+  setV("p-out-pl", (r.cashLeft > 0 ? "+" : "") + yenMarkup(r.cashLeft).text, cls, flash);
+  $("p-out-pl-sub").innerHTML = r.cashLeft > 0 ? "黒字" : (r.cashLeft < 0 ? "赤字" : "トントン");
+
+  setV("p-out-total", r.totalRate.toFixed(1) + '<span class="yen">%</span>', "neutral", flash);
+
+  setV("p-out-pay", yenMarkup(r.cashOut).text, r.cashOut > 0 ? "neutral" : "pos", flash);
+  $("p-out-pay-sub").innerHTML = r.allPoints
+    ? "ポイントのみ決済"
+    : "販売価格 " + yen(r.price) + "円 − 消化 " + yen(r.used) + "円";
+
+  $("q-pt").textContent = Math.round(r.points) + " pt";
+  $("q-used").textContent = "−" + Math.round(r.used) + " pt";
+  $("q-cashout").textContent = yen(r.cashOut) + " 円";
+  $("q-buy").textContent = yen(r.netBuy) + " 円";
+  $("q-left").textContent = Math.round(r.leftPoints) + " pt";
+  $("q-left-cash").textContent = yen(r.cashLeft) + " 円";
+}
+
+var ptInputs = ["p-price", "p-rate", "p-pt", "p-used", "p-buy", "p-fees"];
+for (var pj = 0; pj < ptInputs.length; pj++) {
+  (function (id) {
+    var el = $(id);
+    el.addEventListener("input", function () { renderPoint(false); });
+    el.addEventListener("focus", function () { el.select(); });
+  })(ptInputs[pj]);
+}
+
+$("reset-pt").addEventListener("click", function () {
+  setVal("p-price", 110000);
+  setVal("p-rate", 10);
+  setVal("p-used", 0);
+  setVal("p-buy", 99000);
+  setVal("p-fees", 1000);
+  setVal("p-pt", 11000);
+  renderPoint(true);
+});
+
+$("copy-pt").addEventListener("click", function () {
+  var r = ptState;
+  if (!r) { return; }
+  var txt = "【ポイント換金】" + yen(r.price) + "円（" + r.points.toFixed(0) + "pt還元）\n" +
+    "実質換金率 " + r.rate.toFixed(1) + "%（" + (r.badge === "green" ? "85%以上" : (r.badge === "yellow" ? "80〜84.9%" : "80%未満")) + "）\n" +
+    "買取 " + yen(r.buyback) + "円 − 手数料 " + yen(r.fees) + "円 ／ 現金支出 " + yen(r.cashOut) + "円\n" +
+    "現金手残り " + yen(r.cashLeft) + "円・ポイント込み総合 " + r.totalRate.toFixed(1) + "%";
+  copyText(txt);
+});
+
+/* ---------- init ---------- */
+applyCarrierPreset();
+renderMnp(false);
+renderPoint(false);
+</script>
+</body>
+</html>
