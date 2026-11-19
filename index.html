@@ -8552,10 +8552,22 @@ function renderBudget() {
       }
       th += "</div>";
     } else if (leftAmt >= 1000) {
-      var minCost = rows[0].cost;
-      for (i = 1; i < rows.length; i++) { if (rows[i].cost < minCost) { minCost = rows[i].cost; } }
-      th += '<p class="h">残り <b>' + yen(leftAmt) + "円</b>：この枠に1点で収まる候補はありません（最小 " +
-        yen(minCost) + "円〜）。予算を増やすか、除外をリセットしてください。</p>";
+      var minCost = 0, minRow = null;
+      for (i = 0; i < rows.length; i++) {
+        if (!(rows[i].profit > 0.5)) { continue; }
+        if (!minRow || rows[i].cost < minCost) { minCost = rows[i].cost; minRow = rows[i]; }
+      }
+      var shortage = minRow ? (minCost - leftAmt) : -1;
+      if (minRow && shortage > 0 && shortage <= 3000) {
+        th += '<p class="h">残り <b>' + yen(leftAmt) + "円</b>：<b>あと " + yen(shortage) + "円</b>で " +
+          esc(minRow.it.name) + "（実売 " + yen(minRow.retail) + "円・利益 " + (minRow.profit > 0 ? "+" : "") +
+          yen(minRow.profit) + "円）が入ります。予算を少し増やしてみてください。</p>";
+      } else if (minRow) {
+        th += '<p class="h">残り <b>' + yen(leftAmt) + "円</b>：この枠に1点で収まる候補はありません（最小 " +
+          yen(minCost) + "円〜）。予算を増やすか、除外をリセットしてください。</p>";
+      } else {
+        th += '<p class="h">残り <b>' + yen(leftAmt) + "円</b>：いまの条件で利益の出る追加候補はありません。除外をリセットするか、還元率を変えてみてください。</p>";
+      }
     }
     if (th) { tailBox.innerHTML = th; tailBox.hidden = false; }
   }
