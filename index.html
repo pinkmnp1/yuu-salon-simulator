@@ -679,7 +679,7 @@ textarea.csv{
 .u-src.net{background:rgba(43,255,136,.18);color:#b6ffd6}
 .u-src.local{background:rgba(255,210,63,.18);color:#ffe98a}
 .rank-list{display:flex;flex-direction:column;gap:6px}
-.hit.rank,.hit.rec{width:100%;text-align:left;font-family:inherit;appearance:none;margin-bottom:0}
+.hit.rank,.hit.rec{width:100%;text-align:left;font-family:inherit;color:var(--txt);appearance:none;margin-bottom:0}
 .hit .rk{
   flex:none;width:22px;height:22px;border-radius:8px;display:grid;place-items:center;
   font-size:11px;font-weight:900;font-family:var(--mono);background:rgba(255,255,255,.07);color:var(--muted);
@@ -6875,7 +6875,7 @@ function renderScan() {
      未設定やオフラインでも、この端末の記録だけで動く（ローカルフォールバック）。
    送るもの: 乱数ID・商品ID・JAN・商品名・カテゴリ・買取額・時刻だけ。
              名前・メール・位置情報・IPは送りません。 */
-YS.STATS_URL = "";   /* ← GAS の WebアプリURL（https://script.google.com/macros/s/…/exec）を入れる */
+YS.STATS_URL = "https://script.google.com/macros/s/AKfycbx4BsTXHMNCHhHBS4S4y9aK5AaGaKC5FTguB8kDIRrpdVi7gMemTDjfAUruwlyjzd2fBA/exec";   /* ← GAS の WebアプリURL（https://script.google.com/macros/s/…/exec）を入れる */
 
 YS.STATS = {
   url: "", id: "", state: "idle", error: "", busy: false,
