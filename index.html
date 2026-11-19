@@ -1311,7 +1311,7 @@ textarea.csv{
       <p class="card-title">内蔵 買取相場DB</p>
       <p class="scan-status" id="sc-db-count">—</p>
       <div class="db-wrap" id="sc-db"></div>
-      <p class="tip">価格は2026-11-18時点で各社が公開している<b>新品・未開封</b>の買取上限です。相場は毎日動くので、売る直前に必ず店のページで再確認してください。</p>
+      <p class="tip">価格は各社が公開している<b>新品・未開封</b>の買取上限を毎時集めたものです（画面上部の「時点」が取得時刻）。相場は毎日動くので、売る直前に必ず店のページで再確認してください。</p>
     </div>
   </section>
 
@@ -7982,6 +7982,12 @@ function gkRow(it, rank, prate) {
     h += '<div class="gk-profit ' + (prof > 0 ? "pos" : "neg") + '">ポイント' + prate + "% → 実質仕入 " +
       yen(Math.round(net)) + "円・利益 " + (prof > 0 ? "+" : "") + yen(Math.round(prof)) + "円";
     h += ' <small>（' + (prof > 0 ? "買い" : "スルー") + "）</small></div>";
+    var p20 = gkProfit(it, 20), p30 = gkProfit(it, 30);
+    var other = (prate === 20)
+      ? "ポイント30%時 " + (p30 >= 0 ? "+" : "") + yen(Math.round(p30)) + "円"
+      : "SPU/ポイント20%時 " + (p20 >= 0 ? "+" : "") + yen(Math.round(p20)) + "円 ・ 30%時 " +
+        (p30 >= 0 ? "+" : "") + yen(Math.round(p30)) + "円";
+    h += '<div class="gk-profit" style="margin-top:2px"><small>' + other + "</small></div>";
   }
   h += "</button>";
   return h;
