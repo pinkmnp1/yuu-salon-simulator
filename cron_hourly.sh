@@ -11,7 +11,9 @@ echo "=== $(TZ=Asia/Tokyo date '+%F %T') 開始" >> "$LOG"
 # 1) 実売価格（価格.com）と買取wikiのJAN検索をローテーションで補充（キャッシュ済みは即スキップ）
 #    1回400件まで。全件が終われば以降はキャッシュ更新だけで数秒。
 if [ -x /opt/pwenv/bin/python ]; then
-  timeout 900 /opt/pwenv/bin/python enrich.py --limit 400 >> /var/log/enrich.log 2>&1
+  # 二重起動しないようロックを取る（手動の全件収集が走っている間はスキップ）
+  flock -n /var/lock/enrich.lock timeout 900 /opt/pwenv/bin/python enrich.py --limit 400 \
+    >> /var/log/enrich.log 2>&1 || true
 fi
 
 # 2) 買取8社＋ホムラ＋wiki で価格を取り直し、前日比と実売を scan_db.json に載せる

@@ -14,3 +14,7 @@ uitest/
 *.bak-*
 *.bak
 index-8.html.bak-*
+
+# テスト出力
+final/
+staging/
