@@ -795,6 +795,84 @@ textarea.csv{
 .bd-item .nm{flex:1;min-width:0;font-size:12px;line-height:1.35}
 .bd-item .pr{flex:none;font-family:var(--mono);font-size:11.5px;text-align:right;color:var(--muted)}
 .bd-item .pr b{color:var(--txt);font-size:12.5px}
+
+/* ---------- 予算逆算 完成版（2026-11-19） ---------- */
+.bd-mode{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 8px}
+.bd-mode button{appearance:none;text-align:left;font-family:inherit;cursor:pointer;padding:10px 11px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--muted);transition:.18s}
+.bd-mode button b{display:block;font-size:12.5px;font-weight:800;color:var(--txt);line-height:1.3}
+.bd-mode button span{display:block;font-size:10px;margin-top:2px;line-height:1.35}
+.bd-mode button[aria-pressed="true"]{border-color:rgba(0,229,255,.55);background:linear-gradient(150deg,rgba(0,229,255,.16),rgba(139,92,255,.14));box-shadow:0 0 18px rgba(0,229,255,.18)}
+.bd-mode button[aria-pressed="true"] b{color:#fff}
+.bd-mode button[aria-pressed="true"] span{color:var(--cyan)}
+.bd-hintline{font-size:11px;line-height:1.6;color:var(--muted);margin:0 0 12px;padding:8px 10px;border-radius:11px;background:rgba(0,229,255,.06);border:1px solid rgba(0,229,255,.16)}
+.bd-hintline b{color:#fff;font-weight:800}
+.bd-opts{display:flex;flex-wrap:wrap;align-items:center;gap:7px;margin:10px 0 10px}
+.bd-opts .lbl{font-size:10.5px;font-weight:800;color:var(--muted);letter-spacing:.02em}
+.bd-qtyseg{display:flex;gap:4px}
+#bd-genre,#gk-genre{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+#gk-genre button{min-width:0;padding:9px 4px;font-size:12px}
+#gk-point{display:grid;grid-template-columns:repeat(4,1fr);gap:5px}
+#gk-point button{min-width:0;padding:9px 2px;font-size:10.5px;white-space:nowrap}
+#gk-sort{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+#gk-sort button{min-width:0}
+#gk-net{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+#gk-net button{min-width:0;font-size:11.5px;padding:9px 4px}
+#bd-genre button{min-width:0;padding:9px 4px}
+.bd-qtyseg button{appearance:none;font-family:inherit;cursor:pointer;font-size:11px;font-weight:800;padding:5px 9px;border-radius:9px;border:1px solid var(--line);background:rgba(255,255,255,.05);color:var(--muted)}
+.bd-qtyseg button[aria-pressed="true"]{color:#05060c;background:linear-gradient(135deg,var(--cyan),#7ef0ff);border-color:transparent}
+.bd-nettog{appearance:none;font-family:inherit;cursor:pointer;font-size:10.5px;font-weight:800;padding:5px 9px;border-radius:9px;border:1px solid rgba(0,229,255,.35);background:rgba(0,229,255,.08);color:var(--cyan)}
+.bd-nettog[aria-pressed="true"]{background:linear-gradient(135deg,var(--cyan),#7ef0ff);color:#05060c;border-color:transparent}
+.bd-reset{margin-left:auto;appearance:none;font-family:inherit;cursor:pointer;font-size:10.5px;font-weight:800;padding:5px 9px;border-radius:9px;border:1px solid rgba(255,77,109,.32);background:rgba(255,77,109,.09);color:#ff9bb0}
+.bd-reset b{font-family:var(--mono)}
+.bd-sum{margin:14px 0 0;border-radius:18px;border:1px solid rgba(0,229,255,.35);background:linear-gradient(150deg,rgba(0,229,255,.10),rgba(139,92,255,.12) 55%,rgba(16,18,32,.96));padding:13px 13px 12px;box-shadow:0 18px 50px rgba(0,229,255,.12)}
+.bd-hero .k{font-size:10.5px;letter-spacing:.06em;color:var(--muted);font-weight:800}
+.bd-hero .v{font-family:var(--mono);font-size:clamp(30px,10vw,44px);font-weight:800;line-height:1.05;letter-spacing:-.02em;white-space:nowrap;font-variant-numeric:tabular-nums}
+.bd-hero .v .yen{font-size:.5em;margin-left:2px;opacity:.75}
+.bd-hero .s{font-size:11px;color:var(--muted);margin-top:3px;line-height:1.45}
+.bd-brk{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:11px}
+.bd-kv{min-width:0;border-radius:12px;border:1px solid var(--line);background:rgba(8,10,20,.55);padding:7px 9px}
+.bd-kv .k{font-size:9.5px;color:var(--muted);font-weight:800;letter-spacing:.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bd-kv .v{font-family:var(--mono);font-size:14px;font-weight:800;line-height:1.25;white-space:nowrap;font-variant-numeric:tabular-nums}
+.bd-kv .v .yen{font-size:.7em;opacity:.75;margin-left:1px}
+.bd-kv .s{font-size:9px;color:var(--muted);margin-top:1px;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bd-kv.hi{border-color:rgba(0,229,255,.4);background:rgba(0,229,255,.07)}
+.bd-bar{margin-top:9px;height:8px;border-radius:5px;background:rgba(255,255,255,.08);overflow:hidden}
+.bd-bar i{display:block;height:100%;border-radius:5px;background:linear-gradient(90deg,var(--cyan),#7ef0ff);transition:width .35s}
+.bd-planhead{display:flex;align-items:center;justify-content:space-between;margin:16px 0 2px;font-size:11px;font-weight:800;color:var(--muted);letter-spacing:.04em}
+.bd-planhead b{font-family:var(--mono);color:var(--cyan);font-size:12px}
+.bd-card{margin:7px 0 0;border-radius:15px;border:1px solid var(--line);background:rgba(8,10,20,.62);padding:10px 11px;cursor:pointer;transition:.15s}
+.bd-card:active{transform:scale(.995)}
+.bd-card.top1{border-color:rgba(43,255,136,.5);background:linear-gradient(150deg,rgba(43,255,136,.10),rgba(8,10,20,.64))}
+.bd-r1{display:flex;gap:6px;align-items:flex-start}
+.bd-rk{flex:none;width:19px;height:19px;border-radius:6px;background:rgba(255,255,255,.08);font-family:var(--mono);font-size:10.5px;font-weight:800;text-align:center;line-height:19px;color:var(--muted)}
+.bd-nm{flex:1;min-width:0;font-size:12.5px;font-weight:800;line-height:1.4;word-break:break-word}
+.bd-qtybadge{flex:none;font-family:var(--mono);font-size:11px;font-weight:800;color:#04170c;background:linear-gradient(135deg,#2bff88,#9effc4);border-radius:8px;padding:2px 7px}
+.bd-line{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 5px;margin-top:5px;font-size:11px;color:var(--muted);line-height:1.45}
+.bd-line .ic{font-size:10.5px}
+.bd-line .lb{font-size:10px;font-weight:800;color:var(--muted)}
+.bd-line b{font-family:var(--mono);font-size:12.5px;color:var(--txt);font-weight:800}
+.bd-line .sp{font-size:10px;color:var(--muted);max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bd-line .sp2{font-size:9.5px;color:rgba(160,175,205,.75)}
+.bd-line .d1{font-size:9.5px;font-family:var(--mono);font-weight:800}
+.bd-kk{font-size:10px;color:var(--cyan);text-decoration:none;border-bottom:1px dotted rgba(0,229,255,.55);padding-bottom:1px;white-space:nowrap}
+.bd-line.prof{margin-top:6px;align-items:center;gap:6px}
+.bd-line.prof .pl{font-family:var(--mono);font-size:14.5px;font-weight:800;letter-spacing:-.01em}
+.bd-line.prof .rt{font-size:9.5px;padding:2px 6px;border-radius:999px;background:rgba(43,255,136,.12);color:var(--green);border:1px solid rgba(43,255,136,.3);font-family:var(--mono);font-weight:800}
+.bd-foot{display:flex;align-items:center;gap:8px;margin-top:8px}
+.bd-x{appearance:none;font-family:inherit;cursor:pointer;font-size:10.5px;font-weight:800;color:#ff9bb0;background:rgba(255,77,109,.12);border:1px solid rgba(255,77,109,.35);border-radius:9px;padding:5px 9px}
+.bd-x:active{transform:scale(.97)}
+.bd-more{margin-left:auto;font-size:9.5px;color:rgba(160,175,205,.7)}
+.bd-tail{margin:10px 0 0;padding:10px 11px;border-radius:14px;border:1px dashed rgba(0,229,255,.28);background:rgba(0,229,255,.04)}
+.bd-tail .h{font-size:11px;line-height:1.5;color:var(--muted);margin:0 0 7px}
+.bd-tail .h b{color:var(--cyan);font-family:var(--mono)}
+.bd-sugg{display:flex;flex-direction:column;gap:6px}
+.bd-sugg button{display:flex;align-items:center;gap:7px;text-align:left;appearance:none;font-family:inherit;cursor:pointer;border-radius:11px;border:1px solid var(--line);background:rgba(8,10,20,.55);padding:7px 8px;color:var(--txt)}
+.bd-sugg .sn{flex:1;min-width:0;font-size:10.5px;line-height:1.35;word-break:break-word}
+.bd-sugg .sv{flex:none;font-family:var(--mono);font-size:9.5px;color:var(--muted);text-align:right;line-height:1.35}
+.bd-sugg .sa{flex:none;font-size:10.5px;font-weight:800;color:#04170c;background:linear-gradient(135deg,#2be0ff,#7ef0ff);border-radius:8px;padding:4px 7px}
+.bd-tip{margin:12px 0 0;padding:11px 12px;border-radius:14px;border:1px solid rgba(255,210,63,.4);background:rgba(255,210,63,.08);font-size:11.5px;line-height:1.65;color:var(--txt)}
+.bd-tip b{color:#ffe98a}
+.bd-tip2{font-size:10.5px;color:var(--muted);margin:8px 0 0;line-height:1.6}
 </style>
 </head>
 <body>
@@ -2210,6 +2288,10 @@ textarea.csv{
         <button type="button" data-prate="20" aria-pressed="true">ポイント20%</button>
         <button type="button" data-prate="30" aria-pressed="false">ポイント30%</button>
       </div>
+      <div class="seg" id="gk-net" role="group" aria-label="実売の取得先">
+        <button type="button" data-net="0" aria-pressed="true">🏬 大手量販店のみ</button>
+        <button type="button" data-net="1" aria-pressed="false">＋ネット通販も含める</button>
+      </div>
       <div class="seg" id="gk-sort" role="group" aria-label="並び順">
         <button type="button" data-sort="ratio" aria-pressed="true">還元率順</button>
         <button type="button" data-sort="profit" aria-pressed="false">実質利益順</button>
@@ -2254,11 +2336,18 @@ textarea.csv{
   <!-- ================= TAB : 予算逆算 ================= -->
   <section class="panel" id="panel-budget" role="tabpanel" aria-labelledby="tab-budget" hidden>
     <div class="card">
-      <p class="card-title">💰 ポイント消化・予算逆算 <span class="hint">枠を使い切る</span></p>
-      <p class="intro">「5万円分のポイント（または予算）がある」→ その枠で買うと<b>一番損しない組み合わせ</b>を提案します。ゲーム機が無い日は炊飯器・レンジ・カメラで枠を消化できます。</p>
+      <p class="card-title">💰 予算逆算プランナー <span class="hint">枠をムダなく消化</span></p>
+      <p class="intro">枠の金額を入れるだけで、<b>いま店頭で買える高還元商品</b>から<b>一番利益が残る買い合わせ</b>を自動で組みます。実売は価格.comの<b>大手量販店の最安</b>、買取は10社の最高額（毎時更新）。</p>
+
+      <div class="bd-mode" id="bd-mode" role="group" aria-label="予算の数え方">
+        <button type="button" data-mode="point" aria-pressed="true"><b>💎 ポイント消化</b><span>レジ払いを予算内に</span></button>
+        <button type="button" data-mode="net" aria-pressed="false"><b>💰 実質負担</b><span>還元後を予算内に</span></button>
+      </div>
+      <p class="bd-hintline" id="bd-modehint"></p>
+
       <div class="grid two">
         <div class="field">
-          <label for="bd-budget">予算・ポイント枠 <span class="hint">円</span></label>
+          <label for="bd-budget" id="bd-budget-label">ポイント枠 <span class="hint">円・額面</span></label>
           <div class="input-box"><input id="bd-budget" type="number" inputmode="numeric" min="0" step="1000" value="50000"><span class="unit">円</span></div>
           <div class="qchips" id="q-bdbudget">
             <button class="qchip" type="button" data-q="bd-budget" data-v="30000">3万</button>
@@ -2278,6 +2367,18 @@ textarea.csv{
           </div>
         </div>
       </div>
+
+      <div class="bd-opts">
+        <span class="lbl">同じ商品の重複</span>
+        <div class="bd-qtyseg" id="bd-qty" role="group" aria-label="重複の上限">
+          <button type="button" data-qty="1" aria-pressed="false">1個</button>
+          <button type="button" data-qty="2" aria-pressed="true">2個</button>
+          <button type="button" data-qty="3" aria-pressed="false">3個</button>
+        </div>
+        <button type="button" class="bd-reset" id="bd-reset">除外をリセット（<b id="bd-exn">0</b>）</button>
+        <button type="button" class="bd-nettog" id="bd-nettog" data-netmode="1" aria-pressed="false">🏬 大手量販店のみ</button>
+      </div>
+
       <div class="seg" id="bd-genre" role="group" aria-label="ジャンル">
         <button type="button" data-genre="all" aria-pressed="true">すべて</button>
         <button type="button" data-genre="rice" aria-pressed="false">炊飯器</button>
@@ -2286,23 +2387,31 @@ textarea.csv{
         <button type="button" data-genre="cleaner" aria-pressed="false">掃除機</button>
         <button type="button" data-genre="camera" aria-pressed="false">カメラ</button>
       </div>
+
       <div class="actions">
         <button class="btn primary" id="bd-go" type="button">組み合わせを提案する</button>
       </div>
-      <div class="results" style="margin:12px 0 0">
-        <div class="res main">
+
+      <div class="bd-sum" id="bd-sum" hidden>
+        <div class="bd-hero">
           <div class="k">この組み合わせの実質利益</div>
-          <div class="v neutral" id="bd-profit">—</div>
+          <div class="v" id="bd-profit">—</div>
           <div class="s" id="bd-profit-sub">&nbsp;</div>
         </div>
-        <div class="res">
-          <div class="k">買取合計</div>
-          <div class="v neutral" id="bd-buy">—</div>
-          <div class="s" id="bd-buy-sub">&nbsp;</div>
+        <div class="bd-brk">
+          <div class="bd-kv"><div class="k">レジ支払合計</div><div class="v" id="bd-pay">—</div><div class="s">実売×個数の合計</div></div>
+          <div class="bd-kv"><div class="k">獲得ポイント</div><div class="v" id="bd-points">—</div><div class="s" id="bd-points-sub">&nbsp;</div></div>
+          <div class="bd-kv"><div class="k">実質負担</div><div class="v" id="bd-net">—</div><div class="s">レジ − ポイント</div></div>
+          <div class="bd-kv"><div class="k">買取合計</div><div class="v" id="bd-buy">—</div><div class="s" id="bd-buy-sub">&nbsp;</div></div>
+          <div class="bd-kv hi"><div class="k">予算の残り</div><div class="v" id="bd-left">—</div><div class="s" id="bd-left-sub">&nbsp;</div></div>
+          <div class="bd-kv"><div class="k">枠の消化率</div><div class="v" id="bd-used">—</div><div class="s" id="bd-used-sub">&nbsp;</div></div>
         </div>
+        <div class="bd-bar"><i id="bd-bar" style="width:0%"></i></div>
       </div>
+
       <div class="bd-plan" id="bd-plan"></div>
-      <p class="empty" id="bd-empty">予算を入れて「組み合わせを提案する」を押してください。</p>
+      <div class="bd-tail" id="bd-tail" hidden></div>
+      <p class="empty" id="bd-empty">予算を入れると、一番利益が残る組み合わせを提案します。</p>
     </div>
   </section>
 
@@ -7919,8 +8028,8 @@ renderTax();
    ＋ スキャン結果の「買い/スルー」大型判定
    ================================================================ */
 
-var GKS = { genre: "all", prate: 20, sort: "ratio" };
-var BDS = { genre: "all" };
+var GKS = { genre: "all", prate: 20, sort: "ratio", net: false };
+var BDS = { genre: "all", mode: "point", qty: 2, exclude: {}, forced: [], net: false };
 
 /* ---- ジャンル判定（商品名から） ---- */
 function gkGenreOf(it) {
@@ -7939,6 +8048,8 @@ function gkGenreOf(it) {
 var GK_EXCLUDE = /多言語版|多言語対応|日英|2言語|二言語|言語設定|英語版|中国語版|抽選|限定|予約|受注|特典|初回生産|コレクターズ|プレミア|福袋|海外版|並行輸入|ジャンク|中古|整備済|訳あり|未開封BOX|PSA|鑑定/;
 /* 中古・リサイクル系の店が実売のときは「新品比較ではない」印を付ける */
 var GK_USED_SHOP = /駿河屋|ネットオフ|ブックオフ|古本|まんだらけ|リサイクル|質|ジャンク|ラクマ|メルカリ/;
+/* 大手家電量販店（実売の取得先）。ここに無い店は「ネット通販」扱いで、既定では出さない */
+var GK_BIG_SHOP = /ヨドバシ|ビックカメラ|楽天ビック|ヤマダ|コジマ|ケーズデンキ|エディオン|Joshin|ジョーシン|ソフマップ|ノジマ|nojima|ベスト電器|デオデオ|ミドリ電化|イオンスタイル|Amazon|キタムラ/i;
 
 function gkRetail(it) { return YS.num(it.retail, 0) || 0; }
 function gkRatio(it) {
@@ -7952,7 +8063,7 @@ function gkProfit(it, prate) {
 }
 
 /* 高還元の候補（実売があり、限定品でなく、買取が実売を超えない＝普通に買える品） */
-function gkCandidates(genre) {
+function gkCandidates(genre, includeNet) {
   var out = [], i, it, ratio, r;
   for (i = 0; i < YS.SCAN_DB.length; i++) {
     it = YS.SCAN_DB[i];
@@ -7964,6 +8075,8 @@ function gkCandidates(genre) {
     ratio = gkRatio(it);
     if (ratio === null || ratio > 100) { continue; }
     if (genre && genre !== "all" && gkGenreOf(it) !== genre) { continue; }
+    /* 既定は大手量販店の実売だけ（カデココ・サンサン・XPRICE等の通販専業店を混ぜない） */
+    if (!includeNet && !GK_BIG_SHOP.test(it.retail_shop || "")) { continue; }
     out.push(it);
   }
   return out;
@@ -7979,7 +8092,8 @@ function gkRow(it, rank, prate) {
   h += '<span class="gk-ratio' + cls + '">' + ratio.toFixed(1) + "%</span></div>";
   h += '<div class="gk-meta"><span>買取 <b>' + yen(p) + '円</b></span><span>実売 <b>' + yen(r) + "円</b></span>";
   if (it.retail_shop) {
-    h += "<span>" + (GK_USED_SHOP.test(it.retail_shop) ? "⚠ " : "") + esc(it.retail_shop) + "</span>";
+    var big = GK_BIG_SHOP.test(it.retail_shop);
+    h += "<span>" + (GK_USED_SHOP.test(it.retail_shop) ? "⚠ " : (big ? "" : "🌐 ")) + esc(it.retail_shop) + "</span>";
   }
   h += "</div>";
   if (prof !== null) {
@@ -7998,7 +8112,7 @@ function gkRow(it, rank, prate) {
 }
 
 function renderGenka() {
-  var list = gkCandidates(GKS.genre), prate = GKS.prate, h = "", i, it;
+  var list = gkCandidates(GKS.genre, GKS.net), prate = GKS.prate, h = "", i, it;
   var cmp;
   if (GKS.sort === "profit") {
     cmp = function (a, b) { return (gkProfit(b, prate) || -1e9) - (gkProfit(a, prate) || -1e9); };
@@ -8018,12 +8132,16 @@ function renderGenka() {
   setHtml("gk-list", h);
   var withRetail = 0, j;
   for (j = 0; j < YS.SCAN_DB.length; j++) { if (gkRetail(YS.SCAN_DB[j]) > 0) { withRetail++; } }
-  var note = "実売価格つき " + yen(withRetail) + "件から、いまの条件で " + yen(total) + "件。" +
-    "上位" + Math.min(40, total) + "件を表示（還元率は買取÷実売）。";
+  var note = (GKS.net ? "実売価格つき " + yen(withRetail) + "件（ネット通販含む）" : "大手量販店の実売が取れている " + yen(withRetail) + "件")
+    + "から、いまの条件で " + yen(total) + "件。上位" + Math.min(40, total) + "件を表示（還元率は買取÷実売）。";
+  if (!GKS.net) {
+    note += " ヨドバシ・ビック・ヤマダ・コジマ・ソフマップ・ノジマ・ケーズ・エディオン・Joshin・ベスト・Amazon 等の実売だけを出しています。";
+  }
   if (!total) {
     note = "このジャンルはまだ実売価格を集めている途中です（全体では実売つき " + yen(withRetail) +
       "件）。数分おいて再読み込みしてください。";
     if (!withRetail) { note = "実売価格を集めている途中です。数分おいて再読み込みしてください（毎時更新）。"; }
+    if (!GKS.net) { note += " 「＋ネット通販も含める」に切り替えると候補が出ることがあります。"; }
   }
   setText("gk-note", note);
 }
@@ -8080,71 +8198,367 @@ function renderTrend() {
   if (dnEmpty) { dnEmpty.hidden = !!down.length; }
 }
 
-/* ---- 予算逆算 ---- */
-function renderBudget(plan) {
+/* ---- 予算逆算（完成版 2026-11-19） ---- */
+function bdShopName(s) { return YS.scanNormShop(s || ""); }
+
+/* 1商品の買取：最高額の店と2位を quotes（全店）から拾う */
+function bdQuoteBest(it) {
+  var q = it.quotes || {}, best = 0, bestShop = "", second = 0, secondShop = "", name, v, sh;
+  for (name in q) {
+    if (!Object.prototype.hasOwnProperty.call(q, name)) { continue; }
+    v = YS.num(q[name], 0);
+    if (!(v > 0)) { continue; }
+    sh = bdShopName(name);
+    if (v > best) { second = best; secondShop = bestShop; best = v; bestShop = sh; }
+    else if (v > second) { second = v; secondShop = sh; }
+  }
+  if (!(best > 0)) {
+    best = YS.num(it.price, 0);
+    bestShop = bdShopName(it.shop);
+    second = 0; secondShop = "";
+  }
+  return { v: best, shop: bestShop, second: second, secondShop: secondShop };
+}
+
+/* 価格.com（JANがあればJAN検索、無ければ商品名検索） */
+function bdKakakuUrl(it) {
+  var jan = String(it.jan || "");
+  if (/^\d{8,14}$/.test(jan)) { return "https://search.kakaku.com/" + jan + "/"; }
+  return "https://search.kakaku.com/" + encodeURIComponent(String(it.name || "")) + "/";
+}
+
+function bdRowOf(it, prate, mode) {
+  var r = gkRetail(it), q = bdQuoteBest(it), p = q.v;
+  if (!(r > 0) || !(p > 0)) { return null; }
+  var pts = r * prate / 100, net = r - pts;
+  return {
+    it: it, retail: r, buy: p, q: q, points: pts, net: net,
+    cost: (mode === "net") ? net : r, profit: p - net, ratio: p / r * 100
+  };
+}
+
+function bdYenTxt(n) { return (n > 0.5 ? "+" : "") + yen(n) + '<span class="yen">円</span>'; }
+
+function bdModeHint() {
+  if (BDS.mode === "net") {
+    return "💰 <b>実質負担ベース</b>：予算は「実際に持ち出すお金」。獲得ポイントを差し引いた<b>実質負担</b>が予算内に収まるように組むので、同じ予算でも多く買えます（レジでは実売合計を立て替え、ポイントは後日還元）。";
+  }
+  return "💎 <b>ポイント消化ベース</b>：予算は「ポイント枠の額面」。レジでの支払い（実売合計）が予算を超えないように、<b>枠を額面どおり使い切る</b>組み方です。";
+}
+
+function bdChrome() {
+  gkSetSeg("bd-mode", "data-mode", BDS.mode);
+  gkSetSeg("bd-qty", "data-qty", BDS.qty);
+  gkSetSeg("bd-genre", "data-genre", BDS.genre);
+  var hint = document.getElementById("bd-modehint");
+  if (hint) { hint.innerHTML = bdModeHint(); }
+  var exn = document.getElementById("bd-exn");
+  if (exn) { exn.textContent = Object.keys(BDS.exclude).length; }
+  var nt = document.getElementById("bd-nettog");
+  if (nt) {
+    nt.setAttribute("aria-pressed", BDS.net ? "true" : "false");
+    nt.textContent = BDS.net ? "🏬 大手量販＋ネット通販" : "🏬 大手量販店のみ";
+  }
+  var lab = document.getElementById("bd-budget-label");
+  if (lab) {
+    lab.innerHTML = (BDS.mode === "net")
+      ? '持ち出す予算 <span class="hint">円・実質</span>'
+      : 'ポイント枠 <span class="hint">円・額面</span>';
+  }
+}
+
+function bdEmpty(msg) {
+  var el = document.getElementById("bd-empty");
+  if (el) { el.textContent = msg; el.hidden = false; }
+}
+
+function bdSumHide() {
+  var el = document.getElementById("bd-sum");
+  if (el) { el.hidden = true; }
+}
+
+/* 属性を上にたどる（data-exclude / data-id など） */
+function bdUp(el, root, attr) {
+  var t = el, v;
+  while (t && t !== root) {
+    if (t.getAttribute) { v = t.getAttribute(attr); if (v !== null) { return v; } }
+    t = t.parentNode;
+  }
+  return null;
+}
+
+/* 商品カード1枚（タップでスキャン詳細へ） */
+function bdCard(row, idx, qty, breakEven) {
+  var it = row.it, q = row.q, usedShop = GK_USED_SHOP.test(it.retail_shop || ""), h = "";
+  var per = row.profit;
+  h += '<div class="bd-card' + (idx === 1 ? " top1" : "") + '" data-id="' + esc(it.id) + '">';
+  h += '<div class="bd-r1"><span class="bd-rk">' + idx + '</span><span class="bd-nm">' + esc(it.name) + "</span>";
+  if (qty > 1) { h += '<span class="bd-qtybadge">×' + qty + "</span>"; }
+  h += "</div>";
+  h += '<div class="bd-line"><span class="ic">🛒</span><span class="lb">実売</span><b>' + yen(row.retail) + "円</b>";
+  if (it.retail_shop) {
+    h += '<span class="sp">' + (usedShop ? "⚠ " : (GK_BIG_SHOP.test(it.retail_shop) ? "" : "🌐 ")) + esc(it.retail_shop) + "</span>";
+  }
+  h += '<a class="bd-kk" href="' + bdKakakuUrl(it) + '" target="_blank" rel="noopener">価格.comで店を見る ↗</a></div>';
+  h += '<div class="bd-line"><span class="ic">🏪</span><span class="lb">最高買取</span><b>' + yen(row.buy) + "円</b>";
+  if (q.shop) { h += '<span class="sp">' + esc(q.shop) + "</span>"; }
+  if (q.second > 0) {
+    h += '<span class="sp2">2位 ' + yen(q.second) + "円" + (q.secondShop ? "（" + esc(q.secondShop) + "）" : "") + "</span>";
+  }
+  h += "</div>";
+  h += '<div class="bd-line prof"><span class="pl ' + (per > 0 ? "pos" : "neg") + '">' +
+    (per > 0 ? "+" : "") + yen(per) + "円</span>";
+  h += '<span class="rt">還元率 ' + row.ratio.toFixed(1) + "%</span>";
+  if (qty > 1) { h += '<span class="sp2">×' + qty + " = " + (per * qty > 0 ? "+" : "") + yen(per * qty) + "円</span>"; }
+  if (it.d1) {
+    h += '<span class="d1 ' + (it.d1 > 0 ? "pos" : "neg") + '">前日比 ' + (it.d1 > 0 ? "+" : "") + yen(it.d1) + "円</span>";
+  }
+  if (breakEven) { h += '<span class="sp2">損益分岐 ' + breakEven.toFixed(1) + "%</span>"; }
+  h += "</div>";
+  h += '<div class="bd-foot"><button type="button" class="bd-x" data-exclude="' + esc(it.id) +
+    '" aria-label="この商品を除外して入れ替え">✕ 除外して入替</button><span class="bd-more">タップで買取店の全比較</span></div>';
+  h += "</div>";
+  return h;
+}
+
+/* 重複上限つきナップサック（予算を使い切りつつ利益最大） */
+function bdKnap(rows, budget, maxQty, baseCount) {
+  var counts = {}, i, r, left, k, take, c, w, v, groups = [], g, j, W, B, step;
+  var dp, sp, took, cand, cs, bj;
+  if (!(budget > 0)) { return counts; }
+  step = 50;
+  if (budget > 30000) { step = 100; }
+  if (budget > 150000) { step = 200; }
+  if (budget > 600000) { step = 500; }
+  while (budget / step > 4000) { step *= 2; }
+  B = Math.floor(budget / step);
+  if (B < 1) { return counts; }
+  for (i = 0; i < rows.length; i++) {
+    r = rows[i];
+    left = Math.max(0, maxQty - (baseCount[r.it.id] || 0));
+    k = 1;
+    while (left > 0) {
+      take = Math.min(k, left);
+      c = r.cost * take;
+      w = Math.ceil(c / step - 1e-7);
+      if (w > B) { break; }
+      groups.push({ i: i, take: take, w: w, c: c, v: r.profit * take });
+      left -= take;
+      k *= 2;
+    }
+  }
+  if (!groups.length) { return counts; }
+  W = B + 1;
+  dp = new Float64Array(W);
+  sp = new Float64Array(W);
+  took = new Uint8Array(groups.length * W);
+  for (g = 0; g < groups.length; g++) {
+    w = groups[g].w; v = groups[g].v; c = groups[g].c;
+    for (j = B; j >= w; j--) {
+      cand = dp[j - w] + v;
+      cs = sp[j - w] + c;
+      if (cand > dp[j] + 0.01 || (Math.abs(cand - dp[j]) <= 0.01 && cs > sp[j])) {
+        dp[j] = cand; sp[j] = cs; took[g * W + j] = 1;
+      }
+    }
+  }
+  bj = 0;
+  for (j = 1; j <= B; j++) {
+    if (dp[j] > dp[bj] + 0.01 || (Math.abs(dp[j] - dp[bj]) <= 0.01 && sp[j] > sp[bj])) { bj = j; }
+  }
+  for (g = groups.length - 1; g >= 0 && bj > 0; g--) {
+    if (took[g * W + bj]) {
+      r = rows[groups[g].i];
+      counts[r.it.id] = (counts[r.it.id] || 0) + groups[g].take;
+      bj -= groups[g].w;
+    }
+  }
+  return counts;
+}
+
+/* 利益ゼロのときの案内（損益分岐の還元率を出す） */
+function bdNoProfit(rows, prate) {
+  rows.sort(function (a, b) { return b.ratio - a.ratio; });
+  var top = rows.slice(0, 5), h = "", i, row, need;
+  bdSumHide();
+  need = Math.max(0, 100 - top[0].ratio);
+  h += '<div class="bd-tip">還元率 <b>' + prate + "%</b> では、どの商品も<b>買取 ＜ 実質仕入</b> で利益が出ません。" +
+    "いちばん惜しい <b>" + esc(top[0].it.name) + "</b> は還元率 <b>" + top[0].ratio.toFixed(1) + "%</b> なので、" +
+    "<b>ポイント " + Math.ceil(need) + "%以上</b>なら黒字になります。<br>下は参考：いまの実売・買取での上位5件です。</div>";
+  for (i = 0; i < top.length; i++) { h += bdCard(top[i], i + 1, 1, 100 - top[i].ratio); }
+  setHtml("bd-plan", h);
+  bdEmpty("ポイント還元率を上げるか、ジャンルを変えると組み合わせが出ます。");
+}
+
+var bdTimer = null;
+function bdQueue() {
+  if (bdTimer) { clearTimeout(bdTimer); }
+  bdTimer = setTimeout(function () { bdTimer = null; renderBudget(); }, 140);
+}
+
+function renderBudget() {
   var budget = YS.num(val("bd-budget"), 0), prate = YS.num(val("bd-rate"), 0);
-  var pool = gkCandidates(BDS.genre), i, it, prof, rows = [], h = "";
-  if (!budget) {
-    setText("bd-profit", "—"); setText("bd-buy", "—");
-    setHtml("bd-plan", "");
-    var emp = document.getElementById("bd-empty");
-    if (emp) { emp.hidden = false; }
+  if (!(prate > 0)) { prate = 0; }
+  if (prate > 50) { prate = 50; }
+  bdChrome();
+
+  var planBox = document.getElementById("bd-plan"), tailBox = document.getElementById("bd-tail");
+  var empty = document.getElementById("bd-empty");
+  if (planBox) { planBox.innerHTML = ""; }
+  if (tailBox) { tailBox.innerHTML = ""; tailBox.hidden = true; }
+  if (empty) { empty.hidden = true; }
+
+  if (!(budget > 0)) {
+    bdSumHide();
+    bdEmpty("予算（ポイント枠）を入れると、一番利益が残る組み合わせを自動で組みます。");
     return;
   }
-  /* 実質利益率（利益÷実売）が高い順に、予算に収まるものを詰める */
-  var scored = [];
+
+  var pool = gkCandidates(BDS.genre, BDS.net), rows = [], byId = {}, i, it, row, c, id;
   for (i = 0; i < pool.length; i++) {
     it = pool[i];
-    prof = gkProfit(it, prate);
-    if (prof === null || prof <= 0) { continue; }
-    scored.push({ it: it, prof: prof, net: gkRetail(it) * (1 - prate / 100) });
-  }
-  scored.sort(function (a, b) { return (b.prof / b.net) - (a.prof / a.net); });
-  var left = budget, usedIds = {}, buyTotal = 0, profitTotal = 0, netTotal = 0, picked = 0;
-  for (i = 0; i < scored.length && picked < 8; i++) {
-    var row = scored[i];
-    if (usedIds[row.it.id]) { continue; }
-    if (row.net > left) { continue; }
-    left -= row.net;
-    usedIds[row.it.id] = 1;
-    buyTotal += YS.num(row.it.price, 0);
-    profitTotal += row.prof;
-    netTotal += row.net;
-    picked++;
-    rows.push(row);
-    if (left < 1000) { break; }
+    if (BDS.exclude[it.id]) { continue; }
+    row = bdRowOf(it, prate, BDS.mode);
+    if (row) { rows.push(row); byId[it.id] = row; }
   }
   if (!rows.length) {
-    /* 予算に1点も収まらない時は、いちばん近い候補を出す */
-    scored.sort(function (a, b) { return a.net - b.net; });
-    if (scored.length) {
-      var near = scored[0];
-      h = '<p class="tip">この予算だと1点も収まりません。近い候補：<b>' + esc(near.it.name) + "</b>（実質 " +
-        yen(Math.round(near.net)) + "円）</p>";
-      setText("bd-profit", "—");
-      setHtml("bd-plan", h);
-      return;
-    }
-    setHtml("bd-plan", '<p class="tip">条件に合う商品がまだありません（実売価格の収集中）。</p>');
+    bdSumHide();
+    bdEmpty(BDS.genre === "all"
+      ? "実売価格を集めている途中です（毎時更新）。数分おいて再読み込みしてください。"
+      : "このジャンルはまだ実売価格を集めている途中です。「すべて」に切り替えると他の候補が出ます。");
     return;
   }
+
+  var gain = [];
   for (i = 0; i < rows.length; i++) {
-    var r0 = rows[i];
-    h += '<div class="bd-item"><span class="nm">' + esc(r0.it.name) + "</span>" +
-      '<span class="pr">実売 <b>' + yen(gkRetail(r0.it)) + "</b>円<br>利益 <b class=pos>+" +
-      yen(Math.round(r0.prof)) + "</b>円</span></div>";
+    if (rows[i].profit > 0.5 && rows[i].cost <= budget) { gain.push(rows[i]); }
   }
-  if (left >= 1000) {
-    h += '<p class="tip">まだ ' + yen(Math.round(left)) + "円ぶん枠が残っています（候補がいまはこの範囲）。</p>";
+  if (!gain.length) { bdNoProfit(rows, prate); return; }
+
+  /* 手動で足した商品（端数調整）を先に確保 */
+  var maxQty = BDS.qty, cnt = {}, forcedCost = 0, j, fr;
+  for (j = 0; j < BDS.forced.length; j++) {
+    fr = byId[BDS.forced[j]];
+    if (!fr) { continue; }
+    if (forcedCost + fr.cost > budget) { continue; }
+    cnt[fr.it.id] = (cnt[fr.it.id] || 0) + 1;
+    forcedCost += fr.cost;
+  }
+
+  /* 残り枠で利益最大の組み合わせ */
+  var kn = bdKnap(gain, budget - forcedCost, maxQty, cnt);
+  for (i = 0; i < gain.length; i++) {
+    c = kn[gain[i].it.id] || 0;
+    if (c > 0) { cnt[gain[i].it.id] = (cnt[gain[i].it.id] || 0) + c; }
+  }
+
+  var payTotal = 0, ptTotal = 0, netTotal = 0, buyTotal = 0, nPts = 0, shopSet = {};
+  function take(rr, qn) {
+    if (!rr || !qn) { return; }
+    payTotal += rr.retail * qn; ptTotal += rr.points * qn;
+    netTotal += rr.net * qn; buyTotal += rr.buy * qn; nPts += qn;
+    if (rr.q.shop) { shopSet[rr.q.shop] = 1; }
+  }
+  for (id in cnt) {
+    if (!Object.prototype.hasOwnProperty.call(cnt, id)) { continue; }
+    take(byId[id], cnt[id]);
+  }
+
+  /* 端数の詰め直し（丸めで余った枠に1点ずつ） */
+  var usedCost = (BDS.mode === "net") ? netTotal : payTotal, leftAmt = budget - usedCost;
+  if (leftAmt > 0) {
+    var rest = gain.slice().sort(function (a, b) { return (b.profit / b.cost) - (a.profit / a.cost); });
+    for (j = 0; j < 8 && leftAmt > 0; j++) {
+      var added = false;
+      for (i = 0; i < rest.length; i++) {
+        row = rest[i];
+        if ((cnt[row.it.id] || 0) >= maxQty) { continue; }
+        if (row.cost > leftAmt + 0.0001) { continue; }
+        cnt[row.it.id] = (cnt[row.it.id] || 0) + 1;
+        payTotal += row.retail; ptTotal += row.points; netTotal += row.net;
+        buyTotal += row.buy; nPts++;
+        if (row.q.shop) { shopSet[row.q.shop] = 1; }
+        leftAmt -= row.cost;
+        added = true;
+      }
+      if (!added) { break; }
+    }
+    usedCost = (BDS.mode === "net") ? netTotal : payTotal;
+    leftAmt = budget - usedCost;
+  }
+
+  var picks = [];
+  for (id in cnt) {
+    if (!Object.prototype.hasOwnProperty.call(cnt, id)) { continue; }
+    if (!(cnt[id] > 0) || !byId[id]) { continue; }
+    picks.push({ row: byId[id], qty: cnt[id] });
+  }
+  picks.sort(function (a, b) {
+    var d = (b.row.profit * b.qty) - (a.row.profit * a.qty);
+    if (Math.abs(d) > 0.5) { return d; }
+    return b.row.ratio - a.row.ratio;
+  });
+
+  /* ---- サマリー ---- */
+  var profitTotal = buyTotal - netTotal;
+  var profitRate = payTotal > 0 ? (profitTotal / payTotal * 100) : 0;
+  var usedPct = budget > 0 ? Math.min(100, usedCost / budget * 100) : 0;
+  var sum = document.getElementById("bd-sum");
+  if (sum) { sum.hidden = false; }
+  setV("bd-profit", bdYenTxt(profitTotal), profitTotal > 0.5 ? "pos" : (profitTotal < -0.5 ? "neg" : "neutral"), false);
+  setText("bd-profit-sub", "利益率 " + profitRate.toFixed(1) + "%（レジ支払に対して）・" + nPts + "点");
+  setV("bd-pay", yen(payTotal) + '<span class="yen">円</span>', "neutral", false);
+  setV("bd-points", "+" + yen(ptTotal) + '<span class="yen">円</span>', "neutral", false);
+  setText("bd-points-sub", prate + "%分");
+  setV("bd-net", yen(netTotal) + '<span class="yen">円</span>', "neutral", false);
+  setV("bd-buy", yen(buyTotal) + '<span class="yen">円</span>', "neutral", false);
+  setText("bd-buy-sub", nPts + "点・買取" + Object.keys(shopSet).length + "店");
+  setV("bd-left", yen(Math.max(0, leftAmt)) + '<span class="yen">円</span>', "neutral", false);
+  setText("bd-left-sub", "予算 " + yen(budget) + "円 − " + (BDS.mode === "net" ? "実質負担" : "レジ払い"));
+  setV("bd-used", usedPct.toFixed(0) + "%", "neutral", false);
+  setText("bd-used-sub", (BDS.mode === "net" ? "実質負担" : "レジ払い") + " " + yen(usedCost) + "円");
+  var bar = document.getElementById("bd-bar");
+  if (bar) { bar.style.width = usedPct.toFixed(1) + "%"; }
+
+  /* ---- 商品カード ---- */
+  var h = '<div class="bd-planhead"><span>おすすめの組み合わせ</span><b>' + nPts + "点</b></div>";
+  var shown = 0;
+  for (i = 0; i < picks.length && shown < 12; i++) {
+    h += bdCard(picks[i].row, i + 1, picks[i].qty, null);
+    shown++;
+  }
+  if (picks.length > 12) {
+    h += '<p class="bd-tip2">ほか ' + (picks.length - 12) + "種類（小口）は省略中。除外や予算を変えると入れ替わります。</p>";
   }
   setHtml("bd-plan", h);
-  var emp2 = document.getElementById("bd-empty");
-  if (emp2) { emp2.hidden = true; }
-  setV("bd-profit", (profitTotal > 0 ? "+" : "") + yen(Math.round(profitTotal)) + '<span class="yen">円</span>',
-    profitTotal > 0 ? "pos" : "neg", false);
-  setText("bd-profit-sub", "実質支払 " + yen(Math.round(netTotal)) + "円 ／ 予算 " + yen(budget) + "円（ポイント" + prate + "%）");
-  setV("bd-buy", yen(buyTotal) + '<span class="yen">円</span>', "neutral", false);
-  setText("bd-buy-sub", picked + "点・" + rows.map(function (x) { return x.it.cat; }).filter(function (v, ix, a) { return a.indexOf(v) === ix; }).join(" / "));
+
+  /* ---- 端数候補 ---- */
+  if (tailBox && leftAmt > 0) {
+    var tc = [], th = "";
+    for (i = 0; i < gain.length; i++) {
+      row = gain[i];
+      if ((cnt[row.it.id] || 0) >= maxQty) { continue; }
+      if (row.cost > leftAmt) { continue; }
+      tc.push(row);
+    }
+    tc.sort(function (a, b) { return (b.profit / b.cost) - (a.profit / a.cost); });
+    if (tc.length) {
+      th += '<p class="h">残り <b>' + yen(leftAmt) + "円</b> で足せる候補（タップで追加）</p><div class=\"bd-sugg\">";
+      for (i = 0; i < tc.length && i < 3; i++) {
+        row = tc[i];
+        th += '<button type="button" data-force="' + esc(row.it.id) + '"><span class="sn">' + esc(row.it.name) +
+          '</span><span class="sv">実売 ' + yen(row.retail) + '円<br>利益 +' + yen(row.profit) +
+          '円</span><span class="sa">＋</span></button>';
+      }
+      th += "</div>";
+    } else if (leftAmt >= 1000) {
+      var minCost = rows[0].cost;
+      for (i = 1; i < rows.length; i++) { if (rows[i].cost < minCost) { minCost = rows[i].cost; } }
+      th += '<p class="h">残り <b>' + yen(leftAmt) + "円</b>：この枠に1点で収まる候補はありません（最小 " +
+        yen(minCost) + "円〜）。予算を増やすか、除外をリセットしてください。</p>";
+    }
+    if (th) { tailBox.innerHTML = th; tailBox.hidden = false; }
+  }
 }
 
 /* ---- スキャン結果の大型判定 ---- */
@@ -8239,12 +8653,16 @@ function applyGroup(g) {
     gk.addEventListener("click", function (ev) {
       var t = ev.target;
       while (t && t !== gk && !t.getAttribute("data-genre") && !t.getAttribute("data-prate") &&
-             !t.getAttribute("data-sort") && !t.getAttribute("data-id")) { t = t.parentNode; }
+             !t.getAttribute("data-sort") && !t.getAttribute("data-id") && !t.getAttribute("data-net")) { t = t.parentNode; }
       if (!t || !t.getAttribute) { return; }
       if (t.getAttribute("data-genre")) {
         GKS.genre = t.getAttribute("data-genre"); gkSetSeg("gk-genre", "data-genre", GKS.genre); renderGenka();
       } else if (t.getAttribute("data-prate") !== null) {
         GKS.prate = YS.num(t.getAttribute("data-prate"), 20); gkSetSeg("gk-point", "data-prate", GKS.prate); renderGenka();
+      } else if (t.getAttribute("data-net") !== null) {
+        GKS.net = t.getAttribute("data-net") === "1";
+        gkSetSeg("gk-net", "data-net", GKS.net ? "1" : "0");
+        renderGenka();
       } else if (t.getAttribute("data-sort")) {
         GKS.sort = t.getAttribute("data-sort"); gkSetSeg("gk-sort", "data-sort", GKS.sort); renderGenka();
       } else if (t.getAttribute("data-id")) {
@@ -8270,20 +8688,50 @@ function applyGroup(g) {
   var bd = document.getElementById("panel-budget");
   if (bd) {
     bd.addEventListener("click", function (ev) {
-      var t = ev.target;
-      if (t && t.getAttribute && (t.getAttribute("data-q") === "bd-budget" || t.getAttribute("data-q") === "bd-rate")) {
+      var t = ev.target, a = t;
+      if (!t || !t.getAttribute) { return; }
+      /* 価格.comリンクはブラウザに任せる */
+      while (a && a !== bd && a.tagName !== "A") { a = a.parentNode; }
+      if (a && a.tagName === "A") { return; }
+      if (t.getAttribute("data-q") === "bd-budget" || t.getAttribute("data-q") === "bd-rate") {
         setVal(t.getAttribute("data-q"), t.getAttribute("data-v"));
         renderBudget();
         return;
       }
-      while (t && t !== bd && !t.getAttribute("data-genre")) { t = t.parentNode; }
-      if (t && t.getAttribute && t.getAttribute("data-genre")) {
-        BDS.genre = t.getAttribute("data-genre"); gkSetSeg("bd-genre", "data-genre", BDS.genre); renderBudget();
+      if (t.id === "bd-reset") {
+        BDS.exclude = {}; BDS.forced = [];
+        renderBudget();
+        return;
+      }
+      var v = bdUp(t, bd, "data-exclude");
+      if (v) {
+        BDS.exclude[v] = 1;
+        BDS.forced = BDS.forced.filter(function (x) { return x !== v; });
+        renderBudget();
+        return;
+      }
+      v = bdUp(t, bd, "data-netmode");
+      if (v !== null) { BDS.net = !BDS.net; renderBudget(); return; }
+      v = bdUp(t, bd, "data-force");
+      if (v) { BDS.forced.push(v); renderBudget(); return; }
+      v = bdUp(t, bd, "data-mode");
+      if (v) { BDS.mode = (v === "net") ? "net" : "point"; renderBudget(); return; }
+      v = bdUp(t, bd, "data-qty");
+      if (v) { BDS.qty = Math.max(1, Math.min(3, YS.num(v, 2))); renderBudget(); return; }
+      v = bdUp(t, bd, "data-genre");
+      if (v) { BDS.genre = v; renderBudget(); return; }
+      v = bdUp(t, bd, "data-id");
+      if (v) {
+        if (pickScanId(v)) { selectTab("scan"); }
+        return;
       }
     });
     ["bd-budget", "bd-rate"].forEach(function (id) {
       var el = document.getElementById(id);
-      if (el) { el.addEventListener("input", function () { renderBudget(); }); }
+      if (el) {
+        el.addEventListener("input", function () { bdQueue(); });
+        el.addEventListener("change", function () { bdQueue(); });
+      }
     });
     var go = document.getElementById("bd-go");
     if (go) { go.addEventListener("click", function () { renderBudget(); }); }
