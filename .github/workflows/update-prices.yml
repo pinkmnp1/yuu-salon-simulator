@@ -2,7 +2,7 @@ name: 買取価格を1時間おきに自動更新（24時間監査）
 
 on:
   schedule:
-    - cron: '0 * * * *'
+    - cron: '23 * * * *'
   workflow_dispatch:
 
 permissions:
@@ -29,7 +29,7 @@ jobs:
       - name: 価格を取得して scan_db.json を更新
         run: python3 update_prices.py --delay 0.3
       - name: 差分があればコミットして push（1日1回）
-        if: github.event_name == 'workflow_dispatch' || (github.event_name == 'schedule' && startsWith(github.event.schedule, '0 1 '))
+        if: github.event_name == 'workflow_dispatch' || (github.event_name == 'schedule' && startsWith(github.event.schedule, '23 1 '))
         run: |
           if git diff --quiet -- scan_db.json; then
             exit 0
