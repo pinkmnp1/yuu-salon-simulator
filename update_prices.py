@@ -2,21 +2,26 @@
 # -*- coding: utf-8 -*-
 """『ゆうサロンスキャナー』の買取価格を毎日自動更新する（GitHub Actions 用）。
 
-買取商店・家電市場・買取ルデヤの公開API／公開一覧から最新の「新品・未開封」買取額を取得し、
+8社の公開API／公開一覧から最新の「新品・未開封」買取額を取得し、
 同じリポジトリ直下の scan_db.json を書き換える。Python 標準ライブラリだけで動く
 （pip install 不要・追加パッケージなし）。
+
+  買取商店・家電市場・買取ルデヤ（従来の3社）
+  ＋ 森森買取・携帯空間・トゥインクル・ドラゴンモバイル・ジェーシカ（2026-11-19 追加）
 
     python3 scripts/update_prices.py              # 本番（scan_db.json を書き換える）
     python3 scripts/update_prices.py --dry-run    # 取得と差分表示だけ（ファイルは書かない）
     python3 scripts/update_prices.py --source kaitorishouten --limit 2   # 動作確認
+    python3 scripts/update_prices.py --source morimori --limit 2         # 新店の単体確認
 
 取得できた店だけを更新し、落ちた店の前回値を消さない（安全なフォールバック）。
-3社すべて失敗した時だけ終了コード1で止まり、ファイルは書き換えない。
+どの店からも取れなかった時だけ終了コード1で止まり、ファイルは書き換えない。
 """
 from __future__ import annotations
 
 import argparse
 import datetime as dt
+import http.client
 import json
 import os
 import re
@@ -42,7 +47,18 @@ UA_FALLBACK = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
 SHOP_KS = "買取商店"
 SHOP_KI = "家電市場"
 SHOP_RD = "買取ルデヤ"
-SOURCES = (SHOP_KI, SHOP_RD, SHOP_KS)
+# 2026-11-19 追加（ショップ名は index.html の SCAN_SHOP15 と完全一致させる）
+SHOP_MR = "森森買取"
+SHOP_KK = "携帯空間"
+SHOP_TW = "トゥインクル"
+SHOP_DR = "ドラゴンモバイル"
+SHOP_JC = "ジェーシカ"
+SOURCES = (SHOP_KI, SHOP_RD, SHOP_KS, SHOP_MR, SHOP_KK, SHOP_TW, SHOP_DR, SHOP_JC)
+# 追加店の取得上限（毎時の実行時間を 10〜15分に収めるための安全弁）
+MR_MAX_PAGES = 49           # 森森買取: 合計ページ数（1ページ50件）
+KK_MAX_PAGES = 55           # 携帯空間: 合計ページ数（1ページ12件）
+DR_MAX_PAGES = 60           # ドラゴンモバイル: 合計ページ数（1ページ24件）
+EXTRA_MIN_DELAY = 0.25      # 追加店のリクエスト間隔の下限（秒）
 
 KS_API = "https://www.kaitorishouten-co.jp/api/v1/products"
 KI_BASE = "https://www.kaden-ichiba.com"
@@ -69,6 +85,48 @@ CARD_RE = re.compile(r'x-data="itemCard\((\{.*?\})\)"', re.S)
 RD_CARD_RE = re.compile(
     r'<h3 class="product-card-name">(.*?)</h3>\s*<p class="product-card-jan">(.*?)</p>.*?'
     r'<span class="product-card-price-value">([\d,]+)', re.S)
+
+# ---- 追加店（2026-11-19）----
+MR_BASE = "https://www.morimori-kaitori.jp"
+# 森森買取のカテゴリIDと巡回ページ上限（合計 MR_MAX_PAGES まで）
+#   03 スマホ 1,554件 / 01 ゲーム 1,146件 / 05 カメラ 2,272件 / 06 美容・家電 9,064件 /
+#   24 トレカ / 04 タブレット 658件 / 02 パソコン 5,866件 / 19 ホビー /
+#   31 フィギュア / 09 お酒 / 14 住宅設備 / 15 DIY
+#   24 トレカは PSA 鑑定品（JANでない番号）が混ざるため対象外
+MR_CATS = (("03", 12), ("01", 8), ("05", 6), ("06", 4), ("04", 3),
+           ("19", 3), ("02", 3), ("31", 2), ("09", 1), ("14", 1), ("15", 1))
+MR_CARD_SPLIT = re.compile(r'class="mm1551-(?:prow|hotcard)"')
+MR_TOTAL_RE = re.compile(r'全([\d,]+)件・(\d+)件/ページ')
+
+KK_BASE = "https://www.keitaispace.co.jp"
+# 携帯空間のカテゴリID（トップの商品一覧チップ）と巡回ページ上限
+KK_CATS = ((23, 5), (29, 5), (108, 3), (467, 4), (115, 4), (30, 4), (31, 2), (32, 4),
+           (26, 3), (34, 4), (37, 2), (150, 2), (35, 2), (36, 2), (120, 2), (123, 2),
+           (38, 2), (166, 2), (134, 2), (142, 2), (298, 1), (296, 1))
+KK_CARD_RE = re.compile(
+    r'class="product-name">(.*?)</div>\s*<div class="product-jan">.*?</div>\s*<div class="product-price">\s*'
+    r'<div class="price_pro_news">\s*(?:未使用|未開封品|新品)\s*<span[^>]*>([\d,]+)円', re.S)
+
+TW_BASE = "https://twinkle-mobile.com"
+TW_CATS = ("1", "12", "101", "111", "147/148")     # iPhone / iPad / ゲーム / カメラ / 家電
+TW_NAME_RE = re.compile(r'whitespace-pre-wrap">([^<]{1,300})</div><div class="flex"><span>JANコード:</span>')
+TW_JAN_RE = re.compile(r'(\d{13})')
+TW_NEW_RE = re.compile(r'(?:未開封品|新品|未使用)</span><span[^>]*>([\d,]+)')
+TW_TOTAL_RE = re.compile(r'\\"total\\":(\d+)')
+
+DR_BASE = "https://mobileone.co.jp"
+DR_CATS = (("140", 32), ("142", 18), ("141", 7), ("436", 1))   # スマホ / 家電 / ゲーム機 / トレカ
+DR_NAME_RE = re.compile(r'class="splist1">\s*(.*?)\s*</div>', re.S)
+DR_JAN_RE = re.compile(r'class="splist">\s*JAN:\s*(\d{13})')
+DR_NEW_RE = re.compile(r'新品</font>\s*¥\s*([\d,]+)')
+
+JC_BASE = "https://www.jcka-mobile.co.jp"
+JC_PRICE_URL = JC_BASE + "/kaitori_price/"
+JC_POST_SPLIT = re.compile(r'class="vk_post vk_post-postType-kaitori_price')
+JC_TITLE_RE = re.compile(r'kaitori_price/">(.*?)</a>', re.S)
+JC_NEW_ROW_RE = re.compile(
+    r'<td class="column-1">([^<]*未開封[^<]*)</td><td class="column-2">[^<]*</td>'
+    r'<td class="column-3">([\d,]+)円</td>', re.S)
 
 
 # ---------------------------------------------------------------- 共通ユーティリティ
@@ -189,7 +247,7 @@ class Fetcher:
                 self.failures += 1
                 print(f"    取得失敗 {url} (HTTP {e.code})", flush=True)
                 time.sleep(1.0 + attempt)
-            except (urllib.error.URLError, TimeoutError, OSError) as e:
+            except (urllib.error.URLError, TimeoutError, OSError, http.client.HTTPException) as e:
                 self.failures += 1
                 self.last_error = -1
                 print(f"    取得失敗 {url} ({type(e).__name__}: {e})", flush=True)
@@ -409,25 +467,316 @@ def fetch_rudeya(f: Fetcher, limit: int = 0) -> tuple[dict, bool]:
     return out, complete
 
 
+# ---------------------------------------------------------------- 追加店（2026-11-19）
+
+def parse_morimori(text: str) -> list[dict]:
+    """森森買取の商品行（mm1551-prow / mm1551-hotcard）から JAN・新品額・商品名を読む。"""
+    import html as html_mod
+    out = []
+    for blk in MR_CARD_SPLIT.split(text)[1:]:
+        m = re.search(r'data-cond-new-price="(\d+)"', blk[:400])
+        if not m or int(m.group(1)) <= 0:
+            continue
+        j = (re.search(r'data-product-model="JAN:(\d{13})"', blk[:3000])
+             or re.search(r'JAN:\s*(\d{13})', blk[:6000]))
+        if not j:
+            continue
+        if not jan_ok(j.group(1)):
+            continue                      # PSA鑑定番号などJANでない13桁を捨てる
+        nm = re.search(r'data-product-name="([^"]*)"', blk[:3000])
+        if nm:
+            name = html_mod.unescape(nm.group(1))
+        else:
+            m2 = re.search(r'mm1551-prow__name">(.*?)</div>', blk, re.S)
+            name = html_mod.unescape(re.sub(r'<[^>]+>', ' ', m2.group(1))) if m2 else ""
+        name = clean_name(name)
+        if len(name) < 3:
+            continue
+        out.append({"jan": j.group(1), "price": int(m.group(1)), "name": name})
+    return out
+
+
+def fetch_morimori(f: Fetcher, limit: int = 0) -> tuple[dict, bool]:
+    """森森買取: /category/{id}?page=N の商品行に JAN と「新品」額が入っている。
+
+    WAF が強いので 1本ずつ間隔を空けて読み、403/429 が返ったらその回は即やめる（連打しない）。
+    """
+    out: dict[str, dict] = {}
+    pages = 0
+    fails = 0
+    consec = 0
+    blocked = False
+    for cid, cap in MR_CATS:
+        if limit:
+            cap = min(cap, limit)
+        total = None
+        for page in range(1, cap + 1):
+            if not limit and pages >= MR_MAX_PAGES:
+                break
+            url = f"{MR_BASE}/category/{cid}" + (f"?page={page}" if page > 1 else "")
+            t = f.get_text(url)
+            if not t and f.last_error == 0:      # 空応答（読み取り0バイト）は1回だけやり直す
+                time.sleep(2.0)
+                t = f.get_text(url)
+            if not t:
+                if f.last_error in (404, 410):
+                    break                       # ページが無い＝一覧の終わり（失敗に数えない）
+                fails += 1
+                consec += 1
+                if f.last_error in (403, 429):
+                    print(f"    森森買取 カテゴリ{cid}: HTTP {f.last_error} で拒否 → 今回はこの店をあきらめる", flush=True)
+                    blocked = True
+                    break
+                if consec >= 2:
+                    print(f"    森森買取: {consec}回つづけて取得できない → 今回はこの店をあきらめる", flush=True)
+                    blocked = True
+                    break
+                continue
+            consec = 0
+            pages += 1
+            if page == 1:
+                m = MR_TOTAL_RE.search(t)
+                if m:
+                    total = int(m.group(1).replace(",", ""))
+            got = parse_morimori(t)
+            for r in got:
+                cur = out.get(r["jan"])
+                if cur and cur["price"] >= r["price"]:
+                    continue
+                out[r["jan"]] = {"price": r["price"], "name": r["name"]}
+            if 'mm1551-prow' not in t and 'mm1551-hotcard' not in t:
+                break                       # 商品行が無いページ＝一覧の終わり
+            if total and page * 50 >= total:
+                break
+        print(f"    森森買取 カテゴリ{cid}: 累計 {len(out):,}件（{pages}ページ）", flush=True)
+        if blocked:
+            break
+    complete = (not blocked) and fails == 0 and len(out) > 0
+    return out, complete
+
+
+def parse_keitaispace(text: str) -> list[dict]:
+    """携帯空間の商品カード（商品名に「JAN:xxx」、未使用価格）を読む。"""
+    import html as html_mod
+    out = []
+    for nm_html, price_s in KK_CARD_RE.findall(text):
+        nm = clean_name(html_mod.unescape(re.sub(r'<[^>]+>', ' ', nm_html)))
+        m = re.search(r'JAN:\s*(\d{13})', nm)
+        if not m or not jan_ok(m.group(1)):
+            continue
+        price = int(price_s.replace(",", ""))
+        if price <= 0:
+            continue
+        out.append({"jan": m.group(1), "price": price,
+                    "name": clean_name(re.sub(r'JAN:\s*\d{13}', '', nm))})
+    return out
+
+
+def fetch_keitaispace(f: Fetcher, limit: int = 0) -> tuple[dict, bool]:
+    """携帯空間: /product/?ca={id}&p={page}（1ページ12件）に JAN と未使用価格。"""
+    out: dict[str, dict] = {}
+    pages = 0
+    fails = 0
+    consec = 0
+    for cid, cap in KK_CATS:
+        if limit:
+            cap = min(cap, limit)
+        for page in range(1, cap + 1):
+            if not limit and pages >= KK_MAX_PAGES:
+                break
+            url = f"{KK_BASE}/product/?ca={cid}" + (f"&p={page}" if page > 1 else "")
+            t = f.get_text(url)
+            if not t:
+                fails += 1
+                consec += 1
+                if consec >= 3:
+                    break
+                continue
+            consec = 0
+            pages += 1
+            got = parse_keitaispace(t)
+            for r in got:
+                cur = out.get(r["jan"])
+                if cur and cur["price"] >= r["price"]:
+                    continue
+                out[r["jan"]] = {"price": r["price"], "name": r["name"]}
+            if 'class="product-card"' not in t:
+                break                       # 商品カードが無い＝一覧の終わり
+            if f.last_error in (403, 429):
+                break
+        print(f"    携帯空間 カテゴリ{cid}: 累計 {len(out):,}件（{pages}ページ）", flush=True)
+    return out, fails == 0 and len(out) > 0
+
+
+def parse_twinkle(text: str) -> list[dict]:
+    """トゥインクルの商品カードを1件ずつ読む（正規表現の総当たりを避けて直線的に処理）。"""
+    out = []
+    for m in TW_NAME_RE.finditer(text):
+        name = clean_name(m.group(1))
+        chunk = text[m.end():m.end() + 3000]
+        j = TW_JAN_RE.search(chunk)
+        p = TW_NEW_RE.search(chunk)
+        if not j or not p or not jan_ok(j.group(1)):
+            continue
+        price = int(p.group(1).replace(",", ""))
+        if price <= 0:
+            continue
+        out.append({"jan": j.group(1), "price": price, "name": name})
+    return out
+
+
+def fetch_twinkle(f: Fetcher, limit: int = 0) -> tuple[dict, bool]:
+    """トゥインクル: /shop/products/category/0/{id}?page=N&pageSize=100。
+
+    商品カードに JAN と「未開封品」の買取額がそのまま出る（1ページ100件）。
+    """
+    out: dict[str, dict] = {}
+    pages = 0
+    fails = 0
+    consec = 0
+    for cid in TW_CATS:
+        base = f"{TW_BASE}/shop/products/category/0/{cid}?pageSize=100"
+        t = f.get_text(base + "&page=1")
+        if not t:
+            fails += 1
+            consec += 1
+            if consec >= 3:
+                break
+            continue
+        consec = 0
+        pages += 1
+        m = TW_TOTAL_RE.search(t)
+        last = min(((int(m.group(1)) + 99) // 100), 12) if m else 1
+        if limit:
+            last = min(last, limit)
+        for r in parse_twinkle(t):
+            cur = out.get(r["jan"])
+            if cur and cur["price"] >= r["price"]:
+                continue
+            out[r["jan"]] = {"price": r["price"], "name": r["name"]}
+        for page in range(2, last + 1):
+            tt = f.get_text(base + f"&page={page}")
+            if not tt:
+                fails += 1
+                consec += 1
+                if consec >= 3:
+                    break
+                continue
+            consec = 0
+            pages += 1
+            for r in parse_twinkle(tt):
+                cur = out.get(r["jan"])
+                if cur and cur["price"] >= r["price"]:
+                    continue
+                out[r["jan"]] = {"price": r["price"], "name": r["name"]}
+        print(f"    トゥインクル カテゴリ{cid}: 累計 {len(out):,}件（{pages}ページ）", flush=True)
+    return out, fails == 0 and len(out) > 0
+
+
+def fetch_dragon(f: Fetcher, limit: int = 0) -> tuple[dict, bool]:
+    """ドラゴンモバイル: /sell.html?cat1={id}&page=N（1ページ24件）。
+
+    各行が「JAN」「商品名」「新品 ¥」「中古 ¥」。新品額だけを取る。
+    """
+    out: dict[str, dict] = {}
+    pages = 0
+    fails = 0
+    consec = 0
+    for cid, cap in DR_CATS:
+        if limit:
+            cap = min(cap, limit)
+        for page in range(1, cap + 1):
+            if not limit and pages >= DR_MAX_PAGES:
+                break
+            url = f"{DR_BASE}/sell.html?cat1={cid}&cat2=&cat3=" + (f"&page={page}" if page > 1 else "")
+            t = f.get_text(url)
+            if not t:
+                fails += 1
+                consec += 1
+                if f.last_error in (404, 410, 403, 429) or consec >= 3:
+                    break
+                continue
+            consec = 0
+            pages += 1
+            got = 0
+            for blk in re.split(r'<li>', t)[1:]:
+                j = DR_JAN_RE.search(blk)
+                if not j:
+                    continue
+                nm = DR_NAME_RE.search(blk)
+                pr = DR_NEW_RE.search(blk)
+                if not nm or not pr:
+                    continue
+                price = int(pr.group(1).replace(",", ""))
+                if price <= 0:
+                    continue
+                jan = j.group(1)
+                cur = out.get(jan)
+                if cur and cur["price"] >= price:
+                    continue
+                out[jan] = {"price": price,
+                            "name": clean_name(re.sub(r'<[^>]+>', ' ', nm.group(1)))}
+                got += 1
+            if not DR_NAME_RE.findall(t):
+                break                       # 商品行が無い＝一覧の終わり
+        print(f"    ドラゴンモバイル カテゴリ{cid}: 累計 {len(out):,}件（{pages}ページ）", flush=True)
+    return out, fails == 0 and len(out) > 0
+
+
+def fetch_jcka(f: Fetcher, limit: int = 0) -> tuple[dict, bool]:
+    """ジェーシカ: /kaitori_price/ の1ページに全機種の価格表（未開封・開封・JANｺｰﾄﾞ）。"""
+    out: dict[str, dict] = {}
+    t = f.get_text(JC_PRICE_URL)
+    if not t:
+        return out, False
+    for blk in JC_POST_SPLIT.split(t)[1:]:
+        tm = JC_TITLE_RE.search(blk[:3000])
+        name = clean_name(re.sub(r'<[^>]+>', ' ', tm.group(1))) if tm else ""
+        prices = [int(p.replace(",", "")) for _lab, p in JC_NEW_ROW_RE.findall(blk)]
+        prices = [p for p in prices if p > 0]
+        if not prices:
+            continue
+        price = max(prices)
+        jans = set(re.findall(r'(?<!\d)(\d{13})(?!\d)', blk))
+        for jan in jans:
+            if not jan_ok(jan):
+                continue
+            cur = out.get(jan)
+            if cur and cur["price"] >= price:
+                continue
+            out[jan] = {"price": price, "name": name or clean_name(jan)}
+    print(f"    ジェーシカ: {len(out):,}件", flush=True)
+    return out, len(out) > 0
+
+
 # ---------------------------------------------------------------- 反映
 
 AUTO_NOTE_RE = re.compile(r"^(新品・|新品／)")
 
 
 def note_for(quotes: dict) -> str:
-    order = [SHOP_KI, SHOP_RD, SHOP_KS]
-    parts = [f"{s}{quotes[s]:,}円" for s in order if quotes.get(s)]
-    return ("新品／" + "・".join(parts)) if parts else ""
+    if not quotes:
+        return ""
+    parts = [f"{s}{int(quotes[s]):,}円" for s in sorted(quotes, key=lambda s: -int(quotes[s]))
+             if quotes.get(s)]
+    if not parts:
+        return ""
+    head = parts[:6]
+    rest = len(parts) - len(head)
+    tail = f"・ほか{rest}社" if rest > 0 else ""
+    return "新品／" + "・".join(head) + tail
 
 
 def apply(db: dict, ks: dict | None, ks_complete: bool, ki: dict | None, ki_jan: dict | None,
-          rd: dict | None, rd_complete: bool, today: str) -> dict:
+          rd: dict | None, rd_complete: bool, today: str,
+          extras: dict[str, dict] | None = None) -> dict:
     items = db.get("items") or []
     by_jan = {it["jan"]: it for it in items if it.get("jan")}
     by_id = {it["id"]: it for it in items}
     by_cco = {it["kc"]: it for it in items if it.get("kc")}
     stat = {"更新": 0, "据え置き": 0, "新規": 0, "値上がり": 0, "値下がり": 0,
-            "買取商店": 0, "家電市場": 0, "買取ルデヤ": 0}
+            "買取商店": 0, "家電市場": 0, "買取ルデヤ": 0, SHOP_MR: 0, SHOP_KK: 0,
+            SHOP_TW: 0, SHOP_DR: 0, SHOP_JC: 0}
     refreshed = set()
     if ks:
         refreshed.add(SHOP_KS)
@@ -435,13 +784,16 @@ def apply(db: dict, ks: dict | None, ks_complete: bool, ki: dict | None, ki_jan:
         refreshed.add(SHOP_KI)
     if rd:
         refreshed.add(SHOP_RD)
+    for shop, rows in (extras or {}).items():
+        if rows:
+            refreshed.add(shop)
 
-    def source_rec(jan: str, name: str, cat: str, price: int, note: str) -> dict:
+    def source_rec(jan: str, name: str, cat: str, price: int, note: str, shop: str = SHOP_KS) -> dict:
         """JANの商品を返す（DBに無ければ新規作成）。"""
         rec = by_jan.get(jan)
         if rec:
             return rec
-        rec = new_item(jan, name, cat, price, SHOP_KS, today, note)
+        rec = new_item(jan, name, cat, price, shop, today, note)
         items.append(rec)
         by_jan[jan] = rec
         by_id[rec["id"]] = rec
@@ -488,7 +840,22 @@ def apply(db: dict, ks: dict | None, ks_complete: bool, ki: dict | None, ki_jan:
             rec["quotes"][SHOP_RD] = row["price"]
             stat["買取ルデヤ"] += 1
 
-    # 4) 最高額と更新日を決め直す（15社の外の店の額は、その店の額として持ち続ける）
+    # 4) 追加店（森森買取・携帯空間・トゥインクル・ドラゴンモバイル・ジェーシカ）
+    #    すべて「新品・未開封」額。前回値は消さない（各店の公開範囲が日で変わるため）
+    for shop, rows in (extras or {}).items():
+        if not rows:
+            continue
+        for jan, row in rows.items():
+            rec = by_jan.get(jan)
+            if not rec:
+                rec = source_rec(jan, row["name"], map_cat(None, row["name"]), row["price"],
+                                 "新品・公開一覧の買取額", shop)
+            cur = rec["quotes"].get(shop) or 0
+            if row["price"] > cur:
+                rec["quotes"][shop] = row["price"]
+            stat[shop] += 1
+
+    # 5) 最高額と更新日を決め直す（15社の外の店の額は、その店の額として持ち続ける）
     for rec in items:
         q = rec.get("quotes") or {}
         if rec.get("price") and rec.get("shop"):
@@ -541,7 +908,9 @@ def main() -> int:
     ap.add_argument("--db", default=str(DB_PATH), help="scan_db.json の場所")
     ap.add_argument("--dry-run", action="store_true", help="書き換えずに結果だけ表示")
     ap.add_argument("--source", default="all",
-                    choices=["all", "kaitorishouten", "kadenichiba", "rudeya"], help="取得する店を限定")
+                    choices=["all", "kaitorishouten", "kadenichiba", "rudeya",
+                             "morimori", "keitaispace", "twinkle", "dragon", "jcka"],
+                    help="取得する店を限定")
     ap.add_argument("--limit", type=int, default=0, help="各店のページ数上限（動作確認用）")
     ap.add_argument("--delay", type=float, default=0.2, help="リクエスト間の待ち時間（秒）")
     ap.add_argument("--cache-dir", default="", help="取得結果をこのフォルダに保存（デバッグ用）")
@@ -563,7 +932,9 @@ def main() -> int:
     print(f"読み込み: {len(items):,}件（更新日 {db.get('updated_at')}）")
 
     today = today_jst()
-    f = Fetcher(delay=args.delay)
+    f = Fetcher(delay=max(args.delay, EXTRA_MIN_DELAY))
+    # 森森買取は WAF が強いので、間隔を広め・再試行なしの専用フェッチャーで読む
+    f_mr = Fetcher(delay=max(args.delay, 0.8), retries=0, timeout=20)
     known_cco = {it["kc"] for it in items if it.get("kc")}
     ks = ki = ki_jan = rd = None
     ks_complete = ki_complete = rd_complete = False
@@ -622,12 +993,34 @@ def main() -> int:
             save("rudeya", rd, rd_complete)
         print(f"      → {len(rd):,}件・{'完全' if rd_complete else '失敗あり'}")
 
-    if not any((ks, ki, rd)):
+    extras: dict[str, dict] = {}
+    EXTRA_SRC = [
+        ("morimori", SHOP_MR, "[4/8] 森森買取 カテゴリ別価格一覧", fetch_morimori),
+        ("keitaispace", SHOP_KK, "[5/8] 携帯空間 商品一覧（未使用）", fetch_keitaispace),
+        ("twinkle", SHOP_TW, "[6/8] トゥインクル 商品一覧（未開封）", fetch_twinkle),
+        ("dragon", SHOP_DR, "[7/8] ドラゴンモバイル 買取価格", fetch_dragon),
+        ("jcka", SHOP_JC, "[8/8] ジェーシカ 買取価格表（未開封）", fetch_jcka),
+    ]
+    for key, shop, label, fn in EXTRA_SRC:
+        if not (want_all or args.source == key):
+            continue
+        hit = cached(key) if cache_in else None
+        if hit:
+            rows, done = hit.get("data") or {}, bool(hit.get("complete"))
+            print(f"{label} キャッシュから {len(rows):,}件")
+        else:
+            print(label)
+            rows, done = fn(f_mr if key == "morimori" else f, args.limit)
+            save(key, rows, done)
+        extras[shop] = rows
+        print(f"      → {len(rows):,}件・{'完全' if done else '一部のみ/失敗あり'}")
+
+    if not any((ks, ki, rd)) and not any(extras.values()):
         print("NG: どの店からも取得できませんでした（ネットワーク遮断・サイト仕様変更の可能性）。"
               "scan_db.json は書き換えていません。")
         return 1
 
-    stat = apply(db, ks, ks_complete, ki, ki_jan, rd, rd_complete, today)
+    stat = apply(db, ks, ks_complete, ki, ki_jan, rd, rd_complete, today, extras)
     print(f"更新時刻: {now_jst()} JST")
     print("反映:", " / ".join(f"{k} {v:,}" for k, v in stat.items()))
 
@@ -641,7 +1034,7 @@ def main() -> int:
     tmp.write_text(text, encoding="utf-8")
     os.replace(tmp, path)
     print(f"書き込み: {path}（{len(db['items']):,}件 / {len(text):,}バイト / 更新日 {today}）")
-    print(f"リクエスト {f.requests:,}回・失敗 {f.failures:,}回")
+    print(f"リクエスト {f.requests + f_mr.requests:,}回・失敗 {f.failures + f_mr.failures:,}回")
     return 0
 
 
