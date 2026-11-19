@@ -663,6 +663,85 @@ textarea.csv{
 .cart-tot .b .v{font-family:var(--mono);font-size:13px;font-weight:800;white-space:nowrap}
 .cart-tot .b .v.pos{color:var(--green)}
 .cart-tot .b .v.neg{color:var(--red)}
+
+/* ---------- 利用状況＆人気商品 ---------- */
+.usage{margin:-2px 0 14px}
+.usage-btn{
+  display:inline-flex;align-items:center;gap:7px;appearance:none;cursor:pointer;font-family:inherit;
+  padding:8px 13px;border-radius:999px;border:1px solid rgba(0,229,255,.32);
+  background:linear-gradient(135deg,rgba(0,229,255,.12),rgba(139,92,255,.16));
+  color:var(--txt);font-size:11.5px;font-weight:800;line-height:1.2;min-height:34px;
+}
+.usage-btn:active{transform:scale(.985)}
+.usage-btn b{font-family:var(--mono);font-size:13px;color:#eaffff;letter-spacing:-.02em}
+.usage-btn .u-sep{opacity:.4}
+.u-src{font-size:9.5px;padding:2px 7px;border-radius:999px;font-weight:800;letter-spacing:0;line-height:1.4}
+.u-src.net{background:rgba(43,255,136,.18);color:#b6ffd6}
+.u-src.local{background:rgba(255,210,63,.18);color:#ffe98a}
+.rank-list{display:flex;flex-direction:column;gap:6px}
+.hit.rank,.hit.rec{width:100%;text-align:left;font-family:inherit;appearance:none;margin-bottom:0}
+.hit .rk{
+  flex:none;width:22px;height:22px;border-radius:8px;display:grid;place-items:center;
+  font-size:11px;font-weight:900;font-family:var(--mono);background:rgba(255,255,255,.07);color:var(--muted);
+}
+.hit.rank:nth-child(1) .rk{background:linear-gradient(135deg,#ffd23f,#ffe98a);color:#241a00}
+.hit.rank:nth-child(2) .rk{background:linear-gradient(135deg,#dfe7ff,#9aa3c7);color:#0d1020}
+.hit.rank:nth-child(3) .rk{background:linear-gradient(135deg,#ffb37a,#ffd9b8);color:#241000}
+.ys-modal{
+  position:fixed;inset:0;z-index:120;background:rgba(4,5,10,.74);padding:16px 12px 28px;
+  -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);overflow-y:auto;-webkit-overflow-scrolling:touch;
+}
+.ys-modal-box{
+  max-width:620px;margin:0 auto;padding:16px 15px 20px;border-radius:22px;
+  background:linear-gradient(160deg,rgba(22,25,42,.99),rgba(11,13,24,.99));
+  border:1px solid var(--line2);box-shadow:0 24px 70px rgba(0,0,0,.72);
+}
+.ys-modal-head{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.ys-modal-head .t{flex:1;min-width:0;font-size:15px;font-weight:800;margin:0}
+.ys-x{
+  flex:none;width:32px;height:32px;padding:0;border:0;border-radius:10px;cursor:pointer;font-family:inherit;
+  background:rgba(255,255,255,.07);color:var(--txt);font-size:17px;line-height:1;
+}
+.ys-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+.ys-tile{background:rgba(8,10,20,.62);border:1px solid var(--line);border-radius:14px;padding:10px 12px;min-width:0}
+.ys-tile .k{font-size:10px;color:var(--muted);font-weight:800;letter-spacing:.04em}
+.ys-tile .v{font-family:var(--mono);font-size:20px;font-weight:800;line-height:1.25;margin-top:2px;white-space:nowrap}
+.ys-tile .v small{font-family:inherit;font-size:11px;font-weight:700;color:var(--muted);margin-left:2px}
+.ys-tile .s{font-size:10px;color:var(--muted);margin-top:2px;font-family:var(--mono)}
+.ys-h{font-size:11px;font-weight:800;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;margin:16px 0 8px}
+.ys-days{width:100%;border-collapse:collapse;font-size:11.5px}
+.ys-days th,.ys-days td{padding:6px 4px;border-bottom:1px solid rgba(120,140,255,.12);text-align:right;font-family:var(--mono)}
+.ys-days th{color:var(--muted);font-size:10px;font-weight:800;letter-spacing:.04em}
+.ys-days td:first-child,.ys-days th:first-child{text-align:left}
+.ys-days tr.today td{color:#eaffff;font-weight:800}
+.ys-mini{display:flex;flex-direction:column;gap:5px}
+.ys-mini .m{display:flex;gap:8px;align-items:center;font-size:11.5px;padding:6px 8px;border-radius:10px;background:rgba(8,10,20,.5);border:1px solid var(--line)}
+.ys-mini .m .rk{flex:none;width:18px;font-family:var(--mono);font-weight:800;color:var(--muted);text-align:center}
+.ys-mini .m .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ys-mini .m .c{flex:none;font-family:var(--mono);font-size:10.5px;color:var(--cyan)}
+.ys-state{font-size:10.5px;color:var(--muted);font-family:var(--mono);line-height:1.7;word-break:break-all;margin-top:10px}
+.ys-state b{color:var(--txt)}
+.ys-field{display:flex;gap:7px;margin-top:10px}
+.rec-vote{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.rec-vote .btn{flex:1 1 auto}
+.rec-vote .btn[aria-pressed="true"]{
+  border-color:rgba(43,255,136,.55);background:rgba(43,255,136,.14);color:#d8ffe8;
+}
+.rec-vote-note{font-size:10.5px;color:var(--muted);margin:6px 0 0;line-height:1.6;word-break:break-word}
+.rec-memo{display:flex;gap:7px;margin-top:8px}
+.rec-memo input{
+  flex:1;min-width:0;font-family:inherit;font-size:13px;padding:10px 11px;border-radius:11px;
+  background:rgba(8,10,20,.9);color:var(--txt);border:1px solid var(--line);
+}
+.hit.rec .rc-i{flex:none;font-size:15px;line-height:1}
+.hit.rec .cm{
+  display:block;font-style:normal;font-size:10.5px;color:#ffe98a;margin-top:3px;
+  line-height:1.45;word-break:break-word;
+}
+.ys-field input{
+  flex:1;min-width:0;font-family:var(--mono);font-size:11px;padding:10px 11px;border-radius:11px;
+  background:rgba(8,10,20,.9);color:var(--txt);border:1px solid var(--line);
+}
 </style>
 </head>
 <body>
@@ -675,6 +754,16 @@ textarea.csv{
 
   <h1><span class="neon">ゆうサロンスキャナー</span><br>買取スキャン＆MNP利益ツール</h1>
   <p class="sub">バーコードで買取相場を即判定。MNP・換金・回線・審査・光回線・実績・申告まで、これ1本。</p>
+
+  <div class="usage" id="ys-usage" hidden>
+    <button class="usage-btn" id="ys-usage-btn" type="button">
+      <span aria-hidden="true">👥</span>
+      <span>今日 <b id="ys-u-today">—</b>人利用</span>
+      <span class="u-sep">／</span>
+      <span>累計 <b id="ys-u-total">—</b>人</span>
+      <span class="u-src local" id="ys-u-src">この端末</span>
+    </button>
+  </div>
 
   <div class="tabs" role="tablist">
     <button class="tab" role="tab" id="tab-mnp" aria-controls="panel-mnp" aria-selected="true" data-tab="mnp">
@@ -1064,6 +1153,17 @@ textarea.csv{
           <button class="btn green" id="sc-rec">📈 実績に記録</button>
           <button class="btn" id="sc-copyshare">共有用にコピー</button>
         </div>
+
+        <div class="rec-vote" id="sc-vote-wrap" hidden>
+          <button class="btn" id="sc-vote" type="button" aria-pressed="false">👍 おすすめに追加</button>
+          <button class="btn sm" id="sc-vote-memo-toggle" type="button">＋ひとこと</button>
+        </div>
+        <p class="rec-vote-note" id="sc-vote-note" hidden></p>
+        <div class="rec-memo" id="sc-vote-memo-box" hidden>
+          <input id="sc-vote-memo" type="text" maxlength="40" autocomplete="off"
+                 placeholder="ひとこと（40文字まで・みんなに見えます）">
+          <button class="btn sm" id="sc-vote-memo-send" type="button">送信</button>
+        </div>
       </div>
 
       <div class="empty" id="sc-empty">
@@ -1085,6 +1185,29 @@ textarea.csv{
         <button class="btn" id="sc-cart-copy">カゴをコピー</button>
         <button class="btn" id="sc-cart-clear">クリア</button>
       </div>
+    </div>
+
+    <div class="card" id="ys-rank-card">
+      <p class="card-title">🔥 みんながよく見てる人気商品 <span class="hint">タップで相場を見る</span></p>
+      <div class="seg" id="ys-rank-seg" role="group" aria-label="集計期間">
+        <button type="button" data-range="today" aria-pressed="false">今日</button>
+        <button type="button" data-range="week" aria-pressed="true">週間</button>
+        <button type="button" data-range="all" aria-pressed="false">累計</button>
+      </div>
+      <div class="rank-list" id="ys-rank-list"></div>
+      <p class="empty" id="ys-rank-empty" hidden>まだ集計がありません。<br>みんながスキャンすると、ここに人気順で並びます。</p>
+      <p class="tip" id="ys-rank-note">買取価格が見つかった商品を、端末ごとの乱数IDだけで匿名集計しています（名前・位置情報は送りません）。</p>
+    </div>
+
+    <div class="card" id="ys-rec-card">
+      <p class="card-title">🌟 メンバーのおすすめ <span class="hint">タップで相場を見る</span></p>
+      <div class="seg" id="ys-rec-seg" role="group" aria-label="並び順">
+        <button type="button" data-sort="votes" aria-pressed="true">おすすめ順</button>
+        <button type="button" data-sort="new" aria-pressed="false">新着順</button>
+      </div>
+      <div class="rank-list" id="ys-rec-list"></div>
+      <p class="empty" id="ys-rec-empty" hidden>まだおすすめがありません。<br>商品の判定結果で「👍 おすすめに追加」を押すと、みんなに共有されます。</p>
+      <p class="tip" id="ys-rec-note">おすすめは1端末につき商品1件まで（もう一度押すと解除）。ひとことは40文字までで、サロンのみんなに見えます。</p>
     </div>
 
     <div class="card" id="sc-hits-card" hidden>
@@ -1981,6 +2104,16 @@ textarea.csv{
 </div>
 
 <div class="toast" id="toast" role="status" aria-live="polite">コピーしました</div>
+
+<div class="ys-modal" id="ys-stats-view" hidden>
+  <div class="ys-modal-box" role="dialog" aria-modal="true" aria-labelledby="ys-stats-title">
+    <div class="ys-modal-head">
+      <p class="t" id="ys-stats-title">📊 利用状況</p>
+      <button class="ys-x" id="ys-stats-close" type="button" aria-label="閉じる">×</button>
+    </div>
+    <div id="ys-stats-body"></div>
+  </div>
+</div>
 
 <script>
 /* === CALC CORE START === */
@@ -6065,6 +6198,8 @@ function showScanItem(item) {
   var changed = !scanItem || scanItem.id !== item.id;
   scanItem = item;
   if (changed && YS.num(item.price, 0) > 0) { pushScanHist(item); }
+  if (changed) { try { YS.statsScan(item); } catch (e) { /* no-op */ } }
+  try { YS.recSyncButton(); } catch (e) { /* no-op */ }
   var body = $("sc-body"), empty = $("sc-empty");
   if (body) { body.hidden = false; }
   if (empty) { empty.hidden = true; }
@@ -6729,7 +6864,790 @@ function renderScan() {
   renderScanHist();
   renderCart();
   if (scanItem) { showScanItem(scanItem); }
+  try { YS.statsRender(); } catch (e) { /* no-op */ }
+  try { YS.recRender(); YS.recSyncButton(); } catch (e) { /* no-op */ }
 }
+
+/* ================= 利用状況＆人気商品の匿名集計 =================
+   ・何人来てくれたか: 端末ごとの乱数ID（localStorage）だけで数える（日別・累計）
+   ・どの商品が見られているか: 買取価格が見つかった商品を1回だけ匿名で送る
+   ・送信先は Google Apps Script の Webアプリ（下の YS.STATS_URL）。
+     未設定やオフラインでも、この端末の記録だけで動く（ローカルフォールバック）。
+   送るもの: 乱数ID・商品ID・JAN・商品名・カテゴリ・買取額・時刻だけ。
+             名前・メール・位置情報・IPは送りません。 */
+YS.STATS_URL = "";   /* ← GAS の WebアプリURL（https://script.google.com/macros/s/…/exec）を入れる */
+
+YS.STATS = {
+  url: "", id: "", state: "idle", error: "", busy: false,
+  timer: null, retry: null, server: null, at: 0, range: "week", sent: {}
+};
+var LS_STATS_URL = "ys_v2_stats_url";
+var LS_DEVICE = "ys_v2_device_id";
+var LS_STATS_Q = "ys_v2_stats_q";
+var LS_STATS_LOCAL = "ys_v2_stats_local";
+var LS_STATS_RANGE = "ys_v2_stats_range";
+
+/* ---------- 送信先URL ---------- */
+YS.statsUrlOk = function (u) {
+  u = String(u === null || u === undefined ? "" : u).replace(/^\s+|\s+$/g, "");
+  if (/^https:\/\/[^\s"'<>]+$/i.test(u)) { return true; }
+  return /^http:\/\/(127\.0\.0\.1|localhost)(:\d+)?\//i.test(u);   /* ローカル検証用 */
+};
+YS.statsUrl = function () {
+  if (YS.STATS.url) { return YS.STATS.url; }
+  var u = "";
+  try { if (typeof window !== "undefined" && window.YS_STATS_URL) { u = String(window.YS_STATS_URL); } } catch (e) { u = ""; }
+  if (!YS.statsUrlOk(u)) { u = String(LS.get(LS_STATS_URL, "") || ""); }
+  if (!YS.statsUrlOk(u)) { u = String(YS.STATS_URL || ""); }
+  YS.STATS.url = YS.statsUrlOk(u) ? u : "";
+  return YS.STATS.url;
+};
+
+/* ---------- 端末ID（乱数だけ。個人情報なし） ---------- */
+YS.statsDeviceId = function () {
+  if (YS.STATS.id) { return YS.STATS.id; }
+  var id = String(LS.get(LS_DEVICE, "") || "");
+  if (!/^[A-Za-z0-9_-]{10,64}$/.test(id)) {
+    var rnd = "", i, buf;
+    try {
+      if (typeof crypto !== "undefined" && crypto.getRandomValues) {
+        buf = new Uint8Array(12);
+        crypto.getRandomValues(buf);
+        for (i = 0; i < buf.length; i++) { rnd += ("0" + buf[i].toString(16)).slice(-2); }
+      }
+    } catch (e) { rnd = ""; }
+    if (!rnd) { rnd = String(Date.now()) + String(Math.random()).slice(2); }
+    id = ("d" + rnd + Math.random().toString(36).slice(2)).replace(/[^A-Za-z0-9_-]/g, "").slice(0, 40);
+    LS.set(LS_DEVICE, id);
+  }
+  YS.STATS.id = id;
+  return id;
+};
+
+/* ---------- この端末の記録（オフラインでも人気順を出すため） ---------- */
+YS.statsLocal = function () {
+  var L = LS.get(LS_STATS_LOCAL, null);
+  if (!L || typeof L !== "object" || !(L.items instanceof Array)) { L = { day: "", use: 0, items: [] }; }
+  if (typeof L.use !== "number") { L.use = 0; }
+  return L;
+};
+YS.statsTrack = function (ev) {
+  var L = YS.statsLocal(), today = YS.isoToday();
+  if (!ev) { return L; }
+  if (ev.k === "use") {
+    L.use += 1;
+    L.day = today;
+  } else if (ev.k === "scan" && ev.i) {
+    L.items.push({ id: ev.i.id, jan: ev.i.jan, name: ev.i.name, cat: ev.i.cat, price: ev.i.price, day: today });
+    if (L.items.length > 300) { L.items = L.items.slice(L.items.length - 300); }
+  }
+  LS.set(LS_STATS_LOCAL, L);
+  return L;
+};
+
+/* ---------- 送信待ちキュー（失敗したら次に開いた時に送る） ---------- */
+YS.statsQueue = function () {
+  var q = LS.get(LS_STATS_Q, []);
+  return (q instanceof Array) ? q : [];
+};
+YS.statsQueueSave = function (q) {
+  if (!(q instanceof Array)) { q = []; }
+  if (q.length > 200) { q = q.slice(q.length - 200); }
+  LS.set(LS_STATS_Q, q);
+  return q;
+};
+YS.statsAdd = function (ev) {
+  YS.statsTrack(ev);
+  /* タブを複数開いても取り違えないよう、1件ずつ固有の番号を付ける */
+  ev.qid = "q" + Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+  var q = YS.statsQueue();
+  q.push(ev);
+  YS.statsQueueSave(q);
+  return ev;
+};
+
+YS.statsLater = function (ms) {
+  if (YS.STATS.timer) { return false; }
+  YS.STATS.timer = setTimeout(function () {
+    YS.STATS.timer = null;
+    YS.statsFlush(false);
+  }, Math.max(200, ms || 1000));
+  return true;
+};
+YS.statsRetryLater = function () {
+  if (YS.STATS.retry) { return false; }
+  YS.STATS.retry = setTimeout(function () {
+    YS.STATS.retry = null;
+    if (!YS.STATS.busy) { YS.statsFlush(false); }
+  }, 60000);
+  return true;
+};
+
+/* 利用したこと（1回の表示につき1件。サーバー側で日ごとに1人と数える） */
+YS.statsUse = function () {
+  YS.statsAdd({ k: "use", t: Date.now() });
+  YS.statsRenderPill();
+  YS.statsLater(900);
+  return true;
+};
+/* 買取価格が見つかった商品を1件（同じセッションで同じ商品は1回だけ） */
+YS.statsScan = function (item) {
+  if (!item || !item.id) { return false; }
+  var id = String(item.id);
+  if (id.indexOf("unknown") === 0) { return false; }
+  var price = YS.num(item.price, 0);
+  if (!(price > 0)) { return false; }
+  if (YS.STATS.sent[id]) { return false; }
+  YS.STATS.sent[id] = 1;
+  YS.statsAdd({ k: "scan", i: {
+    id: id.slice(0, 60), jan: String(item.jan || "").slice(0, 14),
+    name: String(item.name || "").slice(0, 100), cat: String(item.cat || "").slice(0, 16),
+    price: Math.round(price)
+  } });
+  YS.statsLater(1200);
+  YS.statsRenderRank();
+  return true;
+};
+
+/* ---------- 送信 ---------- */
+YS.statsFlush = function (force) {
+  var url = YS.statsUrl(), q = YS.statsQueue(), send, body;
+  if (!url) { YS.STATS.state = "local"; YS.statsRender(); return false; }
+  if (YS.STATS.busy) { YS.statsLater(800); return false; }   /* 送信中なら終わってから送り直す */
+  if (typeof fetch !== "function") { YS.STATS.state = "local"; YS.statsRender(); return false; }
+  if (!q.length && !force) { YS.statsRender(); return false; }
+  send = q.slice(0, 40);
+  try { body = JSON.stringify({ v: 1, id: YS.statsDeviceId(), ev: send }); }
+  catch (e) { return false; }
+  YS.STATS.busy = true;
+  YS.STATS.state = "sending";
+  /* 独自ヘッダを付けない＝プリフライト無しで GAS にそのまま届く */
+  fetch(url, {
+    method: "POST", body: body, cache: "no-store", redirect: "follow",
+    credentials: "omit", keepalive: true
+  }).then(function (res) {
+    return res.json();
+  }).then(function (data) {
+    YS.STATS.busy = false;
+    if (data && data.ok) {
+      /* 送った分だけを番号で消す（別タブが足した分は残す） */
+      var done = {}, i, cur = YS.statsQueue(), rest = [];
+      for (i = 0; i < send.length; i++) { if (send[i] && send[i].qid) { done[send[i].qid] = 1; } }
+      for (i = 0; i < cur.length; i++) {
+        if (!cur[i] || !cur[i].qid || !done[cur[i].qid]) { rest.push(cur[i]); }
+      }
+      YS.statsQueueSave(rest);
+      YS.STATS.server = data;
+      YS.STATS.state = "ok";
+      YS.STATS.error = "";
+      YS.STATS.at = Date.now();
+      YS.statsRender();
+      if (rest.length) { setTimeout(function () { YS.statsFlush(false); }, 1500); }
+    } else {
+      YS.STATS.state = "error";
+      YS.STATS.error = (data && data.error) || "server";
+      YS.statsRender();
+      YS.statsRetryLater();
+    }
+  }).catch(function () {
+    YS.STATS.busy = false;
+    YS.STATS.state = "error";
+    YS.STATS.error = "network";
+    YS.statsRender();
+    YS.statsRetryLater();
+  });
+  return true;
+};
+
+/* 集計だけ読みに行く（送るものが溜まっていれば先に送る） */
+YS.statsRefresh = function (force) {
+  var url = YS.statsUrl(), q;
+  if (!url || typeof fetch !== "function") {
+    YS.STATS.state = url ? YS.STATS.state : "local";
+    YS.statsRender();
+    return false;
+  }
+  if (YS.STATS.busy) { return false; }
+  q = YS.statsQueue();
+  if (q.length) { return YS.statsFlush(false); }
+  if (!force && YS.STATS.at && (Date.now() - YS.STATS.at) < 20000) { YS.statsRender(); return false; }
+  YS.STATS.busy = true;
+  fetch(url + (url.indexOf("?") >= 0 ? "&" : "?") + "action=stats&t=" + Date.now() +
+    "&id=" + encodeURIComponent(YS.statsDeviceId()),
+    { cache: "no-store", credentials: "omit" }).then(function (res) {
+    return res.json();
+  }).then(function (data) {
+    YS.STATS.busy = false;
+    YS.STATS.at = Date.now();
+    if (data && data.ok) {
+      YS.STATS.server = data;
+      YS.STATS.state = "ok";
+      YS.STATS.error = "";
+    } else {
+      YS.STATS.state = "error";
+      YS.STATS.error = (data && data.error) || "server";
+    }
+    YS.statsRender();
+  }).catch(function () {
+    YS.STATS.busy = false;
+    YS.STATS.state = "error";
+    YS.STATS.error = "network";
+    YS.statsRender();
+  });
+  return true;
+};
+
+/* ---------- 集計値 ---------- */
+YS.statsCounts = function () {
+  var st = YS.STATS.server, L, today;
+  if (st && st.ok) {
+    return {
+      today: YS.num(st.todayUsers, 0), total: YS.num(st.totalUsers, 0),
+      scans: YS.num(st.totalScans, 0), todayScans: YS.num(st.todayScans, 0), src: "net"
+    };
+  }
+  L = YS.statsLocal();
+  today = YS.isoToday();
+  return {
+    today: (L.use > 0 || L.day === today) ? 1 : 0,
+    total: L.use > 0 ? 1 : 0,
+    scans: L.items.length,
+    todayScans: YS.statsLocalRank("today").length,
+    src: "local"
+  };
+};
+YS.statsLocalRank = function (range) {
+  var L = YS.statsLocal(), today = YS.isoToday(), from = "", map = {}, list = [], i, it, key, cur, price;
+  if (range === "week") { from = YS.addDays(today, -6); }
+  for (i = 0; i < L.items.length; i++) {
+    it = L.items[i];
+    if (!it || !it.id || !it.day) { continue; }
+    if (range === "today" && it.day !== today) { continue; }
+    if (range === "week" && it.day < from) { continue; }
+    key = String(it.id);
+    price = YS.num(it.price, 0);
+    cur = map[key];
+    if (!cur) {
+      map[key] = { id: key, jan: it.jan || "", name: it.name || "", cat: it.cat || "", price: price, count: 1 };
+    } else {
+      cur.count += 1;
+      if (price > cur.price) { cur.price = price; }
+    }
+  }
+  for (key in map) {
+    if (Object.prototype.hasOwnProperty.call(map, key)) { list.push(map[key]); }
+  }
+  list.sort(function (a, b) {
+    if (b.count !== a.count) { return b.count - a.count; }
+    return b.price - a.price;
+  });
+  return list.slice(0, 10);
+};
+YS.statsRankData = function (range) {
+  var st = YS.STATS.server;
+  if (st && st.ok && st.ranking && st.ranking[range] instanceof Array) { return st.ranking[range]; }
+  return YS.statsLocalRank(range);
+};
+
+/* ---------- 画面 ---------- */
+YS.statsRenderPill = function () {
+  var box = $("ys-usage"), c, src;
+  if (!box) { return false; }
+  if (!YS.statsUrl() && !(YS.STATS.server && YS.STATS.server.ok)) {   /* 未設定の間は出さない */
+    box.hidden = true;
+    return false;
+  }
+  c = YS.statsCounts();
+  setText("ys-u-today", yen(c.today));
+  setText("ys-u-total", yen(c.total));
+  src = $("ys-u-src");
+  if (src) {
+    src.className = "u-src " + (c.src === "net" ? "net" : "local");
+    src.textContent = c.src === "net" ? "みんな" : "この端末";
+  }
+  box.hidden = false;
+  return true;
+};
+
+YS.statsRenderRank = function () {
+  var list = $("ys-rank-list"), empty = $("ys-rank-empty"), card = $("ys-rank-card"),
+    range, segs, rows, h = "", i, it, nm, sub;
+  if (!list) { return false; }
+  if (card) { card.hidden = !YS.statsUrl() && !(YS.STATS.server && YS.STATS.server.ok); }
+  range = YS.STATS.range || "week";
+  segs = document.querySelectorAll("#ys-rank-seg button");
+  for (i = 0; i < segs.length; i++) {
+    segs[i].setAttribute("aria-pressed", segs[i].getAttribute("data-range") === range ? "true" : "false");
+  }
+  rows = YS.statsRankData(range);
+  if (!rows || !rows.length) {
+    list.innerHTML = "";
+    if (empty) { empty.hidden = false; }
+    return false;
+  }
+  if (empty) { empty.hidden = true; }
+  for (i = 0; i < rows.length && i < 10; i++) {
+    it = rows[i] || {};
+    nm = String(it.name || "");
+    if (nm.length > 26) { nm = nm.substring(0, 26) + "…"; }
+    sub = [];
+    if (it.cat) { sub.push(String(it.cat)); }
+    if (YS.num(it.count, 0) > 0) { sub.push(yen(YS.num(it.count, 0)) + "人がチェック"); }
+    if (it.jan) { sub.push("JAN " + String(it.jan)); }
+    h += '<button class="hit rank" type="button" data-rank="' + esc(it.id || "") +
+      '" data-jan="' + esc(it.jan || "") + '" data-name="' + esc(it.name || "") + '">' +
+      '<span class="rk">' + (i + 1) + "</span>" +
+      '<div class="n">' + esc(nm) + "<span>" + esc(sub.join("・")) + "</span></div>" +
+      '<div class="p">' + (YS.num(it.price, 0) > 0 ? yen(it.price) + "円" : "—") + "</div></button>";
+  }
+  list.innerHTML = h;
+  return true;
+};
+
+function statsTile_(k, v, unit, s) {
+  return '<div class="ys-tile"><div class="k">' + esc(k) + '</div><div class="v">' + esc(String(v)) +
+    (unit ? "<small>" + esc(unit) + "</small>" : "") + '</div><div class="s">' + esc(s || "") + "</div></div>";
+}
+
+YS.statsStateText = function () {
+  var st = YS.STATS.state, map = {
+    local: "この端末だけで記録中（送信先が未設定）",
+    sending: "送信中…",
+    ok: "みんなの集計を表示中",
+    error: "つながりません（オフライン？）— あとで自動で送り直します",
+    idle: "待機中"
+  };
+  return map[st] || st;
+};
+
+YS.statsRenderView = function () {
+  var body = $("ys-stats-body");
+  if (!body) { return false; }
+  var ae = document.activeElement;
+  if (ae && ae.id === "ys-stats-url") { return false; }   /* 入力中は描き直さない */
+  var c = YS.statsCounts(), st = YS.STATS.server, i, j, h = "", row, days = [], rk;
+  var rgs = ["today", "week", "all"], labels = { today: "今日", week: "週間", all: "累計" };
+
+  h += '<div class="ys-grid">' +
+    statsTile_("今日の利用", yen(c.today), "人", c.src === "net" ? "みんなの端末" : "この端末") +
+    statsTile_("累計の利用", yen(c.total), "人", c.src === "net" ? "のべ端末数" : "この端末") +
+    statsTile_("今日のチェック", yen(c.todayScans), "回", "商品を見た回数") +
+    statsTile_("累計のチェック", yen(c.scans), "回", "商品を見た回数") +
+    statsTile_("おすすめ", yen(YS.num(st && st.recTotal, YS.recData().length)), "票", "みんなの👍") +
+    "</div>";
+
+  if (st && st.days && st.days.length) {
+    days = st.days.slice(0, 7);
+    h += '<p class="ys-h">直近7日</p><table class="ys-days"><tr><th>日付</th><th>利用者</th><th>チェック</th></tr>';
+    for (i = 0; i < days.length; i++) {
+      row = days[i] || {};
+      h += "<tr" + (String(row.day) === YS.isoToday() ? ' class="today"' : "") + "><td>" +
+        esc(String(row.day || "").slice(5)) + "</td><td>" + yen(YS.num(row.users, 0)) + "</td><td>" +
+        yen(YS.num(row.scans, 0)) + "</td></tr>";
+    }
+    h += "</table>";
+  }
+
+  for (i = 0; i < rgs.length; i++) {
+    rk = YS.statsRankData(rgs[i]);
+    h += '<p class="ys-h">人気商品（' + labels[rgs[i]] + "）</p>";
+    if (!rk || !rk.length) { h += '<p class="tip">まだ記録がありません。</p>'; continue; }
+    h += '<div class="ys-mini">';
+    for (j = 0; j < rk.length && j < 5; j++) {
+      h += '<div class="m"><span class="rk">' + (j + 1) + '</span><span class="nm">' +
+        esc(String(rk[j].name || "")) + '</span><span class="c">' + yen(YS.num(rk[j].count, 0)) + "人</span></div>";
+    }
+    h += "</div>";
+  }
+
+  var recs = YS.recData(), rc;
+  recs.sort(function (a, b) {
+    if (YS.num(b.count, 0) !== YS.num(a.count, 0)) { return YS.num(b.count, 0) - YS.num(a.count, 0); }
+    return String(a.last || "") < String(b.last || "") ? 1 : -1;
+  });
+  h += '<p class="ys-h">メンバーのおすすめ</p>';
+  if (!recs.length) {
+    h += '<p class="tip">まだありません。商品の判定結果で「👍 おすすめに追加」を押すと、ここに並びます。</p>';
+  } else {
+    h += '<div class="ys-mini">';
+    for (i = 0; i < recs.length && i < 5; i++) {
+      rc = recs[i] || {};
+      h += '<div class="m"><span class="rk">🌟</span><span class="nm">' + esc(String(rc.name || "")) +
+        '</span><span class="c">' + yen(YS.num(rc.count, 0)) + "人</span></div>";
+    }
+    h += "</div>";
+  }
+
+  h += '<p class="ys-h">接続</p><p class="ys-state">状態: <b>' + esc(YS.statsStateText()) + "</b><br>" +
+    "送信先: " + (YS.statsUrl() ? esc(YS.statsUrl()) : "未設定") + "<br>" +
+    "送信待ち: " + YS.statsQueue().length + "件" +
+    (st && st.at ? "<br>取得: " + esc(String(st.at)) : "") + "</p>";
+
+  h += '<div class="ys-field"><input id="ys-stats-url" type="url" inputmode="url" spellcheck="false" placeholder="script.google.com/macros/s/…/exec" value="' +
+    esc(YS.statsUrl()) + '"><button class="btn sm" type="button" id="ys-stats-save">保存</button></div>' +
+    '<div class="actions"><button class="btn green" type="button" id="ys-stats-reload">今すぐ更新</button></div>' +
+    '<p class="tip">送信先は GAS（Google Apps Script）の WebアプリURL。ここで入れた値はこの端末だけの上書きで、みんなに配るURLはアプリ本体（index.html）に書き込みます。</p>';
+  body.innerHTML = h;
+  return true;
+};
+
+YS.statsRender = function () {
+  YS.recMergeServer();
+  YS.statsRenderPill();
+  YS.statsRenderRank();
+  try { YS.recRender(); } catch (e) { /* no-op */ }
+  var v = $("ys-stats-view");
+  if (v && !v.hidden) { YS.statsRenderView(); }
+  return true;
+};
+
+YS.statsOpen = function () {
+  var v = $("ys-stats-view");
+  if (!v) { return false; }
+  v.hidden = false;
+  YS.statsRenderView();
+  YS.statsRefresh(false);
+  return true;
+};
+YS.statsClose = function () {
+  var v = $("ys-stats-view");
+  if (v) { v.hidden = true; }
+  return true;
+};
+
+/* 人気商品をタップ → その商品の判定結果へ */
+YS.statsPick = function (id, jan, name) {
+  var it = null, hits = null;
+  if (id && YS.scanIdIndex && YS.scanIdIndex.get) { it = YS.scanIdIndex.get(String(id)) || null; }
+  if (!it && jan) {
+    hits = YS.scanSearch(YS.SCAN_DB, String(jan));
+    if (hits && hits.length) { it = hits[0].item; }
+  }
+  if (!it && name) {
+    hits = YS.scanSearch(YS.SCAN_DB, String(name));
+    if (hits && hits.length) { it = hits[0].item; }
+  }
+  if (!it) { toast("内蔵DBに無い商品です。JANで検索してください"); return null; }
+  var tab = document.querySelector('.tab[data-tab="scan"]');
+  if (tab && tab.getAttribute("aria-selected") !== "true") { selectTab("scan"); }
+  showScanItem(it);
+  return it;
+};
+
+/* ================= メンバーのおすすめ（👍） =================
+   ・1端末（匿名ID）につき同じ商品へ1票。もう一度押すと解除。
+   ・ひとことは40文字まで（みんなに見える）。サーバーは GAS の recs シート。
+   ・オフラインでも自分の端末の票はローカルに残り、次に開いた時に送る。 */
+YS.RECS = { sort: "votes" };
+var LS_RECS_MINE = "ys_v2_recs_mine";
+var LS_RECS_SORT = "ys_v2_recs_sort";
+
+YS.recMine = function () {
+  var m = LS.get(LS_RECS_MINE, null);
+  if (!m || typeof m !== "object" || m instanceof Array) { m = {}; }
+  return m;
+};
+YS.recMineSave = function (m) { LS.set(LS_RECS_MINE, m); return m; };
+YS.recHas = function (id) {
+  var m = YS.recMine(), k = String(id === null || id === undefined ? "" : id);
+  if (!k) { return false; }
+  return Object.prototype.hasOwnProperty.call(m, k);
+};
+YS.recComment = function (id) {
+  var m = YS.recMine(), it = m[String(id === null || id === undefined ? "" : id)];
+  return it && it.c ? String(it.c) : "";
+};
+
+/* 投票（on=true）／解除（on=false）＋ひとこと */
+YS.recVote = function (item, on, c) {
+  if (!item || !item.id) { return false; }
+  var id = String(item.id);
+  if (id.indexOf("unknown") === 0) { return false; }
+  var mine = YS.recMine();
+  var text = String(c === null || c === undefined ? "" : c)
+    .replace(/[\r\n\t]+/g, " ").replace(/\s+/g, " ").replace(/^\s+|\s+$/g, "").slice(0, 40);
+  if (on) {
+    var prev = mine[id] || {};
+    mine[id] = {
+      c: text || prev.c || "", ts: Date.now(),
+      name: String(item.name || prev.name || ""), jan: String(item.jan || prev.jan || ""),
+      cat: String(item.cat || prev.cat || ""), price: YS.num(item.price, prev.price || 0)
+    };
+  } else {
+    delete mine[id];
+  }
+  YS.recMineSave(mine);
+  YS.statsAdd({ k: "rec", on: !!on, c: text, i: {
+    id: id.slice(0, 60), jan: String(item.jan || "").slice(0, 14),
+    name: String(item.name || "").slice(0, 100), cat: String(item.cat || "").slice(0, 16),
+    price: Math.round(YS.num(item.price, 0))
+  } });
+  YS.statsLater(400);
+  YS.recRender();
+  YS.recSyncButton();
+  toast(on ? "👍 おすすめに追加しました" : "おすすめを解除しました");
+  return true;
+};
+
+/* サーバーが返した「この端末の票」に合わせる（送信待ちがある間は触らない） */
+YS.recMergeServer = function () {
+  var st = YS.STATS.server;
+  if (!st || !st.ok || !(st.myRecs instanceof Array)) { return false; }
+  /* 別の端末向けの応答で自分の票を消さない（サーバーが端末IDを返した時だけ照合） */
+  if (typeof st.device !== "string" || st.device !== YS.statsDeviceId()) { return false; }
+  if (YS.statsQueue().length) { return false; }
+  var mine = YS.recMine(), out = {}, i, id;
+  for (i = 0; i < st.myRecs.length; i++) {
+    id = String(st.myRecs[i] || "");
+    if (!id) { continue; }
+    out[id] = mine[id] || { c: "", ts: 0 };
+  }
+  YS.recMineSave(out);
+  return true;
+};
+
+/* 一覧データ（サーバー → 無ければこの端末の票だけ） */
+YS.recData = function () {
+  var st = YS.STATS.server, out = [], mine, k, it;
+  if (st && st.ok && st.recs instanceof Array && st.recs.length) { return st.recs.slice(0); }
+  mine = YS.recMine();
+  for (k in mine) {
+    if (!Object.prototype.hasOwnProperty.call(mine, k)) { continue; }
+    it = mine[k] || {};
+    out.push({
+      id: k, jan: it.jan || "", name: it.name || "（この端末のおすすめ）", cat: it.cat || "",
+      price: YS.num(it.price, 0), count: 1, last: "",
+      comments: it.c ? [{ c: String(it.c), day: "" }] : []
+    });
+  }
+  return out;
+};
+
+YS.recRender = function () {
+  var list = $("ys-rec-list"), empty = $("ys-rec-empty"), card = $("ys-rec-card");
+  if (!list) { return false; }
+  if (card) { card.hidden = !YS.statsUrl() && !(YS.STATS.server && YS.STATS.server.ok); }
+  var sort = YS.RECS.sort || "votes", segs = document.querySelectorAll("#ys-rec-seg button"),
+    rows = YS.recData(), h = "", i, it, nm, sub, cm, price;
+  for (i = 0; i < segs.length; i++) {
+    segs[i].setAttribute("aria-pressed", segs[i].getAttribute("data-sort") === sort ? "true" : "false");
+  }
+  rows.sort(function (a, b) {
+    if (sort === "new") {
+      var an = String(a.last || ""), bn = String(b.last || "");
+      if (an !== bn) { return an < bn ? 1 : -1; }
+    }
+    if (YS.num(b.count, 0) !== YS.num(a.count, 0)) { return YS.num(b.count, 0) - YS.num(a.count, 0); }
+    return String(a.name || "") < String(b.name || "") ? -1 : 1;
+  });
+  if (!rows.length) {
+    list.innerHTML = "";
+    if (empty) { empty.hidden = false; }
+    return false;
+  }
+  if (empty) { empty.hidden = true; }
+  for (i = 0; i < rows.length && i < 20; i++) {
+    it = rows[i] || {};
+    nm = String(it.name || "");
+    if (nm.length > 26) { nm = nm.substring(0, 26) + "…"; }
+    sub = [];
+    sub.push("👍 " + yen(YS.num(it.count, 0)) + "人");
+    if (it.cat) { sub.push(String(it.cat)); }
+    if (it.jan) { sub.push("JAN " + String(it.jan)); }
+    if (it.last) { sub.push(String(it.last).slice(5, 10).replace("-", "/")); }
+    cm = (it.comments && it.comments.length) ? String(it.comments[0].c || "") : "";
+    price = YS.num(it.price, 0);
+    h += '<button class="hit rec" type="button" data-rank="' + esc(it.id || "") +
+      '" data-jan="' + esc(it.jan || "") + '" data-name="' + esc(it.name || "") + '">' +
+      '<span class="rc-i">🌟</span>' +
+      '<div class="n">' + esc(nm) + "<span>" + esc(sub.join("・")) + "</span>" +
+      (cm ? '<em class="cm">「' + esc(cm) + "」</em>" : "") + "</div>" +
+      '<div class="p">' + (price > 0 ? yen(price) + "円" : "—") + "</div></button>";
+  }
+  list.innerHTML = h;
+  return true;
+};
+
+/* 判定結果のボタンを、いま選んでいる商品の状態に合わせる */
+YS.recSyncButton = function () {
+  var wrap = $("sc-vote-wrap"), btn = $("sc-vote"), note = $("sc-vote-note"),
+    box = $("sc-vote-memo-box"), inp = $("sc-vote-memo");
+  if (!btn || !wrap) { return false; }
+  var usable = !!(scanItem && scanItem.id && String(scanItem.id).indexOf("unknown") !== 0);
+  if (!YS.statsUrl() && !(YS.STATS.server && YS.STATS.server.ok)) { usable = false; }   /* 集計が未設定なら出さない */
+  wrap.hidden = !usable;
+  if (!usable) {
+    if (note) { note.hidden = true; }
+    if (box) { box.hidden = true; }
+    return false;
+  }
+  var on = YS.recHas(scanItem.id), c = YS.recComment(scanItem.id);
+  btn.setAttribute("aria-pressed", on ? "true" : "false");
+  btn.textContent = on ? "✅ おすすめ済み（タップで解除）" : "👍 おすすめに追加";
+  if (note) {
+    note.hidden = !(on && c);
+    note.textContent = (on && c) ? "あなたのひとこと：「" + c + "」" : "";
+  }
+  if (inp && !on) { inp.value = ""; }
+  return true;
+};
+
+YS.recOpenMemo = function () {
+  var box = $("sc-vote-memo-box"), inp = $("sc-vote-memo");
+  if (!box || !inp || !scanItem) { return false; }
+  box.hidden = false;
+  inp.value = YS.recComment(scanItem.id) || "";
+  try { inp.focus(); } catch (e) { /* no-op */ }
+  return true;
+};
+YS.recSendMemo = function () {
+  var inp = $("sc-vote-memo");
+  if (!inp || !scanItem) { return false; }
+  var c = String(inp.value || "").replace(/^\s+|\s+$/g, "");
+  if (!c) { toast("ひとことを入れてください"); return false; }
+  YS.recVote(scanItem, true, c);
+  var box = $("sc-vote-memo-box");
+  if (box) { box.hidden = true; }
+  return true;
+};
+
+/* ---------- 配線 ---------- */
+(function () {
+  var btn = $("sc-vote"), memo = $("sc-vote-memo-toggle"), send = $("sc-vote-memo-send"),
+    inp = $("sc-vote-memo"), recSeg = $("ys-rec-seg"), recList = $("ys-rec-list");
+
+  if (btn) {
+    btn.addEventListener("click", function () {
+      if (!scanItem) { return; }
+      YS.recVote(scanItem, !YS.recHas(scanItem.id), "");
+    });
+  }
+  if (memo) { memo.addEventListener("click", function () { YS.recOpenMemo(); }); }
+  if (send) { send.addEventListener("click", function () { YS.recSendMemo(); }); }
+  if (inp) {
+    inp.addEventListener("keydown", function (ev) {
+      if (ev && ev.key === "Enter") { ev.preventDefault(); YS.recSendMemo(); }
+    });
+  }
+  if (recSeg) {
+    recSeg.addEventListener("click", function (ev) {
+      var t = ev && ev.target ? ev.target : null;
+      var el = t && t.closest ? t.closest("[data-sort]") : null;
+      if (!el) { return; }
+      var sort = String(el.getAttribute("data-sort") || "votes");
+      if (["votes", "new"].indexOf(sort) < 0) { sort = "votes"; }
+      YS.RECS.sort = sort;
+      LS.set(LS_RECS_SORT, sort);
+      YS.recRender();
+    });
+  }
+  if (recList) {
+    recList.addEventListener("click", function (ev) {
+      var t = ev && ev.target ? ev.target : null;
+      var el = t && t.closest ? t.closest("[data-rank]") : null;
+      if (!el) { return; }
+      YS.statsPick(el.getAttribute("data-rank"), el.getAttribute("data-jan"), el.getAttribute("data-name"));
+    });
+  }
+}());
+
+/* ---------- 起動 ---------- */
+YS.statsInit = function () {
+  var search = "", hash = "", m, u, want = false, i, rgs = ["today", "week", "all"];
+  try { search = String((typeof location !== "undefined" && location.search) || ""); } catch (e) { search = ""; }
+  try { hash = String((typeof location !== "undefined" && location.hash) || ""); } catch (e) { hash = ""; }
+
+  m = search.match(/[?&]stats=([^&]*)/i);
+  if (m) {
+    u = "";
+    try { u = decodeURIComponent(m[1]); } catch (e) { u = m[1]; }
+    u = String(u || "").replace(/^\s+|\s+$/g, "");
+    if (YS.statsUrlOk(u)) {
+      LS.set(LS_STATS_URL, u);
+      YS.STATS.url = u;
+      want = true;
+    } else if (u === "" || u === "1") {
+      want = true;
+    }
+  }
+  if (hash.replace(/^#/, "").indexOf("stats") === 0) { want = true; }
+
+  YS.STATS.range = String(LS.get(LS_STATS_RANGE, "") || "week");
+  YS.RECS.sort = String(LS.get(LS_RECS_SORT, "") || "votes");
+  if (["votes", "new"].indexOf(YS.RECS.sort) < 0) { YS.RECS.sort = "votes"; }
+  if (rgs.indexOf(YS.STATS.range) < 0) { YS.STATS.range = "week"; }
+  YS.statsDeviceId();
+  YS.statsUse();
+  YS.statsRender();
+  YS.statsLater(700);
+  if (want) { setTimeout(function () { YS.statsOpen(); }, 40); }
+
+  if (typeof document !== "undefined" && document.addEventListener) {
+    document.addEventListener("visibilitychange", function () {
+      if (document.hidden) { YS.statsFlush(false); }
+      else { YS.statsRefresh(false); }
+    });
+  }
+  if (typeof window !== "undefined" && window.addEventListener) {
+    window.addEventListener("pageshow", function () { YS.statsRefresh(false); });
+  }
+  return true;
+};
+
+/* ---------- 操作の配線 ---------- */
+(function () {
+  var btn = $("ys-usage-btn"), close = $("ys-stats-close"), view = $("ys-stats-view"),
+    body = $("ys-stats-body"), rl = $("ys-rank-list"), seg = $("ys-rank-seg");
+
+  if (btn) { btn.addEventListener("click", function () { YS.statsOpen(); }); }
+  if (close) { close.addEventListener("click", function () { YS.statsClose(); }); }
+  if (view) {
+    view.addEventListener("click", function (ev) {
+      if (ev && ev.target === view) { YS.statsClose(); }
+    });
+  }
+  if (body) {
+    body.addEventListener("click", function (ev) {
+      var t = ev && ev.target ? ev.target : null;
+      if (!t || !t.closest) { return; }
+      if (t.closest("#ys-stats-save")) {
+        var inp = $("ys-stats-url"), u = inp ? String(inp.value || "").replace(/^\s+|\s+$/g, "") : "";
+        if (!YS.statsUrlOk(u)) { toast("script.google.com/…/exec の形で入れてください"); return; }
+        LS.set(LS_STATS_URL, u);
+        YS.STATS.url = u;
+        YS.STATS.at = 0;
+        toast("送信先を保存しました");
+        YS.statsRefresh(true);
+        return;
+      }
+      if (t.closest("#ys-stats-reload")) {
+        YS.STATS.at = 0;
+        toast("集計を更新中…");
+        YS.statsRefresh(true);
+      }
+    });
+  }
+  if (rl) {
+    rl.addEventListener("click", function (ev) {
+      var t = ev && ev.target ? ev.target : null;
+      var el = t && t.closest ? t.closest("[data-rank]") : null;
+      if (!el) { return; }
+      YS.statsPick(el.getAttribute("data-rank"), el.getAttribute("data-jan"), el.getAttribute("data-name"));
+    });
+  }
+  if (seg) {
+    seg.addEventListener("click", function (ev) {
+      var t = ev && ev.target ? ev.target : null;
+      var el = t && t.closest ? t.closest("[data-range]") : null;
+      if (!el) { return; }
+      var r = String(el.getAttribute("data-range") || "week");
+      if (["today", "week", "all"].indexOf(r) < 0) { r = "week"; }
+      YS.STATS.range = r;
+      LS.set(LS_STATS_RANGE, r);
+      YS.statsRenderRank();
+    });
+  }
+}());
 
 /* ---------- init ---------- */
 
@@ -6764,6 +7682,9 @@ renderTax();
 
 /* 公開URL（GitHub Pages）で開いた時だけ、最新の買取価格を裏で読みに行く */
 YS.scanSyncStart();
+
+/* 利用状況の集計（端末IDの用意・今日の記録・人気商品の表示） */
+try { YS.statsInit(); } catch (e) { /* 集計が死んでもスキャナーは動かす */ }
 </script>
 </body>
 </html>
