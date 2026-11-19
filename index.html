@@ -6957,7 +6957,8 @@ YS.statsQueueSave = function (q) {
   return q;
 };
 YS.statsAdd = function (ev) {
-  YS.statsTrack(ev);
+  YS.statsTrack(ev);                       /* この端末の記録は常に残す */
+  if (!YS.statsUrl()) { return ev; }       /* 送信先が未設定の間は送らない（あとで古い記録を送らない） */
   /* タブを複数開いても取り違えないよう、1件ずつ固有の番号を付ける */
   ev.qid = "q" + Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
   var q = YS.statsQueue();
