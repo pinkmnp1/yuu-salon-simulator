@@ -53,7 +53,10 @@ SHOP_KK = "携帯空間"
 SHOP_TW = "トゥインクル"
 SHOP_DR = "ドラゴンモバイル"
 SHOP_JC = "ジェーシカ"
-SOURCES = (SHOP_KI, SHOP_RD, SHOP_KS, SHOP_MR, SHOP_KK, SHOP_TW, SHOP_DR, SHOP_JC)
+# 2026-11-19 追加（2次拡張）: 買取ホムラ（公開JSON API・全件）／買取wiki（JAN検索・ローテーション）
+SHOP_HM = "買取ホムラ"
+SHOP_WK = "買取wiki"
+SOURCES = (SHOP_KI, SHOP_RD, SHOP_KS, SHOP_MR, SHOP_KK, SHOP_TW, SHOP_DR, SHOP_JC, SHOP_HM, SHOP_WK)
 # 追加店の取得上限（毎時の実行時間を 10〜15分に収めるための安全弁）
 MR_MAX_PAGES = 49           # 森森買取: 合計ページ数（1ページ50件）
 KK_MAX_PAGES = 55           # 携帯空間: 合計ページ数（1ページ12件）
@@ -119,6 +122,10 @@ DR_CATS = (("140", 32), ("142", 18), ("141", 7), ("436", 1))   # スマホ / 家
 DR_NAME_RE = re.compile(r'class="splist1">\s*(.*?)\s*</div>', re.S)
 DR_JAN_RE = re.compile(r'class="splist">\s*JAN:\s*(\d{13})')
 DR_NEW_RE = re.compile(r'新品</font>\s*¥\s*([\d,]+)')
+
+HM_API = "https://api.kaitori-homura.com/api/v1/products"
+HM_PER_PAGE = 20            # 公開APIの1ページ件数（固定）
+HM_MAX_PAGES = 120          # 安全弁（実測 94ページ / 1,861件）
 
 JC_BASE = "https://www.jcka-mobile.co.jp"
 JC_PRICE_URL = JC_BASE + "/kaitori_price/"
@@ -749,6 +756,148 @@ def fetch_jcka(f: Fetcher, limit: int = 0) -> tuple[dict, bool]:
     return out, len(out) > 0
 
 
+def fetch_homura(f: Fetcher, limit: int = 0) -> tuple[dict, bool]:
+    """買取ホムラ: 公開JSON API（/api/v1/products?page=N）。1ページ20件・実測94ページ/1,861件。
+
+    robots.txt で禁止されておらず、アプリ（kaitori-homura.com）が実際に叩いている公開API。
+    JANコードと買取価格（新品・未使用）がそのまま返る。
+    """
+    out: dict[str, dict] = {}
+    pages = 0
+    fails = 0
+    total_pages = 0
+    page = 1
+    cap = limit if limit else HM_MAX_PAGES
+    while page <= cap:
+        b = f.get(f"{HM_API}?page={page}")
+        if not b:
+            fails += 1
+            if fails >= 3:
+                break
+            page += 1
+            continue
+        fails = 0
+        try:
+            data = json.loads(b.decode("utf-8", "ignore"))
+        except Exception:
+            break
+        rows = data.get("data") or []
+        meta = data.get("meta") or {}
+        if not total_pages:
+            total_pages = int(meta.get("total_pages") or 0)
+        if not rows:
+            break
+        for r in rows:
+            jan = str(r.get("jan_code") or "")
+            price = int(r.get("price") or 0)
+            if not jan_ok(jan) or price <= 0:
+                continue
+            name = clean_name(r.get("name") or "")
+            cur = out.get(jan)
+            if cur and cur["price"] >= price:
+                continue
+            out[jan] = {"price": price, "name": name}
+        pages += 1
+        if total_pages and page >= total_pages:
+            break
+        page += 1
+    print(f"    買取ホムラ: {len(out):,}件（{pages}ページ・全{total_pages or '?'}ページ）", flush=True)
+    return out, fails == 0 and len(out) > 0
+
+
+# ---------------------------------------------------------------- 補助データ（実売価格・買取wiki）
+
+CACHE_RETAIL = ROOT / "retail_cache.json"     # enrich.py が作る {jan: {retail, shop, src, at}}
+CACHE_WIKI = ROOT / "wiki_cache.json"         # enrich.py が作る {jan: {price, name, at}}
+HISTORY_DIR = ROOT / "history"                # 日次スナップショット {date}.json
+HIST_KEEP_DAYS = 21
+
+
+def load_json_file(path: Path, default):
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return default
+
+
+def load_wiki_rows() -> dict:
+    """買取wiki（JAN検索・キャッシュ）を1店分の価格表として読む。"""
+    out = {}
+    for jan, row in (load_json_file(CACHE_WIKI, {}) or {}).items():
+        price = int((row or {}).get("price") or 0)
+        if price > 0 and jan_ok(jan):
+            out[jan] = {"price": price, "name": (row or {}).get("name") or ""}
+    return out
+
+
+def hist_load(date: str) -> dict | None:
+    p = HISTORY_DIR / f"{date}.json"
+    return load_json_file(p, None)
+
+
+def add_trend(db: dict, today: str) -> dict:
+    """前日・先週との比較（同じ店どうしで比べる）を作り、今日のスナップショットを残す。
+
+    - 各商品で「今日も前日も価格がある店」だけを使い、その中で一番高い額を比べる。
+      途中で追加した店（今回から取れ始めた店）は前日が無いので比較から外れ、
+      実際の値動きだけが前日比として出る。
+    - history/YYYY-MM-DD.json に {id: {店: 額}} を1日1回上書き保存（21日分を保持）。
+    """
+    HISTORY_DIR.mkdir(exist_ok=True)
+    d = dt.date.fromisoformat(today)
+    yday = (d - dt.timedelta(days=1)).isoformat()
+    wago = (d - dt.timedelta(days=7)).isoformat()
+    prev = hist_load(yday)
+    prev7 = hist_load(wago)
+    pq = (prev or {}).get("quotes") or {}
+    p7q = (prev7 or {}).get("quotes") or {}
+    snap: dict[str, dict] = {}
+    up = down = flat = compared = 0
+    for rec in db.get("items") or []:
+        q = rec.get("quotes") or {}
+        if not q:
+            continue
+        rid = rec.get("id")
+        snap[rid] = {s: int(v) for s, v in q.items() if int(v or 0) > 0}
+        for key, base, tag in (("d1", pq, "1"), ("d7", p7q, "7")):
+            old = base.get(rid) or {}
+            common = [s for s in q if s in old and q[s] and old[s]]
+            if not common:
+                rec.pop(key, None)
+                rec.pop(key + "p", None)
+                rec.pop(key + "s", None)
+                continue
+            now_best = max(common, key=lambda s: q[s])
+            delta = int(q[now_best]) - int(old[now_best])
+            rec[key] = delta
+            rec[key + "p"] = round(delta / int(old[now_best]) * 100, 1) if old[now_best] else 0
+            rec[key + "s"] = now_best
+            if tag == "1":
+                compared += 1
+                if delta > 0:
+                    up += 1
+                elif delta < 0:
+                    down += 1
+                else:
+                    flat += 1
+    (HISTORY_DIR / f"{today}.json").write_text(
+        json.dumps({"date": today, "at": now_jst(), "quotes": snap},
+                   ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+    # 古いスナップショットを掃除
+    keep = {(d - dt.timedelta(days=i)).isoformat() for i in range(HIST_KEEP_DAYS)}
+    for p in HISTORY_DIR.glob("*.json"):
+        if p.stem not in keep and re.fullmatch(r"\d{4}-\d{2}-\d{2}", p.stem):
+            try:
+                p.unlink()
+            except OSError:
+                pass
+    trend = {"d1": yday if prev else "", "d7": wago if prev7 else "",
+             "compared": compared, "up": up, "down": down, "flat": flat,
+             "at": now_jst()}
+    db["trend"] = trend
+    return trend
+
+
 # ---------------------------------------------------------------- 反映
 
 AUTO_NOTE_RE = re.compile(r"^(新品・|新品／)")
@@ -769,14 +918,14 @@ def note_for(quotes: dict) -> str:
 
 def apply(db: dict, ks: dict | None, ks_complete: bool, ki: dict | None, ki_jan: dict | None,
           rd: dict | None, rd_complete: bool, today: str,
-          extras: dict[str, dict] | None = None) -> dict:
+          extras: dict[str, dict] | None = None, retail: dict | None = None) -> dict:
     items = db.get("items") or []
     by_jan = {it["jan"]: it for it in items if it.get("jan")}
     by_id = {it["id"]: it for it in items}
     by_cco = {it["kc"]: it for it in items if it.get("kc")}
     stat = {"更新": 0, "据え置き": 0, "新規": 0, "値上がり": 0, "値下がり": 0,
             "買取商店": 0, "家電市場": 0, "買取ルデヤ": 0, SHOP_MR: 0, SHOP_KK: 0,
-            SHOP_TW: 0, SHOP_DR: 0, SHOP_JC: 0}
+            SHOP_TW: 0, SHOP_DR: 0, SHOP_JC: 0, SHOP_HM: 0, SHOP_WK: 0, "実売": 0}
     refreshed = set()
     if ks:
         refreshed.add(SHOP_KS)
@@ -886,6 +1035,23 @@ def apply(db: dict, ks: dict | None, ks_complete: bool, ki: dict | None, ki_jan:
                 rec["note"] = n
         stat["更新"] += 1
 
+    # 6) 実売価格（価格.com・量販店最安）を付ける。高還元家電ランキングの分母。
+    if retail:
+        for rec in items:
+            r = retail.get(rec.get("jan") or "")
+            if not r:
+                continue
+            amt = int((r or {}).get("retail") or 0)
+            if amt <= 0:
+                continue
+            rec["retail"] = amt
+            rec["retail_shop"] = (r.get("shop") or "")[:40]
+            rec["retail_src"] = r.get("src") or ""
+            rec["retail_at"] = int(r.get("at") or 0)
+            rec["retail_hi"] = int(r.get("hi") or 0)
+            rec["retail_lo"] = int(r.get("lo") or 0)
+            stat["実売"] += 1
+
     stamp = now_jst()
     db["updated_at"] = today                       # 画面の新旧判定用（YYYY-MM-DD）
     db["updated_at_jst"] = stamp + " JST"          # 実際に取得した時刻
@@ -909,7 +1075,8 @@ def main() -> int:
     ap.add_argument("--dry-run", action="store_true", help="書き換えずに結果だけ表示")
     ap.add_argument("--source", default="all",
                     choices=["all", "kaitorishouten", "kadenichiba", "rudeya",
-                             "morimori", "keitaispace", "twinkle", "dragon", "jcka"],
+                             "morimori", "keitaispace", "twinkle", "dragon", "jcka",
+                             "homura", "wiki"],
                     help="取得する店を限定")
     ap.add_argument("--limit", type=int, default=0, help="各店のページ数上限（動作確認用）")
     ap.add_argument("--delay", type=float, default=0.2, help="リクエスト間の待ち時間（秒）")
@@ -999,7 +1166,8 @@ def main() -> int:
         ("keitaispace", SHOP_KK, "[5/8] 携帯空間 商品一覧（未使用）", fetch_keitaispace),
         ("twinkle", SHOP_TW, "[6/8] トゥインクル 商品一覧（未開封）", fetch_twinkle),
         ("dragon", SHOP_DR, "[7/8] ドラゴンモバイル 買取価格", fetch_dragon),
-        ("jcka", SHOP_JC, "[8/8] ジェーシカ 買取価格表（未開封）", fetch_jcka),
+        ("jcka", SHOP_JC, "[8/10] ジェーシカ 買取価格表（未開封）", fetch_jcka),
+        ("homura", SHOP_HM, "[9/10] 買取ホムラ 公開API（新品・未使用）", fetch_homura),
     ]
     for key, shop, label, fn in EXTRA_SRC:
         if not (want_all or args.source == key):
@@ -1015,12 +1183,24 @@ def main() -> int:
         extras[shop] = rows
         print(f"      → {len(rows):,}件・{'完全' if done else '一部のみ/失敗あり'}")
 
+    # 買取wiki（enrich.py がJAN検索で貯めたキャッシュを1店として合流）
+    wiki_rows = load_wiki_rows()
+    if wiki_rows:
+        extras[SHOP_WK] = wiki_rows            # キャッシュなので毎回合流（通信なし）
+        print(f"[10/10] 買取wiki（JAN検索キャッシュ）: {len(wiki_rows):,}件")
+    retail = load_json_file(CACHE_RETAIL, {}) or {}
+    if retail:
+        print(f"実売価格キャッシュ: {len(retail):,}件（価格.com・量販店最安）")
+
     if not any((ks, ki, rd)) and not any(extras.values()):
         print("NG: どの店からも取得できませんでした（ネットワーク遮断・サイト仕様変更の可能性）。"
               "scan_db.json は書き換えていません。")
         return 1
 
-    stat = apply(db, ks, ks_complete, ki, ki_jan, rd, rd_complete, today, extras)
+    stat = apply(db, ks, ks_complete, ki, ki_jan, rd, rd_complete, today, extras, retail)
+    trend = add_trend(db, today)
+    print(f"前日比: 比較{trend['compared']:,}件（+{trend['up']:,} / -{trend['down']:,} / 変わらず{trend['flat']:,}）"
+          f" 基準日 {trend['d1'] or 'なし'}")
     print(f"更新時刻: {now_jst()} JST")
     print("反映:", " / ".join(f"{k} {v:,}" for k, v in stat.items()))
 
