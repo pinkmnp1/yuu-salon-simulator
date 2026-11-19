@@ -742,57 +742,6 @@ textarea.csv{
   flex:1;min-width:0;font-family:var(--mono);font-size:11px;padding:10px 11px;border-radius:11px;
   background:rgba(8,10,20,.9);color:var(--txt);border:1px solid var(--line);
 }
-
-/* ---------- 2026-11-19: 初心者向け せどりタブ ---------- */
-.grpseg{display:flex;gap:6px;margin:0 0 8px}
-.grpseg button{flex:1;appearance:none;border:1px solid var(--line);background:rgba(255,255,255,.05);color:var(--muted);font-family:inherit;font-weight:800;font-size:12px;padding:10px 6px;border-radius:13px;cursor:pointer;transition:.18s}
-.grpseg button[aria-pressed="true"]{color:#05060c;background:linear-gradient(135deg,var(--cyan),#7ef0ff);border-color:transparent;box-shadow:0 0 16px rgba(0,229,255,.32)}
-.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:0 0 12px}
-.step{background:rgba(8,10,20,.62);border:1px solid var(--line);border-radius:14px;padding:10px 7px;text-align:center}
-.step b{display:block;font-size:10.5px;color:var(--cyan);letter-spacing:.05em}
-.step span{display:block;font-size:11.5px;line-height:1.4;margin-top:3px;color:var(--txt)}
-.intro{font-size:12px;line-height:1.7;color:var(--muted);margin:0 0 12px}
-.intro b{color:var(--txt)}
-.gk-row{display:block;width:100%;text-align:left;appearance:none;font-family:inherit;cursor:pointer;padding:11px 12px;border-radius:14px;border:1px solid var(--line);background:rgba(8,10,20,.55);margin-bottom:8px;color:inherit;transition:.15s}
-.gk-row:active{transform:scale(.99)}
-.gk-row.top1{border-color:rgba(43,255,136,.55);background:linear-gradient(150deg,rgba(43,255,136,.12),rgba(8,10,20,.6))}
-.gk-top{display:flex;gap:8px;align-items:flex-start}
-.gk-rk{flex:none;width:20px;font-family:var(--mono);font-weight:800;color:var(--muted);font-size:12px;text-align:center;padding-top:3px}
-.gk-nm{flex:1;min-width:0;font-size:12.5px;font-weight:800;line-height:1.35;word-break:break-word}
-.gk-ratio{flex:none;font-family:var(--mono);font-size:13px;font-weight:800;color:#04170c;background:linear-gradient(135deg,#2bff88,#9effc4);padding:3px 8px;border-radius:10px}
-.gk-ratio.warn{background:linear-gradient(135deg,#ffd23f,#ffe98a);color:#1c1600}
-.gk-ratio.low{background:rgba(255,255,255,.1);color:var(--muted)}
-.gk-meta{display:flex;flex-wrap:wrap;gap:4px 10px;margin-top:6px;font-size:11px;font-family:var(--mono);color:var(--muted)}
-.gk-meta b{color:var(--txt);font-weight:800}
-.gk-profit{margin-top:7px;font-size:12.5px;font-weight:800;font-family:var(--mono)}
-.gk-profit.pos{color:var(--green)}
-.gk-profit.neg{color:var(--red)}
-.gk-profit small{font-family:inherit;font-weight:700;font-size:10.5px;color:var(--muted)}
-.gk-empty{font-size:12px;color:var(--muted);line-height:1.7;padding:10px 0}
-.tr-tiles{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:0 0 12px}
-.tr-tile{background:rgba(8,10,20,.62);border:1px solid var(--line);border-radius:14px;padding:10px 12px}
-.tr-tile .k{font-size:10px;color:var(--muted);font-weight:800;letter-spacing:.04em}
-.tr-tile .v{font-family:var(--mono);font-size:19px;font-weight:800;margin-top:2px}
-.tr-row{display:flex;gap:8px;align-items:center;padding:8px 10px;border-radius:12px;background:rgba(8,10,20,.5);border:1px solid var(--line);margin-bottom:6px;cursor:pointer}
-.tr-row .rk{flex:none;width:18px;font-family:var(--mono);font-weight:800;color:var(--muted);font-size:11px;text-align:center}
-.tr-row .nm{flex:1;min-width:0;font-size:12px;line-height:1.35;word-break:break-word}
-.tr-row .df{flex:none;font-family:var(--mono);font-size:12.5px;font-weight:800;text-align:right}
-.tr-row .df small{display:block;font-size:10px;color:var(--muted);font-weight:700}
-.sc-verdict{margin:10px 0 0;padding:12px;border-radius:14px;border:1px solid var(--line);background:rgba(8,10,20,.6)}
-.sc-verdict .lbl{font-family:var(--mono);font-size:20px;font-weight:800}
-.sc-verdict .why{font-size:11.5px;line-height:1.6;color:var(--muted);margin-top:4px}
-.sc-verdict.buy{border-color:rgba(43,255,136,.55);background:linear-gradient(150deg,rgba(43,255,136,.16),rgba(8,10,20,.6))}
-.sc-verdict.thin{border-color:rgba(255,210,63,.5);background:linear-gradient(150deg,rgba(255,210,63,.12),rgba(8,10,20,.6))}
-.sc-verdict.no{border-color:rgba(255,77,109,.5);background:linear-gradient(150deg,rgba(255,77,109,.12),rgba(8,10,20,.6))}
-.sc-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
-.sc-chip{font-size:11px;font-family:var(--mono);padding:4px 9px;border-radius:999px;background:rgba(255,255,255,.06);border:1px solid var(--line);color:var(--txt)}
-.sc-chip.pos{color:var(--green);border-color:rgba(43,255,136,.4)}
-.sc-chip.neg{color:var(--red);border-color:rgba(255,77,109,.4)}
-.bd-plan{display:flex;flex-direction:column;gap:7px;margin:10px 0 0}
-.bd-item{display:flex;gap:8px;align-items:center;padding:9px 10px;border-radius:12px;background:rgba(8,10,20,.55);border:1px solid var(--line)}
-.bd-item .nm{flex:1;min-width:0;font-size:12px;line-height:1.35}
-.bd-item .pr{flex:none;font-family:var(--mono);font-size:11.5px;text-align:right;color:var(--muted)}
-.bd-item .pr b{color:var(--txt);font-size:12.5px}
 </style>
 </head>
 <body>
@@ -816,43 +765,29 @@ textarea.csv{
     </button>
   </div>
 
-  <div class="grpseg" id="grpSeg" role="group" aria-label="メニュー切替">
-    <button type="button" data-grp="sedori" aria-pressed="true">🛒 せどり・買取</button>
-    <button type="button" data-grp="mnp" aria-pressed="false">📱 MNP・回線</button>
-  </div>
-
   <div class="tabs" role="tablist">
-    <button class="tab" role="tab" id="tab-mnp" aria-controls="panel-mnp" aria-selected="true" data-tab="mnp" data-grp="mnp">
+    <button class="tab" role="tab" id="tab-mnp" aria-controls="panel-mnp" aria-selected="true" data-tab="mnp">
       <span class="ico">🧮</span>MNP利益
     </button>
-    <button class="tab new glow" role="tab" id="tab-scan" aria-controls="panel-scan" aria-selected="false" data-tab="scan" data-grp="sedori">
+    <button class="tab new glow" role="tab" id="tab-scan" aria-controls="panel-scan" aria-selected="false" data-tab="scan">
       <span class="ico">📷</span>スキャン
     </button>
-    <button class="tab" role="tab" id="tab-genka" aria-controls="panel-genka" aria-selected="false" data-tab="genka" data-grp="sedori">
-      <span class="ico">🏬</span>高還元家電
-    </button>
-    <button class="tab" role="tab" id="tab-trend" aria-controls="panel-trend" aria-selected="false" data-tab="trend" data-grp="sedori">
-      <span class="ico">📈</span>急騰・相場
-    </button>
-    <button class="tab" role="tab" id="tab-budget" aria-controls="panel-budget" aria-selected="false" data-tab="budget" data-grp="sedori">
-      <span class="ico">💰</span>予算逆算
-    </button>
-    <button class="tab" role="tab" id="tab-pt" aria-controls="panel-pt" aria-selected="false" data-tab="pt" data-grp="sedori">
+    <button class="tab" role="tab" id="tab-pt" aria-controls="panel-pt" aria-selected="false" data-tab="pt">
       <span class="ico">💎</span>ポイント
     </button>
-    <button class="tab" role="tab" id="tab-lines" aria-controls="panel-lines" aria-selected="false" data-tab="lines" data-grp="mnp">
+    <button class="tab" role="tab" id="tab-lines" aria-controls="panel-lines" aria-selected="false" data-tab="lines">
       <span class="ico">📋</span>回線管理
     </button>
-    <button class="tab" role="tab" id="tab-check" aria-controls="panel-check" aria-selected="false" data-tab="check" data-grp="mnp">
+    <button class="tab" role="tab" id="tab-check" aria-controls="panel-check" aria-selected="false" data-tab="check">
       <span class="ico">🚦</span>審査・BL
     </button>
-    <button class="tab" role="tab" id="tab-hikari" aria-controls="panel-hikari" aria-selected="false" data-tab="hikari" data-grp="mnp">
+    <button class="tab" role="tab" id="tab-hikari" aria-controls="panel-hikari" aria-selected="false" data-tab="hikari">
       <span class="ico">🏠</span>光回線
     </button>
-    <button class="tab" role="tab" id="tab-dash" aria-controls="panel-dash" aria-selected="false" data-tab="dash" data-grp="mnp">
+    <button class="tab" role="tab" id="tab-dash" aria-controls="panel-dash" aria-selected="false" data-tab="dash">
       <span class="ico">📈</span>実績
     </button>
-    <button class="tab" role="tab" id="tab-tax" aria-controls="panel-tax" aria-selected="false" data-tab="tax" data-grp="mnp">
+    <button class="tab" role="tab" id="tab-tax" aria-controls="panel-tax" aria-selected="false" data-tab="tax">
       <span class="ico">🧾</span>申告メモ
     </button>
   </div>
@@ -1103,12 +1038,6 @@ textarea.csv{
   <!-- ================= TAB 2 : SCANNER ================= -->
   <section class="panel" id="panel-scan" role="tabpanel" aria-labelledby="tab-scan" hidden>
     <div class="card">
-      <p class="card-title">📷 スキャン / 利益判定 <span class="hint">3ステップ</span></p>
-      <div class="steps">
-        <div class="step"><b>① よみとる</b><span>バーコードを撮る<br>or JANを入れる</span></div>
-        <div class="step"><b>② 値札を入れる</b><span>店頭価格と<br>ポイント%</span></div>
-        <div class="step"><b>③ 判定を見る</b><span>買い / スルーが<br>大きく出る</span></div>
-      </div>
       <p class="card-title">JAN・型番で買取価格を引く</p>
 
       <video class="scan-video" id="scan-video" playsinline muted hidden></video>
@@ -1181,7 +1110,6 @@ textarea.csv{
           <span class="grade na" id="sc-grade">—</span>
           <span class="rate-note" id="sc-rate">定価 —</span>
         </div>
-        <div class="sc-chips" id="sc-chips"></div>
         <p class="scan-meta" id="sc-note"></p>
 
         <p class="card-title mt">店頭価格を入れて粗利を見る</p>
@@ -1204,19 +1132,6 @@ textarea.csv{
           </div>
         </div>
 
-        <div class="field" style="margin-top:10px">
-          <label for="sc-pct">ポイント還元率 <span class="hint">店頭の付与率（%）</span></label>
-          <div class="input-box"><input id="sc-pct" type="number" inputmode="numeric" min="0" max="50" step="1" value="0"><span class="unit">%</span></div>
-          <div class="qchips" id="q-scpct">
-            <button class="qchip" type="button" data-q="sc-pct" data-v="0">0%</button>
-            <button class="qchip" type="button" data-q="sc-pct" data-v="10">10%</button>
-            <button class="qchip" type="button" data-q="sc-pct" data-v="15">15%</button>
-            <button class="qchip" type="button" data-q="sc-pct" data-v="20">20%</button>
-            <button class="qchip" type="button" data-q="sc-pct" data-v="30">30%</button>
-          </div>
-          <p class="tip" style="margin:6px 0 0">%を入れると「ポイント充当」に自動で反映されます（店頭価格 × 還元率）。</p>
-        </div>
-
         <div class="scan2">
           <div class="res main" id="sc-profit-res">
             <div class="k">見込み粗利</div>
@@ -1228,11 +1143,6 @@ textarea.csv{
             <div class="v neutral" id="sc-margin">—</div>
             <div class="s">実質仕入 <b id="sc-net">—</b>円</div>
           </div>
-        </div>
-
-        <div class="sc-verdict" id="sc-verdict">
-          <div class="lbl" id="sc-verdict-lbl">店頭の値札を入れてください</div>
-          <div class="why" id="sc-verdict-why">値札（円）とポイント還元率（%）を入れるだけで、買いかスルーかを大きく表示します。</div>
         </div>
 
         <div class="shop-row" id="sc-shops"></div>
@@ -2182,125 +2092,6 @@ textarea.csv{
       <p class="card-title">明細一覧</p>
       <div id="t-list"></div>
       <div class="empty" id="t-empty">まだ明細がありません。<br>上のフォームから収支を追加してください。</div>
-    </div>
-  </section>
-
-
-  <!-- ================= TAB : 高還元家電（普通に買える） ================= -->
-  <section class="panel" id="panel-genka" role="tabpanel" aria-labelledby="tab-genka" hidden>
-    <div class="card">
-      <p class="card-title">🏬 普通に買える 高還元家電 <span class="hint">買取額 ÷ 実売価格</span></p>
-      <p class="intro">ゲーム機が買えない日でも、<b>炊飯器・レンジ・ドライヤー・掃除機・カメラ</b>で「買った瞬間に利益が残る」商品を探せます。数字は <b>買取屋の最高額 ÷ 量販店の実売価格</b>。還元率が高いほどポイント消化に向いています。</p>
-      <div class="seg" id="gk-genre" role="group" aria-label="ジャンル">
-        <button type="button" data-genre="all" aria-pressed="true">すべて</button>
-        <button type="button" data-genre="rice" aria-pressed="false">炊飯器</button>
-        <button type="button" data-genre="microwave" aria-pressed="false">レンジ・オーブン</button>
-        <button type="button" data-genre="beauty" aria-pressed="false">ドライヤー・美容</button>
-        <button type="button" data-genre="cleaner" aria-pressed="false">掃除機</button>
-        <button type="button" data-genre="tv" aria-pressed="false">テレビ・レコーダー</button>
-        <button type="button" data-genre="camera" aria-pressed="false">カメラ</button>
-        <button type="button" data-genre="audio" aria-pressed="false">オーディオ</button>
-        <button type="button" data-genre="other" aria-pressed="false">その他家電</button>
-      </div>
-      <div class="seg" id="gk-point" role="group" aria-label="想定ポイント還元率">
-        <button type="button" data-prate="0" aria-pressed="false">0%</button>
-        <button type="button" data-prate="10" aria-pressed="false">ポイント10%</button>
-        <button type="button" data-prate="20" aria-pressed="true">ポイント20%</button>
-        <button type="button" data-prate="30" aria-pressed="false">ポイント30%</button>
-      </div>
-      <div class="seg" id="gk-sort" role="group" aria-label="並び順">
-        <button type="button" data-sort="ratio" aria-pressed="true">還元率順</button>
-        <button type="button" data-sort="profit" aria-pressed="false">実質利益順</button>
-        <button type="button" data-sort="price" aria-pressed="false">買取額順</button>
-      </div>
-      <p class="tip" id="gk-note">読み込み中…</p>
-      <div id="gk-list"></div>
-    </div>
-    <div class="card">
-      <p class="card-title">この数字の見方 <span class="hint">初心者向け</span></p>
-      <p class="intro" style="margin-bottom:8px"><b>還元率80%</b>＝1万円で買って8,000円で売れる商品。手元に2,000円残ります。<br>
-      <b>ポイント20%</b>なら実質8,000円で買ったのと同じなので、<b>8,000円で売れれば損益ゼロ</b>、それ以上なら利益です。</p>
-      <p class="tip">ゲーム機の抽選や多言語版など<b>店頭に並ばない限定品・プレ値品はこのランキングから外しています</b>。<br>
-      実売価格は価格.comの量販店最安（ビック・ノジマ・ソフマップ・ヨドバシ・ヤマダ・Joshin等）を毎日取得。中古・ジャンク・箱不良は除外。<br>
-      価格は毎時更新ですが、店頭の値札とポイント条件は当日の店舗でご確認ください。</p>
-    </div>
-  </section>
-
-  <!-- ================= TAB : 急騰・相場 ================= -->
-  <section class="panel" id="panel-trend" role="tabpanel" aria-labelledby="tab-trend" hidden>
-    <div class="card">
-      <p class="card-title">📈 今日の急騰 TOP20 <span class="hint">前日比</span></p>
-      <div class="tr-tiles" id="tr-tiles"></div>
-      <div id="tr-up"></div>
-      <p class="empty" id="tr-up-empty" hidden>まだ前日データがありません。今日から毎時ためて、明日の朝には出ます。</p>
-    </div>
-    <div class="card">
-      <p class="card-title">📉 値崩れ注意（暴落） <span class="hint">前日比マイナス</span></p>
-      <div id="tr-down"></div>
-      <p class="empty" id="tr-down-empty" hidden>今日は大きな値下がりはありません。</p>
-    </div>
-    <div class="card">
-      <p class="card-title">相場の見方 <span class="hint">初心者向け</span></p>
-      <p class="intro">急騰＝買取屋が在庫を欲しがっている合図。同じ商品でも<b>1日で数千円動く</b>ので、売る前にここを確認するだけで損が減ります。<br>
-      前日比は<b>「昨日も今日も価格がある同じ店」どうし</b>で比べています（途中から追加した店の分は含めません）。</p>
-      <div class="actions">
-        <button class="btn" id="tr-refresh" type="button">🔄 いまの価格を取り直す</button>
-      </div>
-    </div>
-  </section>
-
-  <!-- ================= TAB : 予算逆算 ================= -->
-  <section class="panel" id="panel-budget" role="tabpanel" aria-labelledby="tab-budget" hidden>
-    <div class="card">
-      <p class="card-title">💰 ポイント消化・予算逆算 <span class="hint">枠を使い切る</span></p>
-      <p class="intro">「5万円分のポイント（または予算）がある」→ その枠で買うと<b>一番損しない組み合わせ</b>を提案します。ゲーム機が無い日は炊飯器・レンジ・カメラで枠を消化できます。</p>
-      <div class="grid two">
-        <div class="field">
-          <label for="bd-budget">予算・ポイント枠 <span class="hint">円</span></label>
-          <div class="input-box"><input id="bd-budget" type="number" inputmode="numeric" min="0" step="1000" value="50000"><span class="unit">円</span></div>
-          <div class="qchips" id="q-bdbudget">
-            <button class="qchip" type="button" data-q="bd-budget" data-v="30000">3万</button>
-            <button class="qchip" type="button" data-q="bd-budget" data-v="50000">5万</button>
-            <button class="qchip" type="button" data-q="bd-budget" data-v="100000">10万</button>
-            <button class="qchip" type="button" data-q="bd-budget" data-v="200000">20万</button>
-          </div>
-        </div>
-        <div class="field">
-          <label for="bd-rate">ポイント還元率 <span class="hint">%</span></label>
-          <div class="input-box"><input id="bd-rate" type="number" inputmode="numeric" min="0" max="50" step="1" value="20"><span class="unit">%</span></div>
-          <div class="qchips" id="q-bdrate">
-            <button class="qchip" type="button" data-q="bd-rate" data-v="0">0%</button>
-            <button class="qchip" type="button" data-q="bd-rate" data-v="10">10%</button>
-            <button class="qchip" type="button" data-q="bd-rate" data-v="20">20%</button>
-            <button class="qchip" type="button" data-q="bd-rate" data-v="30">30%</button>
-          </div>
-        </div>
-      </div>
-      <div class="seg" id="bd-genre" role="group" aria-label="ジャンル">
-        <button type="button" data-genre="all" aria-pressed="true">すべて</button>
-        <button type="button" data-genre="rice" aria-pressed="false">炊飯器</button>
-        <button type="button" data-genre="microwave" aria-pressed="false">レンジ</button>
-        <button type="button" data-genre="beauty" aria-pressed="false">美容</button>
-        <button type="button" data-genre="cleaner" aria-pressed="false">掃除機</button>
-        <button type="button" data-genre="camera" aria-pressed="false">カメラ</button>
-      </div>
-      <div class="actions">
-        <button class="btn primary" id="bd-go" type="button">組み合わせを提案する</button>
-      </div>
-      <div class="results" style="margin:12px 0 0">
-        <div class="res main">
-          <div class="k">この組み合わせの実質利益</div>
-          <div class="v neutral" id="bd-profit">—</div>
-          <div class="s" id="bd-profit-sub">&nbsp;</div>
-        </div>
-        <div class="res">
-          <div class="k">買取合計</div>
-          <div class="v neutral" id="bd-buy">—</div>
-          <div class="s" id="bd-buy-sub">&nbsp;</div>
-        </div>
-      </div>
-      <div class="bd-plan" id="bd-plan"></div>
-      <p class="empty" id="bd-empty">予算を入れて「組み合わせを提案する」を押してください。</p>
     </div>
   </section>
 
@@ -3454,7 +3245,7 @@ YS.SCAN_B_NOTE = "01010101bp5k5k8y1$225k5k6Z6Z6Z8080808080808080bb807V803w515151
 YS.SCAN_NOTE_DICT = "0;0新品・カテゴリ別価格表;3サイト更新2020/12/4;b1/10/22;h3;h5;h6;g4;e1/12;h7;g24;h6;h9;e2/1;h0;h5;h6;h7;h8;g20;h1;h4;g9;d5/25;d6/11;g4;g7;f9;d7/6;b2/1/14;g8;f25;g8;g9;f31;e0/1;g20;h5;h6;g5;g7;e1/1;h1;h4;h7;g2;h2;h3;h4;h5;h8;h9;g3;g4;g8;e2/1;h2;h4;h5;h9;g21;h4;h8;g5;g8;d2/10;f23;g4;g8;f8;d3/14;g5;g8;f2;g4;f30;g1;f5;f7;d4/1;g4;g6;f21;g5;g8;f5;f6;d5/13;g7;f25;g6;g8;f30;f7;d6/13;g4;g7;f2;g1;g7;g8;g9;f6;f7;f8;f9;d7/11;g2;g6;g8;f20;g1;g2;g5;g6;f4;f7;f8;d8/18;f22;g3;f5;d9/1;g3;g9;f2;g0;g1;g3;g6;g7;g8;g9;f3;f7;f8;b3/1/10;g1;g3;g6;g7;g8;f20;g3;g6;f30;f5;f6;f7;e0/11;h7;h8;h9;g20;h4;h5;h6;g31;g5;e1/10;h3;h4;g2;h2;h7;h8;g6;g7;e2/11;h2;h3;h8;h9;g20;g6;g8;g9;d2/10;g3;g4;g8;f20;g1;g2;g4;g8;f3;f9;d3/1;g0;g4;g6;g7;f2;f3;f9;d4/10;g1;g2;g3;g8;g9;f20;g1;g4;g6;g7;f3;f5;f6;d5/10;g1;g2;g7;g9;f23;g4;g9;d6/12;g4;g6;g9;f20;g1;g2;g3;g6;g7;g9;f3;f5;f6;f7;f9;d7/11;g8;f20;g4;g6;g7;g8;f3;f4;f5;f6;d8/1;g5;g7;f22;g3;g5;g8;d9/11;g2;g3;g6;f20;g1;g2;g3;g6;g7;g8;f5;f6;f7;b4/1/16;g7;g9;f25;g6;f4;f5;f9;e0/1;h0;h1;h4;h6;h7;h8;g2;h1;h2;h3;h4;h5;h9;g3;h0;h1;g8;g9;e1/11;h3;h4;h5;h9;g21;h2;h3;h6;h7;h9;g5;g7;g8;e2/10;h1;h2;h6;h8;h9;g2;h0;h4;h5;h6;h7;g3;g4;g5;g6;d2/12;g3;g6;f20;g6;g7;g8;f5;f6;f7;d3/12;g3;g5;g8;g9;f20;g1;g2;g5;g7;f5;f6;f7;d4/11;g2;g6;g7;g8;g9;f2;g2;g3;g5;f4;f5;d5/10;g3;g5;g6;g7;f21;g3;g4;g8;g9;f30;f8;d6/10;g1;g2;g3;g4;g7;g8;g9;f20;g1;g4;g5;g8;f3;f5;f6;f7;d7/1;g0;g1;g2;g5;g6;g7;g8;g9;f2;g2;g3;g4;g5;g6;g7;g9;f31;f4;f5;f8;f9;d8/1;g4;g5;g9;f2;g0;g1;g2;g3;g6;g7;g9;f30;f5;f6;d9/10;g3;g4;g7;g8;g9;f2;g0;g3;g5;g6;f3;g0;f4;f5;f6;f9;b5/1/10;g4;g5;g6;g7;f20;g2;g4;g7;g8;g9;f31;f6;f7;f8;f9;e0/1;h0;h4;h5;g20;h1;h2;h3;h4;h5;h8;h9;g3;h0;h1;g4;g6;g7;g9;e1/10;h1;h2;h3;h4;h7;h8;h9;g20;h1;h4;h5;h6;h7;h8;g3;g4;g5;g6;g7;e2/10;h2;h5;h7;g2;g3;g4;g5;g9;d2/1;g2;g3;g4;g7;g8;g9;f20;g2;g4;g5;g7;g8;f3;f4;f5;f6;f7;d3/11;g2;g3;g4;g7;f20;g1;g4;g5;g7;g8;f3;g1;f4;f5;f6;f7;f8;d4/1;g0;g1;g4;g5;g7;g8;f21;g2;g5;f3;f4;f7;f8;f9;d5/12;g4;g5;g9;f20;g1;g2;g3;g6;g7;g8;g9;f30;f7;f8;f9;d6/11;g2;g3;g7;g9;f21;g4;g5;g6;f3;f4;f5;f6;f9;d7/1;g1;g4;g5;g6;g7;g8;g9;f2;g1;g2;g3;g4;g5;g8;g9;f30;f4;f9;d8/1;g3;g4;g5;g8;g9;f20;g1;g2;g7;g8;g9;f4;f5;f7;d9/1;g0;g1;g2;g7;g8;g9;f22;g6;g9;f5;f6;f8;f9;b6/1/13;g5;g6;g7;g9;f20;g1;g2;g6;g7;g8;f5;f7;f8;f9;e0/1;h0;h3;h4;h6;h7;h9;g2;h0;h1;h2;h3;h6;h8;h9;g30;g5;g6;g8;g9;e1/10;h1;h2;h3;h4;h6;h7;g2;g5;g9;d2/10;g2;g3;g4;f2;g5;g6;f3;f4;f5;f6;f9;d3/10;g1;g2;g6;g8;g9;f23;g4;g5;f3;g0;g1;f4;f5;f6;d4/1;g0;g4;g6;g7;f20;g1;g2;g3;g4;g7;f6;f7;f9;d5/11;g2;g3;g5;g8;f22;g5;g6;g7;g8;g9;f7;f8;d6/1;g0;g1;g2;g3;g5;g6;g8;g9;f2;g0;g5;g6;g9;f30;f5;f8;f9;d7/1;g0;g3;g6;f20;g3;g4;g7;g8;g9;f3;g0;g1;f6;f8;f9;d8/13;g4;g7;g8;g9;f20;g1;g4;g6;g8;f31;f4;f5;f6;d9/1;g0;g1;g4;g5;g6;g7;g9;f2;g2;g4;g5;g8;g9;f30;f4;f7;f8;f9";
 /* 各社の買取額（スパース）: 商品番号（3文字）＋店番号（SCAN_SHOP15の番号1文字）＋価格（4文字）。
    主要16商品と、公開一覧で他社の額も分かっている1,700件ぶんだけを持つ。 */
-YS.SCAN_SHOP15 = ["森森買取", "携帯空間", "家電市場", "買取商店", "ゲオ", "買取楽園", "買取ルデヤ", "ケータイゴッド", "トゥインクル", "買取1丁目", "ドラゴンモバイル", "買取ミナモト", "モバイルミックス", "買取ホムラ", "ジェーシカ", "買取wiki"];
+YS.SCAN_SHOP15 = ["森森買取", "携帯空間", "家電市場", "買取商店", "ゲオ", "買取楽園", "買取ルデヤ", "ケータイゴッド", "トゥインクル", "買取1丁目", "ドラゴンモバイル", "買取ミナモト", "モバイルミックス", "買取ホムラ", "ジェーシカ"];
 YS.SCAN_SHOP_PRICES = "00060kk000030k1g00130cQk00160cIw00240s4U00230OYY00260MR0003306mg004304MI004604x4006403b8007303iY00860mCU0096083E00b30pEE00b60oqw00c303W000c603qM00e10b6Y00e608Wk00e307Ao00f103_I00f003W000f303W000f603qM00g30eV800h30ybw00i30ijU00k601lY00l60fE000q60q_A00r60csU01k20cCg01k60bRQ01l20cCg01l60bRQ01m20cCg01m60bRQ01n20cCg01n60bRQ01o20cCg01o60bRQ01p20cCg01p60bRQ01u60d3Y01v60d3Y01w20ejE01w60d3Y01x60d3Y01y60d3Y01z60d3Y01P302Xw01Q304pg01R304pg01S304pg02p3011E02r60sA802s60hB002u60MR002V606vE03130mBk03f601sc03g600Xo03m603W003n6049E03o200vg03t303b803R307Q003S307Q003T307Q003U307Q003V308yU03W308yU03X308yU03Y308yU03Z307Q003_307Q003$307Q0040307Q0041308yU042308yU043308yU044308yU04530a$804630a$804730a$804830a$804930a$804a30a$804b30a$804c30a$804d30cdg04e30cdg04f30cdg04g30cdg04h30cdg04i30cdg04j30cdg04k30cdg05S30l_g05T30l_g05U30l_g05V30l_g05W30l_g05X30l_g05Y30l_g05Z30l_g05_30l_g05$30l_g06030l_g06130l_g06230l_g06330l_g06430l_g06530l_g06630l_g06p30l_g06s204yE06s304pg06t307XQ06v305nM06P3013c06Q2014M06T300Xo06U200Xo06V3026o06W201e806Z600SI06_600lU06$600ns071600fE072600zY074600ns078600kk0796007Q07c601e807d300wQ07f600D407g600e407h600lU07i601Jo07j300qA07k600iM07l600aY07m300s807n600fE07o600kk07p601Rc07q601e807w602Xw07y600SI07A600HM07C600vg07D3009o07E600p007H303Oc07I303W00bs602Xw0bI303b80bJ30HYw0bL30eV80bN20lKE0bQ20yWo0bQ30xd00bR21kug0bR31e800bS309N00bT309N00bU30Gf80bV30zUU0bW30Ei80bX30upk0bY30hQE0bZ30jFQ0b_30mJ80b$309hM0c130kM80c231f6w0c430JVw0c530_8A0c831xG00c930xXU0ca30qSM0cb311TE0ce30dWE0cf30a$80cg3138U0ci31g880cj31lsM0ck31qlg0cm30HYw0cp304Zc0cr21g500cr31bHM0cs20Z2g0ct20XQ80cu309hM0cv305_Q0cw33rKw0cx30Fwg0cy30IPc0cW304MI0d130a8s0d3300SI0dt608Ow0du60aLw0dN30u1U0dR32uIg0dV60pEE0dV30p9o0dW60k$M0dW30kgU0dX60KrU0dX30IX00dY60Zxw0dY30Xxo0em600_w0ez308yU0fP302A40fQ302080fR302080fS302080fT302080fU302080fV302080fW302080fY302080fZ302080g23069M0g7307580gc307Q00gu3059I0gH610lc0gH30$uw0gQ30Ei80gQ60Ei80gT30mYM0gU60lKE0gU30lv00gX60lzI0gY60pYY0gY30pEE0gZ30rm00gZ60qD80h230gos0h330ns00h360kM80h430tj00h830cY80he30j2M0hn30BRU0ho639qE0ho32iv00hp60s800hp30s4U0hq60pyo0hq30oVM0hr30dro0hs60jy00hu31_Z00hv31E_M0hw62g2M0hw32bag0hx61Stg0hx31JTg0hy61fm80hy319fw0hz60mdU0hz30l_g0hA60l_g0hA30lfo0hB30j2M0hB60h5M0hD30qnw0hE30pEE0hF30hB00hF60fTE0hG60rec0hG30pUg0hH60rec0hH30qnw0hI60kk00hI30jy00hJ60jy00hJ30j2M0hK311WM0hL61oYc0hL31lsM0hM60WC00hM30UF00hN61DGo0hN31Cyw0hO60Qvo0hP61ruI0hP31lsM0hQ60_LE0hQ30Z2g0hR60Reg0hR30Qvo0hS60MYQ0hS30MR00hT60CeU0hT30BmE0hU60LCU0hV30HYw0hV60GKo0hW30Dzg0hW60BRU0hX30tj00hX60sA80hY30ybw0hZ30l_g0hZ60kgU0iu306mg0iv306mg0iw305Do0ix305Do0iy305Do0iz60ei40iA60ei40iF600SI0iO300tI0iP213WU0iP312q00iU300nM0iV20$K80iW20t3o0iW30sPM0i_30Yjo0i$30$uw0j030ZUY0j1309280j2302Xw0j3305nM0j4306Rw0j53066E0j6300ns0j7300kk0j8300Jk0j9304tY0ja304tY0jb300ns0jc300p00jd300jy0jd200jy0je300kk0jf300CM0jg300ns0jh300kO0ji300lU0jj300A60jk300jy0jl300lU0jm300sW0jn300s80jo300p00jp300oe0jq300mQ0jr300Ek0jt304Uw0jv319fw0jw30pEE0jy212Ns0jy311WM0jz304tY0jB33fxg0jD62uIg0jD32bag0jL60XJU0jM60XZw0jN60KU00jO60L$U0jP60UcU0jP30Reg0jQ60QZ40jR612dw0jR310IE0jS60u1U0jS30sA80jT30pEE0jT60oqw0jY60Sek0jY30RJw0jZ60RJw0jZ30KoM0j_30D400j_60ybw0j$30Fwg0j$60FgE0k060EVc0k160Dzg0k760pp00k860kM80k960whE0ka60zjo0ka30ybw0kb60ADM0kb30ybw0kc60zpE0kc30wZo0kd60uAg0kd30sPM0ke60uAg0ke30tj00kf60v1Y0kf30tj00km60ZbE0kn315B80kn614n00kp6182Y0kp3181o0kq614q80kq3138U0kr30ScM0kr60Reg0ks30Reg0ks60PMw0kt60NYU0ku60J_c0kv60Nno0kv30MR00kw60LG00kw30KEo0kx60Ymw0kx30XkU0ky30JVw0ky60IX00kz60GSc0kz30F$w0kA615B80kA314n00kB612QA0kB30Z2g0kC603Go0kD603Go0kE600mm0kF601BA0kG300oe0kH300tI0kI600lg0kK6009o0kL600lU0kM600t40kN600lg0kO600i80kP600vg0kQ600mm0kR600lU0kS600lU0kW309hM0kX30kgU0kY30e2s0kZ30kww0k_30hlo0l5301b00l9301b00la300Xo0lb300_w0ld3011E0le300Xo0lf300Xo0lg600Gc0ll6041Q0ll303W00lm6041Q0lm303W00m520cdg0mQ3041Q0mR3041Q0mS3041Q0mW3041Q0mX3041Q0mY3041Q0m$6041Q0n06041Q0n13041Q0n16041Q0nb307Q00nc307Q00nd307Q00ne307XQ0ny30aLw0nz30aLw0nA30aLw0oi30jy00oz30yWo0oA30yWo0oB30xIg0oK30HdE0oL30C5w0oO30D400pP30KoM0pQ30KoM0pX314n00pX614n00pY314n00pY614n00pZ30MR00pZ604Uw0p_30MR00p_604Uw0p$60MR00q220SXE0q320SXE0q520SXE0qb601b00qc303W00qd303W00qe303W00qi605_Q0qj605_Q0qk605_Q0ql605_Q0qw60k1g0qx60k1g0qy60k1g0qz60k1g0qA60nXg0qB60nXg0qC60nXg0qD60nXg0qE60tOg0qF60tOg0qG60tOg0qH60tOg0qI60ybw0qJ60D400qK60D400qL60GKo0qM60ux80qN60ux80qO60ux80qP60ux80qQ60wZo0qR60gmU0qS60gmU0qT60gmU0qU60gmU0qV60jy00qW60jy00qX60jy00qY60jy00qZ60pUg0q_60pUg0q$60pUg0r060pUg0r160t3o0r260t3o0r360t3o0r460t3o0r560JaE0r660x5c0r760x5c0r860x5c0r960x5c0ra60Cdk0rb60Cdk0rc60Cdk0rd60MR00re60MR00rf60V0s0rg60OiM0rh60zpE0ri60zpE0rj60zpE0rk60zpE0rl60FE40rm60FE40rn60FE40ro60FE40st60eFw0su60eFw0sv60eFw0sw60eFw0sx60gf40sy60gf40sz60gf40sX203b80tX3016k0un300kE0vV30dro0v_600HM0ww301Gg0wx301R_0wy301R_0wz301A00wC304EU0wX6041Q0w_6041Q0xf605UA0xg605UA0xh606Lg0xi606Lg0xq3041Q0xC30eag0xS60how0xS30h5M0xT30ijU0xU60jYA0xU30jNE0xW30eFw0x_30jy00x$30s4U0y930vLg0y960tm80yb30O380yc30RJw0yh31lsM0yi30WC00yn61xQY0yn31nV00yo31OLM0yo61K6U0yt30RJw0yt60MR00yu30O380yx30ybw0yy30zpE0yz30Phg0yA30GKo0yC30Fwg0yD30Fwg0yE30BRU0yF30MR00yG30MR00yH30MR00z1309N00z2306Rw0Aa30h5M0Al30wZo0Am30ADM0An30JdM0Ap30JdM0Ar30JdM0At30JdM0Au30wZo0AN30OiM0AO30CAM0AS30rtQ0AT30nXg0AU30rtQ0AV30nXg0AW30rtQ0B030N4E0B130U9M0B230N4E0B330U9M0B431fm80C960bRQ0C930bOI0Ca30ff00Cn600G_0Cp600O00Cq600Ug0Cr600KU0Ct600s80CO319fw0CO618Mg0CP30uhw0CZ606Rw0C_300_w0D0607Ao0D430Reg0D530qSM0D630kgU0D7311WM0D930cdg0Db30ExM0Dc30l_g0Df32zAM0Di30ns00Dj30pp00Dj20pp00Dk20v0o0Dk30uMM0Dl20Qvo0Dm20Qvo0Dn20IX00Do20IX00Dr30dbM0Dt300VQ0Dx302BE0Dz30aLw0Dz60avU0DA600KU0DB601VU0DC6026o0DD6036s0DE602yw0DJ30djA0DJ60csU0DK30dro0DK60djA0DL602cE0DM30ei40DM60ei40DO60dK80DO30dH00DP30dWE0DQ209Aw0DQ309pA0DR609JU0DR309Fc0DV601Ty0DW601_A0DX600Gc0DY601VU0DZ600Gc0D_600iM0D$600zY0E0601tM0E1601tM0E2601Ty0E3601R_0E4306JI0E4606Ds0E5606Ds0E5306BU0E6306JI0E6606Ds0E7306BU0E7206BU0E8306JI0E8606Ds0E96076I0E9307580Ea6076I0Ea307580Eb207580Ec207580Ed6078g0Ed3076I0Ei601vk0Em600YY0En601hg0Et600KU0EE60b3Q0EF20a8s0EF60a3M0EG60b3Q0EG30aUU0EH60b3Q0EI60b3Q0EU60kM80EU30kgU0EV30lKE0EV60kM80E$30lv00F030eFw0F230hQE0F260hQE0F360jio0F330j2M0F460lqk0F430jy00F530dWE0Fl307580Fm30ybw0Fn30cdg0Fo20jio0Fo30j2M0Fq3172U0Fq611WM0Fr60NzU0Ft60Y3M0Fv30O380Fv60MR00Fw30Htg0Fw60DmM0Fx60KVA0Fx30JaE0Fy60DAQ0Fy30C5w0Fz30wZo0Fz60v0o0FA60v_U0FA30vg00FB60scI0FC60skw0FE30s4U0FF30qSM0FG30tj00FH30tj00FJ30pEE0FK60rBE0FK30oqw0FT60d5w0FT30cdg0Go303Go0Gu606nQ0Gw302HU0Gy302sg0GA602cE0GC303Oc0GE301Rc0GJ301Z00GL601Z00GP301Rc0GT302fM0GV304pg0GX303iY0GZ303qM0H1603SU0H3608Ow0H5302ks0H7605T00H9302cE0Hb303Oc0Hp204EU0Hq204yE0Hr204yE0Hs304EU0Ht304MI0Ht604x40Hu603b80Hv603b80HR607kM0HS607kM0HT607kM0HZ60agg0H_60a$80H$609Fc0I0609Fc0I330eag0I430eag0If30s4U0Ii30Z2g0Ij30ybw0Ik30ybw0Ip308r40Iq309280Ir30cl40Is30agg0K9606mg0Ka606mg0Kb600D40Kp60qvk0Kp30qnw0Kr60tBM0Kr30tqQ0Kt60s_I0Kt30sPM0Kx30OYY0Kx60LCU0KB60q_A0KB30qSM0KC30qBA0KC60qvk0KK602sg0KL209N00KL609N00KM6024Q0KN6024Q0KO6024Q0KP6024Q0KQ6024Q0KR6024Q0KS202sg0KS602sg0KT602sg0KU302HU0KV603qM0KW602sg0KX602sg0KZ6024Q0K_6024Q0K$602sg0L3602p80L4602sg0L56024Q0L6602Uo0L76024Q0L86024Q0L96024Q0La6024Q0Lb6024Q0Lc6024Q0Ld6024Q0Le602sg0Lj30kww0Lk30cQk0Ll30cQk0LV20MR00OL203Go0PF211WM0PG20Phg0Qy20kcc0QR20bZE0Uy30l_g0Uz30l_g0Vq304pg0Vr303qM0Vs303Go0Vv600vg0Vw603b80Vx602tQ0VA308F80VA608F80VB608240VB3080w0VC3086M0VC6086M0VD60beM0VE60beM0VH60MR00VI60jQM0VK306u40VL302080VM302080VN302080VO302080VP302080VQ302080VR302Xw0VS300SI0VT6011E0VU6019s0Wb60NBs0Wb30JaE0Wc60agg0Wc30a0E0Wd30Fwg0We30GKo0Wf30JaE0Wg30MR00Wh30HYw0Wi20PD80Wi30O380Wk30WC00Wl308kQ0Wm308uc0Wn307580Wr30laI0Ws30BK40Xc30cY80Xl20ssk0Xl30nco0Xm20ssk0Xm30nco0Xn20ssk0Xn30nco0Xo20ssk0Xo30nco0Xs30skw0Xt30LCU0Xu30U9M0Xw30U9M0Zf30j2M0Zr60a0E0Zw30tW40Zx30nXg0Zy307XQ0ZB30aDI0ZC30GKo0ZG30dH00ZH30yGM0ZJ216dM0ZJ30Z2g0ZM205vA0ZM305ss0ZN30Phg0ZO30Phg0ZP30Phg0ZQ30Tbg0ZR30Tbg0ZS30Tbg0ZT30Tbg0ZX60pEE0ZY60p9o0_060U9M0_l60kww0_s30h5M0_t30h5M0_D30kgU0_F30WC00_H30ybw0_I312FE0_J30Z2g0_K30QL00_M30ybw0_N30A8w0_O315B80_Q31xG00_R30ScM0_S30zUU0_U314n00_V31A6g0_W30Dzg0_X30lfo0_Y20OiM0_Y30MR00_Z30O380_Z20O380__20Tbg0__30ScM0_$21aJg0_$319fw0$030oqw0$130ADM0$230uu00$430cIw0$530dWE0$630vLg0$730HYw0$831keE0$930HYw0$a311WM0$b30gmU0$c30nHE0$d30nHE0$e20rUo0$e30rRg0$f20ux80$f30upk0$g30Phg0$h30qSM0$i31E_M0$n301tM0$r601HQ0$u601Rc0$v603Go0$L616uY0$L30Z2g0$M3041Q0$N303W00$O3066E0$P307Ao0$Q308Ow0$R308yU0$S308yU0$T30pUg0$U303Oc0$V605yI0$V305ss0$W605u00$W305ss0$X302cE0$Y302cE0$Z302cE0$_302cE0$$304Uw100305Do10130758102306Zk103307kM10430bRQ10530bRQ10630bRQ10730bRQ10830bRQ109207kM10g600O010h600Ug10j600SI10k605qU10n60xQ410n20xAs10o30EbU10o20E5E10p30EbU10p20E4410q20wIc10s60KoM10t60Z2g10u610IE10v60DbQ10v30D4010w20GSc10w60GSc10D302sg11e30dro11f30eag11h30qSM11i30nco11j30g7g11k30lSs11l30lKE11o30BmE11p30ux811q30qSM11r30avU11w30g7g11x30ux811y30dro11A30l_g11B30sA811V309JU14A307u814B307u814S60dOQ14S30dro14T60dro14U30M6814V30JaE14W60gWQ14W30gS814X60gHc14X30gmU14Y60j2M14Y30iP814Z30ijU14Z60ijU14_30p9o14_60nco14$30oqw14$60nco15060sL415030rRg15160uhw15130tOg15260mdU15230m6415360l7A15330k$M15430U9M15530U9M15g301tM15i302IG15j303E215k303E215l304IO15m305WW15n60lPk15n30lKE15p60tBM15p30tyE15t60qVU15t30qD815u301tM15v301tM15w301tM15x301e815y301jC15A602A415C301tM15D302cE15E301Gg15F302sg15H302cE15J301tM15K301tM15L301tM15M301tM15O301tM15P301tM15Q301tM15R301tM15S301tM15T301tM15U301tM15V301tM15W301tM15X301tM15Y301tM15Z301tM15$301tM160301tM161301tM162301lY163301tM164301tM165301tM166301lY168301lY16a601e816b603cI16c301tM16d301tM17F20yGM17H20yGM17L60WC017M60WC017N60WC017O60WC017P60LSw17Q60LSw17R60LSw17S60LSw18560f0Y18530cIw18660f0Y18630cIw18760f0Y18730cIw18r30kM818r60kM818s60jHo18s30jy018t30fE018u60Ifg18u30HYw18v30wu818x60sfQ18x30s4U18y30fwc18y60eV818z30rBE18z60rm018E30KoM18E60I7s18H60MoU18H30HYw18I613TM18I3138U18J61Hbo18J31Cyw18K625jg18K321pg18L30VnU18L60VnU18N30Phg18N60Phg18P30p9o18P60p9o18Q30pEE18Q60pEE18R30pUg18T60lYI18T30kFU18U60mv418V60BRU18V30B7018W60Cdk18W30ADM18X60rm018X30qnw18Y612Vg18Y30WC018Z60U1Y18Z30Phg18_30Fwg18_60Fwg18$316Pg19061xYM19031wrU19161cqE191314n019a303qM19p316fk19p611WM19q60U9M19x303b819y303b819z303b81a6600za1aj30g7g1aj60g7g1ak30g7g1ak60g7g1al60g7g1al30fTE1am30g7g1am60g7g1an30jio1ao30jio1ap30jio1aq30jio1ar30lfo1as30lfo1at30lfo1au30lfo1bt60iCE1bt30izw1bu60iCE1bu30izw1bv60iCE1bv30izw1bw60iCE1bw30izw1bB60l2U1bB30k$M1bC60l2U1bC30k$M1bD60l2U1bD30k$M1bE60l2U1bE30k$M1bF60qSM1bG60qSM1bH60qSM1bI60qSM1bJ30nXg1bJ60nXg1bK30nXg1bK60nXg1bL30nXg1bL60nXg1bM30nXg1bM60nXg1bR60sHY1bR30qSM1bS60sHY1bS30qSM1bT60sHY1bT30qSM1bU60sHY1bU30qSM1c430fTE1c530fTE1c630fTE1c730fTE1c830jy01c930jy01ca30jy01cb30jy01cc30h5M1cd30h5M1ce30h5M1cf30h5M1cg30ijU1ch30ijU1ci30ijU1cj30ijU1ck30ijU1cl30ijU1cm30ijU1cn30ijU1co30l_g1cp30l_g1cq30l_g1cr30l_g1cs30jy01ct30jy01cu30jy01cv30jy01cw30kM81cx30kM81cy30kM81cz30kM81cZ60m$U1cZ30mYM1c_60m$U1c_30mYM1c$60m$U1c$30mYM1d060m$U1d030mYM1d560qGg1d530qD81d660qGg1d630qD81d760qGg1d730qD81d860qGg1d830qD81d960wZo1da60wZo1db60wZo1dc60wZo1dd60vLg1dd30tj01de60vLg1de30tj01df60vLg1df30tj01dg60vLg1dg30tj01dl60A8w1dl30vLg1dm60A8w1dm30vLg1dn60A8w1dn30vLg1do60A8w1do30vLg1dI30ijU1dJ30ijU1dK30ijU1dL30ijU1dM30l_g1dN30l_g1dO30l_g1dP30l_g1dQ30jy01dR30jy01dS30jy01dT30jy01dU30kM81dV30kM81dW30kM81dX30kM81dY30kM81dZ30kM81d_30kM81d$30kM81e030oqw1e130oqw1e230oqw1e330oqw1e430l_g1e530l_g1e630l_g1e730l_g1e830nco1e930nco1ea30nco1eb30nco1ec20ybw1ed20ybw1ee20zpE1et30F101et60DOU1eu30F101eu60DOU1ez60JFU1ez30IPc1eA60JFU1eA30IPc1eD20v_U1eD30vg01eE20v_U1eE30vg01eH20Ao81eH30zpE1eI20Ao81eI30zpE1eL30ybw1eM30ybw1eN30wZo1eO30wZo1eP30tj01eQ30tj01eR30ADM1eS30ADM1eT30zpE1eU30vLg1eV30vLg1eW30Ei81eX30Ei81eY30Fwg1eZ30Fwg1e_30GKo1e$30GKo1f030HYw1f130HYw1f230D401f330D401gN30MR01gN60L7E1gO30MR01gO60LCU1gT60SAc1gT30RJw1gU60SAc1gU30RJw1gV20DWI1gV30DOU1gW20DWI1gW30DjE1gX20GKo1gX30Gf81gY20GKo1gY30Gf81gZ30zpE1g_30zpE1g$30ADM1h030ADM1h130JaE1h230JaE1h330KoM1h430KoM1h530Fwg1h630Fwg1h730MR01h830MR01h930O381ha30O381hb30HYw1hc30HYw1hd30vLg1he30vLg1hf30D401hg30D401hh30Ei81hi30Ei81hj30ybw1hk30ybw1hl60hB01hl30hlo1hm60hB01hm30hlo1hn60hB01hn30hlo1ho60hB01ho30hlo1hp60k1g1hp30jNE1hq60k1g1hq30jNE1hr60k1g1hr30jNE1hs60k1g1hs30jNE1ht60nHE1ht30ns01hu60nHE1hu30ns01hv60nHE1hv30ns01hw60nHE1hw30ns01hF60phc1hF30p9o1hG60phc1hG30p9o1hH60q_A1hH30qSM1hI60q_A1hI30qSM1hJ30s4U1hJ60qSM1hK30s4U1hK60qSM1hL60uEY1hL30ux81hM60uEY1hM30ux81hN30wew1hN60v0o1hO30wew1hO60v0o1hP60avU1hQ60avU1hR60avU1hS60avU1hT30bK01hU30bK01hV30bK01hW30bK01l960rBE1l930q_A1la60rBE1la30q_A1lb60rBE1lb30q_A1lc60rBE1lc30q_A1ld60rBE1ld30q_A1le30sA81le60sA81lf30sA81lf60sA81lg30sA81lg60sA81lh30sA81lh60sA81li30sA81li60sA81lj30u1U1lj60u1U1lk30u1U1lk60u1U1ll30u1U1ll60u1U1lm30u1U1lm60u1U1ln30u1U1ln60u1U1lo60r6o1lp60r6o1lq60r6o1lr60r6o1ls60r6o1lt60tqQ1lu60tqQ1lv60tqQ1lw60tqQ1lx60tqQ1ly60v0o1lz60v0o1lA60v0o1lB60v0o1lC60v0o1lD60ybw1lE60ybw1lF60ybw1lG60ybw1lH60Fwg1lI60Fwg1lJ60Fwg1lK60Fwg1lL60ADM1lM60ADM1lN60ADM1lO60ADM1lP60D401lQ60D401lR60D401lS60D401lT60MR01lU60MR01lV60MR01lW60MR01lX60ADM1lY60ADM1lZ60ADM1l_60ADM1l$60HYw1m060HYw1m160HYw1m260HYw1m360k1g1m460k1g1m560kgU1m660kgU1m760kww1m860kww1m930y3I1m960y3I1ma30y3I1ma60y3I1mb30y3I1mb60y3I1mc30y3I1mc60y3I1md30y3I1md60y3I1me30ATo1me60ATo1mf30ATo1mf60ATo1mg30ATo1mg60ATo1mh30ATo1mh60ATo1mi30ATo1mi60ATo1mj30NzU1mj60NzU1mk30O381mk60O381ml30NzU1ml60NzU1mm30Fwg1mm60Fwg1mn30GKo1mn60GKo1mo20GKo1mo60Fwg1mp30MlM1mp60MlM1mq20MlM1mq60MlM1mr20NHI1mr60MR01ms30Wmo1ms60VLk1mt60WC01mt30Wmo1mu30Wmo1mu60VLk1mv30IHo1mv60HYw1mw30IHo1mw60HYw1mx30KU01mx20KU01my311rw1my611rw1mz311WM1mz611WM1mA311rw1mA611rw1mB20Phg1mB60Phg1mC20Q_E1mC60QnA1mD20PwU1mD60Phg1mE30qnw1mE60qnw1mF30qnw1mF60qnw1mG30qnw1mG60qnw1mH30sPM1mH60sPM1mI30sPM1mI60sPM1mJ30sPM1mJ60sPM1mK317NM1mK217NM1mL317NM1mL217NM1mM319v81mM219v81mN317NM1mN217NM1mO20O381mO60O381mP20Ns41mP60Ns41mQ20OqA1mQ60OqA1mR20O381mR60O381mS21p781mS61p781mT21p781mT61p781mU21rzo1mU61rzo1mV21p781mV61p781mW30V8g1mW60V8g1mX20WC01mX60WC01mY20WC01mY60WC01mZ20WC01mZ60WC01m_61h3w1m_31gPU1m$31fBM1m$21fBM1n021gPU1n061gPU1n131gPU1n121gPU1n220Tbg1n260Tbg1n320Tbg1n360Tbg1n420Tbg1n460Tbg1n520Tbg1n560Tbg1n621uuU1n661t$E1n721uuU1n761t$E1n821wX81n861wrU1n921uuU1n961t$E1na30$K81na20$K81nb60$uw1nb20_$g1nc60$K81nc20$uw1nd30$K81nd20$uw1ne30A8w1ne60A8w1nf20BmE1nf60B701ng20BmE1ng60B701nh20BmE1nh60B701ni30wRA1ni60wRA1nj30wew1nj60wew1nk30wRA1nk60wRA1nl30wRA1nl60wRA1nm30yGM1nm60yGM1nn30xsE1nn60xsE1no60yGM1no30yr81np20yGM1np60yGM1nq31PZU1nq61PZU1nr31PZU1nr61PZU1ns21nV01ns61nV01nt31nV01nt21nV01nu22dCw1nu62dCw1nv22dCw1nv62dCw1nw31xVE1nw21xVE1nx31xVE1nx21xVE1nH603b81nI603b81nJ603b81nK604wi1nL205Do1nM608yU1nN608yU1nO60cdg1nP6068c1nV303W01nW303W01nX602PI1nY602PI1ob304Uw1oc304Uw1od303b81oe303b81of303b81og207kM1og605T01oh207kM1oh605T01oi207kM1oi605T01oj202Xw1ok202Xw1ol202Xw1ot607kM1ot206mg1ou607kM1ou206mg1ov60a8s1ov20a0E1ow60a8s1ow20a0E1ox30cdg1ox60a8s1oB30bZE1oC30bK01oD30bZE1oG30f8M1oH30f8M1oI30f8M1oJ30nco1oK30HYw1oL30HYw1pg62VGQ1pg32uIg1ph621pg1pl30kM81pn30m7E1pr60jPc1pr30jy01ps60lnc1ps30kM81pt60nPs1pt30nHE1pu30u1U1pu60tOg1pv60nXg1pv30l_g1pw30pEE1pw60oVM1pz60t6w1pz30t3o1pB60DIE1pB30CAM1pC60MR01pC30MlM1pF30HYw1pF60GKo1pG60SXE1pG30Qvo1pH30VnU1pH60VnU1pJ61be41pJ31atE1pK61e9A1pL60TOk1pL30RJw1pM60Ao81pM30A8w1pN60ADM1pN30zpE1pO30F101pO60F101pP60G_01pP30GKo1pQ61ano1pQ316Pg1pT30HYw1pV31nV01pV61nV01pW31xG01pX61pDY1pZ32pPM1pZ62oBE1q0602nA1qa308jg1qh300_w1qi601ko1qs309C41qw601HQ1qI609N01qJ60beM1qK60epU1qT60a0E1qU60a0E1qV60kww1qW60kww1r3605nM1r560c701so200iM1ss6044Y1st602Js1su6083E1ty604EU1tz604EU1tA602m01tB602m01tC602m01tD602m01tE602m01tF602sg1tG602sg1tH602sg1tI602sg1tJ602sg1tK602sg1tL602sg1tM602sg1tN602sg1tO602HU1tP602HU1tQ602HU1tR602HU1tS602HU1tT603Go1tV60aFg1tW60aFg1tX603iY1tY603iY1tZ603iY1t_603iY1t$603iY1u0603iY1u1601Jo1u2601Jo1u3601Jo1u460bK01u560bK01u660bK01u7605qU1u9301Gg1ue30aDI1uf307Ic1ug307Ic1uO60cY81uU60a0E1v1605Gw1v360mYM1v460vvE1v860BmE1vg60ueo1vj60wew1vk60rBE1vl60kM81vm60QMA1vr60f8M1vu60dWE1vy60xIg1vI605T01vN60zFg1vP60n4A1vT60oaU1vV60kgU1wk300_w1wC300D41wC200D41wD200HM1wJ60cdg1wK60cdg1wL60cdg1wO605T01wP605T01wR60g7g1wS60f$s1wU60O381xk60kww1xl600Bw1xp60gCw1xr6041Q1xs600oe1xt600za1xu60fTE1xx60h5M1xz60dH01xB30eag1xC30u1U1xD30kM81zX6016k1z_6019s1A5302PI1A6301wU1A7601iQ1A93011E1Aa601b01Ac601ko1Ad601fI1Ae601ys1Af3019s1Ag601041Ai601nw1Aj601Jo1Ak601b01Al601sc1Am600Xo1An601qE1Ao601Jo1Ap601p41Aq601vk1Ar601Gg1As3013c1At601O41Au300_w1Aw301EI1Az30wZo1AA30sA81AB30U9M1AC30u1U1AD30dro1BA60foo1Dk300tI1Du300KU1Dw60p9o1Dz60ZN81DH60a0E1DI60ao41DO60c8A1DP60cgo1DQ60D401D_605j41E960gFE1EB20ux81EB60ux81EC20ijU1ED62GVw1EE62coo1EF20oqw1EG20oG81EH61Mjw1EI60P9s1EJ20F$w1EK20ybw1EM20pEE1EN20ybw1EO20Phg1EP20hQE1EQ20nco1ER20n_o1ER60l_g1ES20HdE1ES60GKo1ET20$K81EV601b01F9607Ao1Fb301EI1Fc601041Fd30KU01Fe31gPU1Ff30$uw1FD62GVw1FE601lY1FF601qE1FG600O01FH300yo1FL30csU1FL60csU1G760eV81G960kM81Gd624sA1Ge6014M1Gf6013c1Gg301Xs1Go200HM1Gt60agg1Gu600ns1Gv600vg1HH601hg1HK600VQ1Ig608RE1Iu20sXA1Iu30sSU1Iv30cl41Iv20cl41Ix20eag1Ix60dOQ1Iz304vw1IA600_w1Jx3016k1Jy601ys1JA6019s1JB601ys1JE6006g1JF303b81JG302PI1JH604Uw1JI302cE1JJ3049E1JK3049E1JL303W01JM609N01JN602EM1J_3009o1J$602sg1K0301tM1K1601BA1K2601Gg1K3601Jo1K4601ys1K5601ys1Kb605881Kc302sg1Kd302cE1Ke303yA1Kf302ks1Kg302sg1Kh302Xw1Ki602A41Kj302cE1Kk302cE1Kl302cE1Km302ks1Kn302cE1Ko302sg1Kp301Z01Kq303b81Kr302Xw1Ks605fY1Kt604Ro1Ku601Z01Kv601Z01KN20lNM1KN30lKE1KO20jy01KO30juU1KP20jy01KP30juU1L530fLQ1L630cQk1L9600D41La600HM1Lb601PE1Lc601b01Ld601wU1Le600HM1Lh601uy1Li301b01LH32iv01LJ30a8s1LK30gS81LL600_w1LN600zY1LO300R81LP601b01M3600KU1Mp601ko1Mq601e81Mr300ns1Ms602p81Mt602p81Mu603iY1Mv602cE1Mw602cE1Mx601Jo1My601Jo1Mz601Jo1MA601Jo1MB601Jo1MD6050k1MI304JA1MJ603yA1MK603yA1ML603Oc1MM603Oc1MN603W01MO302iU1MP603W01N430kgU1N930h5M1NE30tyE1O53011E1O6300_w1O76019s1O8301BA1Of301lY1OX301p41OY300Xo1OZ306mg1Pw206Rw1PD301e81PE304x41PF6033k1PG3033k1PH6033k1PI302iU1PM303W01PW300_w1PX301Jo1RU301Jo1RW301BA1S0303b81S1301tM1S2600VQ1S9600_w1SA209281SB209xo1SU207581Tm603yA1Tn603b81To603Go1Tp603Oc1Tr302iU1Ts303tU1Tt6041Q1Tv601tM1Tw601lY1Ty300fE1Tz300s8";
 /* 定価（実測した公式税込価格）: 商品番号（3文字）＋価格（4文字）の並び。未登録は0のまま。 */
 YS.SCAN_MSRP = "02Q0lX802R0lX802S0lX802T0lX802U0lX803B0ad803C0ad803D0ad803E0ad803F0ad803G0ad803H0ad803I0ad803J0brg03K0brg03L0brg03M0brg03N0brg03O0brg03P0brg03Q0brg03R0ad803S0ad803T0ad803U0ad803V0brg03W0brg03X0brg03Y0brg04W0lX804X0lX804Y0lX804Z0lX804_0lX804$0lX80500lX80510lX80520lX80530lX80540lX80550lX80560lX80570lX80580lX80590lX805a0lX805b0lX805c0lX805z0hxU05A0hxU05B0hxU05C0hxU05D0hxU05E0hxU05F0hxU05G0hxU05H0hxU05I0jKw05J0jKw05K0jKw05L0jKw05M0jKw05N0jKw05O0jKw05P0jKw05Q0jKw05R0jKw0670yTg0680yTg0690yTg06a0yTg06b0yTg06c0yTg06d0yTg06e0yTg06f0yTg06g0yTg06h0yTg06i0yTg06j0yTg06k0yTg06l0yTg06m0yTg06n0yTg06o0yTg06t0asM0C90ew80Ca0iP80E407ks0E507ks0E607ks0E707ks0E807ks0Ep0aLc0Eq0aLc0EE0bJI0EF0bJI0Kp0nWY0Kx0xHY1a70ono1a80ono1a90ono1aa0ono1ab0sx01ac0sx01ad0sx01ae0sx01af0B3U1ag0B3U1ah0B3U1ai0B3U1aj0igM1ak0igM1al0igM1am0igM1an0mqo1ao0mqo1ap0mqo1aq0mqo1ar0uZg1as0uZg1at0uZg1au0uZg1bJ0vI81bK0vI81bL0vI81bM0vI81bN0UBU1bO0UBU1bP0UBU1bQ0UBU1bR0zRM1bS0zRM1bT0zRM1bU0zRM1bV0IoE1bW0IoE1bX0IoE1bY0IoE1ck0BOM1cl0BOM1cm0BOM1cn0BOM1co0_Iw1cp0_Iw1cq0_Iw1cr0_Iw1cs0FYo1ct0FYo1cu0FYo1cv0FYo1cw0Ovg1cx0Ovg1cy0Ovg1cz0Ovg1dd0Ft81de0Ft81df0Ft81dg0Ft81dh12mU1di12mU1dj12mU1dk12mU1dl0JCM1dm0JCM1dn0JCM1do0JCM1dp0S9E1dq0S9E1dr0S9E1ds0S9E1dY0LzM1dZ0LzM1d_0LzM1d$0LzM1e018tw1e118tw1e218tw1e318tw1e40PJo1e50PJo1e60PJo1e70PJo1e80Ygg1e90Ygg1ea0Ygg1eb0Ygg1ec0XN01ed0XN01ep1cSM1eq1cSM1er1h0o1es1h0o1et0Pe81eu0Pe81ev1yR01ew1yR01ex1C_E1ey1C_E1ez0XN01eA0XN01eW1lpE1eX1lpE1eY1pzg1eZ1pzg1e_1HnU1e$1HnU1f01Lxw1f11Lxw1f214jU1f314jU1gJ1rwg1gK1rwg1gL1vFU1gM1vFU1gN11TE1gO11TE1gP1Nuw1gQ1Nuw1gR1RE81gS1RE81gT1aqw1gU1aqw1h11A381h21A381h31EcM1h41EcM1h51aqw1h61aqw1h71W1o1h81W1o1h91_b01ha1_b01hb1iZo1hc1iZo1hF0tfU1hG0tfU1hH0xpw1hI0xpw1hJ0Bz81hK0Bz81hL0FYo1hM0FYo1hN0K601hO0K601l90y8o1la0y8o1lb0y8o1lc0y8o1ld0y8o1lo0y8o1lp0y8o1lq0y8o1lr0y8o1ls0y8o1lD0y8o1lE0y8o1lF0y8o1lG0y8o1m30y8o1m40y8o1m90D0U1ma0D0U1mb0D0U1mc0D0U1md0D0U1me0LzM1mf0LzM1mg0LzM1mh0LzM1mi0LzM1mm0D0U1mn0D0U1mo0D0U1mp0LzM1mq0LzM1mr0LzM1mv0D0U1mw0D0U1mx0D0U1mB0LzM1mC0LzM1mD0LzM1mE0uu01mF0uu01mG0uu01mH0D0U1mI0D0U1mJ0D0U1mK1fj01mL1fj01mM1fj01mN1fj01mO0RGo1mP0RGo1mQ0RGo1mR0RGo1mS1EXE1mT1EXE1mU1EXE1mV1EXE1mW0_dg1mX0_dg1mY0_dg1mZ0_dg1m_1kbw1m$1kbw1n01kbw1n11kbw1n20WyU1n30WyU1n40WyU1n50WyU1n61JQ81n71JQ81n81JQ81n91JQ81na135M1nb135M1nc135M1nd135M1ne17_g1nf17_g1ng17_g1nh17_g1ni0KlE1nj0KlE1nk0KlE1nl0KlE1nm0SUw1nn0SUw1no0SUw1np0SUw1nq1OIE1nr1OIE1ns1p401nt1p401nu2clg1nv2clg1nw1xCU1nx1xCU1u40htc1u50htc1u60htc1vd2PXE1Iv0dro1Lx5yvw1Lz6qUU1LB6P3M1LE5fIo1LF4Txw1LG4czw1LH3CZg";
@@ -3684,9 +3475,7 @@ YS.SHOPS = [
   { name: "買取ホムラ", base: "https://kaitori-homura.com/",
     search: "https://www.google.com/search?q=site%3Akaitori-homura.com+", own: false },
   { name: "ジェーシカ", base: "https://www.jcka-mobile.co.jp/",
-    search: "https://www.jcka-mobile.co.jp/?s=", own: true },
-  { name: "買取wiki", base: "https://gamekaitori.jp/",
-    search: "https://gamekaitori.jp/search?q=", own: true }
+    search: "https://www.jcka-mobile.co.jp/?s=", own: true }
 ];
 
 YS.scanNorm = function (v) {
@@ -3824,7 +3613,7 @@ YS.scanVerdict = function (item, shopPrice, point) {
   };
 };
 
-/* 16社の買取額（DBの実測値）。金額がある店を高い順 → 金額のない店の順に並べ、
+/* 15社の買取額（DBの実測値）。金額がある店を高い順 → 金額のない店の順に並べ、
    最高値の店に best を立てる。item が null なら全店「サイトで確認」。 */
 YS.scanShopQuotes = function (item, q) {
   var links = YS.shopLinks(q);
@@ -3868,11 +3657,10 @@ YS.shopLinks = function (q) {
 /* ---- 毎日の価格自動更新（GitHub Actions が書き換える scan_db.json を読む） ----
    公開URL（http/https = GitHub Pages）で開いた時だけ、同じフォルダの scan_db.json を
    バックグラウンドで読み、内蔵DBより新しければ
-     「更新日」「最高買取額」「16社ボタンの各社金額」を差し替える。
+     「更新日」「最高買取額」「15社ボタンの各社金額」を差し替える。
    file://（テスト・ローカル）では通信しない＝内蔵DBのまま動く。 */
-YS.SCAN_DB_URL = "../scan_db.json";
+YS.SCAN_DB_URL = "./scan_db.json";
 YS.SCAN_SYNC = { state: "idle", at: "", count: 0 };
-YS.SCAN_TREND = null;   /* scan_db.json の trend（前日比の集計） */
 
 /* 「家電市場（新品）」→「家電市場」 */
 YS.scanNormShop = function (s) {
@@ -3922,22 +3710,6 @@ YS.scanApplyRemote = function (data) {
       date: it.date || updatedAt || YS.SCAN_UPDATED,
       note: it.note || (prev ? prev.note : "")
     };
-    /* 実売目安（価格.com・量販店最安）と前日比・先週比（サーバーが計算） */
-    if (YS.num(it.retail, 0) > 0) {
-      rec.retail = YS.num(it.retail, 0);
-      rec.retail_shop = it.retail_shop || "";
-      rec.retail_src = it.retail_src || "";
-      rec.retail_hi = YS.num(it.retail_hi, 0);
-    } else if (prev && YS.num(prev.retail, 0) > 0) {
-      rec.retail = prev.retail; rec.retail_shop = prev.retail_shop || "";
-      rec.retail_src = prev.retail_src || ""; rec.retail_hi = YS.num(prev.retail_hi, 0);
-    }
-    if (it.d1 !== undefined && it.d1 !== null) { rec.d1 = it.d1; rec.d1p = it.d1p; rec.d1s = it.d1s || ""; }
-    if (it.d7 !== undefined && it.d7 !== null) { rec.d7 = it.d7; rec.d7p = it.d7p; rec.d7s = it.d7s || ""; }
-    if (it.d1 === undefined && prev && prev.d1 !== undefined) {
-      rec.d1 = prev.d1; rec.d1p = prev.d1p; rec.d1s = prev.d1s || "";
-      rec.d7 = prev.d7; rec.d7p = prev.d7p; rec.d7s = prev.d7s || "";
-    }
     if (!(rec.price > 0) && prev) {
       rec.price = YS.num(prev.price, 0);
       rec.shop = prev.shop;
@@ -3984,14 +3756,13 @@ YS.scanApplyRemote = function (data) {
       if (!cur || it.price > cur.price) { YS.scanJanIndex.set(it.jan, it); }
     }
   }
-  if (data.trend && data.trend.d1) { YS.SCAN_TREND = data.trend; }
   YS.SCAN_SYNC.at = updatedAt;
   YS.SCAN_SYNC.at_jst = updatedTime;
   YS.SCAN_SYNC.count = out.length;
   return true;
 };
 
-/* 同期後の画面更新（一覧・選択中の商品・16社ボタン・検索結果） */
+/* 同期後の画面更新（一覧・選択中の商品・15社ボタン・検索結果） */
 YS.scanAfterSync = function () {
   var q;
   if (typeof renderDbList === "function") { try { renderDbList(); } catch (e) { /* no-op */ } }
@@ -6389,7 +6160,6 @@ function scanRecalc() {
     setV("sc-net", "—", "neutral", false);
     setV("sc-margin", "—", "neutral", false);
   }
-  try { scanExtra(v); } catch (e) { /* no-op */ }
   return v;
 }
 
@@ -7910,379 +7680,6 @@ renderHikariPresets();
 renderHikari(false);
 renderDash();
 renderTax();
-
-
-/* ================================================================
-   2026-11-19 追加: せどりタブ（高還元家電 / 急騰・相場 / 予算逆算）
-   ＋ スキャン結果の「買い/スルー」大型判定
-   ================================================================ */
-
-var GKS = { genre: "all", prate: 20, sort: "ratio" };
-var BDS = { genre: "all" };
-
-/* ---- ジャンル判定（商品名から） ---- */
-function gkGenreOf(it) {
-  var n = String(it.name || "");
-  if (/炊飯|炊きたて|おどり炊き|炎舞炊き|炊飯ジャー|マイコンジャー|電気圧力鍋|圧力鍋/.test(n)) { return "rice"; }
-  if (/オーブンレンジ|電子レンジ|レンジ|オーブン|トースター|グリル|ホットプレート|スチーム/.test(n)) { return "microwave"; }
-  if (/ドライヤー|ヘアアイロン|アイロン|シェーバー|美顔|電動歯ブラシ|脱毛|光美容器|バリカン|ヘッドスパ|美容器/.test(n)) { return "beauty"; }
-  if (/掃除機|クリーナー|ルンバ|ロボット|スティック|布団クリーナー|コードレス/.test(n)) { return "cleaner"; }
-  if (/テレビ|レコーダー|ブルーレイ|ビエラ|ブラビア|アクオス|レグザ|プロジェクター|ディーガ|プレーヤー|シアター/.test(n)) { return "tv"; }
-  if (it.cat === "カメラ" || /カメラ|レンズ|インスタント|チェキ|アクションカム|GoPro|ビデオ/.test(n)) { return "camera"; }
-  if (it.cat === "オーディオ" || /イヤホン|ヘッドホン|スピーカー|サウンドバー|ウォークマン|AirPods|ラジオ|アンプ|オーディオ|マイク/.test(n)) { return "audio"; }
-  return "other";
-}
-
-/* 「店頭に並ばない限定品・プレ値品」は高還元ランキングから外す */
-var GK_EXCLUDE = /多言語版|多言語対応|抽選|限定|予約|受注|特典|初回生産|コレクターズ|プレミア|福袋|海外版|並行輸入|ジャンク|中古|整備済|訳あり|未開封BOX|PSA|鑑定/;
-
-function gkRetail(it) { return YS.num(it.retail, 0) || 0; }
-function gkRatio(it) {
-  var r = gkRetail(it), p = YS.num(it.price, 0);
-  return (r > 0 && p > 0) ? (p / r) * 100 : null;
-}
-function gkProfit(it, prate) {
-  var r = gkRetail(it), p = YS.num(it.price, 0);
-  if (!(r > 0) || !(p > 0)) { return null; }
-  return p - r * (1 - YS.num(prate, 0) / 100);
-}
-
-/* 高還元の候補（実売があり、限定品でなく、買取が実売を超えない＝普通に買える品） */
-function gkCandidates(genre) {
-  var out = [], i, it, ratio, r;
-  for (i = 0; i < YS.SCAN_DB.length; i++) {
-    it = YS.SCAN_DB[i];
-    r = gkRetail(it);
-    if (!(r >= 3000)) { continue; }
-    if (YS.num(it.price, 0) < 2000) { continue; }
-    if (GK_EXCLUDE.test(it.name || "")) { continue; }
-    if (it.cat === "ゲーム機" || it.cat === "トレカ" || it.cat === "端末" || it.cat === "タブレット") { continue; }
-    ratio = gkRatio(it);
-    if (ratio === null || ratio > 100) { continue; }
-    if (genre && genre !== "all" && gkGenreOf(it) !== genre) { continue; }
-    out.push(it);
-  }
-  return out;
-}
-
-function gkRow(it, rank, prate) {
-  var ratio = gkRatio(it), r = gkRetail(it), p = YS.num(it.price, 0), prof = gkProfit(it, prate);
-  var net = r * (1 - prate / 100);
-  var cls = ratio >= 85 ? "" : (ratio >= 70 ? " warn" : " low");
-  var h = '<button type="button" class="gk-row' + (rank === 1 ? " top1" : "") + '" data-id="' + esc(it.id) + '">';
-  h += '<div class="gk-top"><span class="gk-rk">' + rank + "</span>";
-  h += '<span class="gk-nm">' + esc(it.name) + "</span>";
-  h += '<span class="gk-ratio' + cls + '">' + ratio.toFixed(1) + "%</span></div>";
-  h += '<div class="gk-meta"><span>買取 <b>' + yen(p) + '円</b></span><span>実売 <b>' + yen(r) + "円</b></span>";
-  if (it.retail_shop) { h += "<span>" + esc(it.retail_shop) + "</span>"; }
-  h += "</div>";
-  if (prof !== null) {
-    h += '<div class="gk-profit ' + (prof > 0 ? "pos" : "neg") + '">ポイント' + prate + "% → 実質仕入 " +
-      yen(Math.round(net)) + "円・利益 " + (prof > 0 ? "+" : "") + yen(Math.round(prof)) + "円";
-    h += ' <small>（' + (prof > 0 ? "買い" : "スルー") + "）</small></div>";
-  }
-  h += "</button>";
-  return h;
-}
-
-function renderGenka() {
-  var list = gkCandidates(GKS.genre), prate = GKS.prate, h = "", i, it;
-  if (GKS.sort === "profit") {
-    list.sort(function (a, b) { return (gkProfit(b, prate) || -1e9) - (gkProfit(a, prate) || -1e9); });
-  } else if (GKS.sort === "price") {
-    list.sort(function (a, b) { return YS.num(b.price, 0) - YS.num(a.price, 0); });
-  } else {
-    list.sort(function (a, b) { return (gkRatio(b) || 0) - (gkRatio(a) || 0); });
-  }
-  var total = list.length;
-  for (i = 0; i < list.length && i < 40; i++) { h += gkRow(list[i], i + 1, prate); }
-  setHtml("gk-list", h);
-  var withRetail = 0, j;
-  for (j = 0; j < YS.SCAN_DB.length; j++) { if (gkRetail(YS.SCAN_DB[j]) > 0) { withRetail++; } }
-  var note = "実売価格つき " + yen(withRetail) + "件から、いまの条件で " + yen(total) + "件。" +
-    "上位" + Math.min(40, total) + "件を表示（還元率は買取÷実売）。";
-  if (!total) { note = "まだ実売価格を集めている途中です。数分おいて再読み込みしてください（毎時更新）。"; }
-  setText("gk-note", note);
-}
-
-function gkSetSeg(id, attr, value) {
-  var btns = document.querySelectorAll("#" + id + " button"), i;
-  for (i = 0; i < btns.length; i++) {
-    btns[i].setAttribute("aria-pressed", btns[i].getAttribute(attr) === String(value) ? "true" : "false");
-  }
-}
-
-/* ---- 急騰・相場 ---- */
-function renderTrend() {
-  var up = [], down = [], i, it, d;
-  for (i = 0; i < YS.SCAN_DB.length; i++) {
-    it = YS.SCAN_DB[i];
-    if (it.d1 === undefined || it.d1 === null) { continue; }
-    d = YS.num(it.d1, 0);
-    if (!d) { continue; }
-    if (d > 0) { up.push(it); } else { down.push(it); }
-  }
-  up.sort(function (a, b) { return YS.num(b.d1, 0) - YS.num(a.d1, 0); });
-  down.sort(function (a, b) { return YS.num(a.d1, 0) - YS.num(b.d1, 0); });
-  var t = YS.SCAN_TREND || {};
-  var tiles = "";
-  tiles += '<div class="tr-tile"><div class="k">値上がり</div><div class="v pos">' + yen(up.length) + "件</div></div>";
-  tiles += '<div class="tr-tile"><div class="k">値下がり</div><div class="v neg">' + yen(down.length) + "件</div></div>";
-  tiles += '<div class="tr-tile"><div class="k">比較できた商品</div><div class="v">' + yen(t.compared || 0) + "件</div></div>";
-  tiles += '<div class="tr-tile"><div class="k">基準日（前日）</div><div class="v" style="font-size:14px">' + esc(t.d1 || "—") + "</div></div>";
-  setHtml("tr-tiles", tiles);
-
-  var h = "", n, k = 0;
-  for (n = 0; n < up.length && k < 20; n++, k++) {
-    it = up[n];
-    h += '<div class="tr-row" data-id="' + esc(it.id) + '"><span class="rk">' + (k + 1) + "</span>" +
-      '<span class="nm">' + esc(it.name) + "</span>" +
-      '<span class="df pos">+' + yen(YS.num(it.d1, 0)) + "円<small>" +
-      (YS.num(it.d1p, 0) > 0 ? "+" + YS.num(it.d1p, 0).toFixed(1) + "%" : "") + "</small></span></div>";
-  }
-  setHtml("tr-up", h);
-  var upEmpty = document.getElementById("tr-up-empty");
-  if (upEmpty) { upEmpty.hidden = !!up.length; }
-  var h2 = "";
-  k = 0;
-  for (n = 0; n < down.length && k < 10; n++, k++) {
-    it = down[n];
-    h2 += '<div class="tr-row" data-id="' + esc(it.id) + '"><span class="rk">' + (k + 1) + "</span>" +
-      '<span class="nm">' + esc(it.name) + "</span>" +
-      '<span class="df neg">' + yen(YS.num(it.d1, 0)) + "円<small>" +
-      YS.num(it.d1p, 0).toFixed(1) + "%</small></span></div>";
-  }
-  setHtml("tr-down", h2);
-  var dnEmpty = document.getElementById("tr-down-empty");
-  if (dnEmpty) { dnEmpty.hidden = !!down.length; }
-}
-
-/* ---- 予算逆算 ---- */
-function renderBudget(plan) {
-  var budget = YS.num(val("bd-budget"), 0), prate = YS.num(val("bd-rate"), 0);
-  var pool = gkCandidates(BDS.genre), i, it, prof, rows = [], h = "";
-  if (!budget) {
-    setText("bd-profit", "—"); setText("bd-buy", "—");
-    setHtml("bd-plan", "");
-    var emp = document.getElementById("bd-empty");
-    if (emp) { emp.hidden = false; }
-    return;
-  }
-  /* 実質利益率（利益÷実売）が高い順に、予算に収まるものを詰める */
-  var scored = [];
-  for (i = 0; i < pool.length; i++) {
-    it = pool[i];
-    prof = gkProfit(it, prate);
-    if (prof === null || prof <= 0) { continue; }
-    scored.push({ it: it, prof: prof, net: gkRetail(it) * (1 - prate / 100) });
-  }
-  scored.sort(function (a, b) { return (b.prof / b.net) - (a.prof / a.net); });
-  var left = budget, usedIds = {}, buyTotal = 0, profitTotal = 0, netTotal = 0, picked = 0;
-  for (i = 0; i < scored.length && picked < 8; i++) {
-    var row = scored[i];
-    if (usedIds[row.it.id]) { continue; }
-    if (row.net > left) { continue; }
-    left -= row.net;
-    usedIds[row.it.id] = 1;
-    buyTotal += YS.num(row.it.price, 0);
-    profitTotal += row.prof;
-    netTotal += row.net;
-    picked++;
-    rows.push(row);
-    if (left < 1000) { break; }
-  }
-  if (!rows.length) {
-    /* 予算に1点も収まらない時は、いちばん近い候補を出す */
-    scored.sort(function (a, b) { return a.net - b.net; });
-    if (scored.length) {
-      var near = scored[0];
-      h = '<p class="tip">この予算だと1点も収まりません。近い候補：<b>' + esc(near.it.name) + "</b>（実質 " +
-        yen(Math.round(near.net)) + "円）</p>";
-      setText("bd-profit", "—");
-      setHtml("bd-plan", h);
-      return;
-    }
-    setHtml("bd-plan", '<p class="tip">条件に合う商品がまだありません（実売価格の収集中）。</p>');
-    return;
-  }
-  for (i = 0; i < rows.length; i++) {
-    var r0 = rows[i];
-    h += '<div class="bd-item"><span class="nm">' + esc(r0.it.name) + "</span>" +
-      '<span class="pr">実売 <b>' + yen(gkRetail(r0.it)) + "</b>円<br>利益 <b class=pos>+" +
-      yen(Math.round(r0.prof)) + "</b>円</span></div>";
-  }
-  if (left >= 1000) {
-    h += '<p class="tip">まだ ' + yen(Math.round(left)) + "円ぶん枠が残っています（候補がいまはこの範囲）。</p>";
-  }
-  setHtml("bd-plan", h);
-  var emp2 = document.getElementById("bd-empty");
-  if (emp2) { emp2.hidden = true; }
-  setV("bd-profit", (profitTotal > 0 ? "+" : "") + yen(Math.round(profitTotal)) + '<span class="yen">円</span>',
-    profitTotal > 0 ? "pos" : "neg", false);
-  setText("bd-profit-sub", "実質支払 " + yen(Math.round(netTotal)) + "円 ／ 予算 " + yen(budget) + "円（ポイント" + prate + "%）");
-  setV("bd-buy", yen(buyTotal) + '<span class="yen">円</span>', "neutral", false);
-  setText("bd-buy-sub", picked + "点・" + rows.map(function (x) { return x.it.cat; }).filter(function (v, ix, a) { return a.indexOf(v) === ix; }).join(" / "));
-}
-
-/* ---- スキャン結果の大型判定 ---- */
-function syncPointFromPct() {
-  var c = YS.num(val("sc-cost"), 0), p = YS.num(val("sc-pct"), 0);
-  if (c > 0 && p > 0) { setVal("sc-point", Math.round(c * p / 100)); }
-}
-function scanExtra() {
-  var it = scanItem;
-  if (!it) { return; }
-  var r = gkRetail(it), ratio = gkRatio(it), p = YS.num(it.price, 0);
-  var pct = YS.num(val("sc-pct"), 0), cost = YS.num(val("sc-cost"), 0);
-  var chips = "";
-  if (r > 0) { chips += '<span class="sc-chip">実売 ' + yen(r) + "円</span>"; }
-  if (ratio !== null) { chips += '<span class="sc-chip">還元率 ' + ratio.toFixed(1) + "%</span>"; }
-  if (it.d1 !== undefined && it.d1 !== null && YS.num(it.d1, 0) !== 0) {
-    chips += '<span class="sc-chip ' + (YS.num(it.d1, 0) > 0 ? "pos" : "neg") + '">前日比 ' +
-      (YS.num(it.d1, 0) > 0 ? "+" : "") + yen(YS.num(it.d1, 0)) + "円</span>";
-  }
-  if (it.d7 !== undefined && it.d7 !== null && YS.num(it.d7, 0) !== 0) {
-    chips += '<span class="sc-chip ' + (YS.num(it.d7, 0) > 0 ? "pos" : "neg") + '">先週比 ' +
-      (YS.num(it.d7, 0) > 0 ? "+" : "") + yen(YS.num(it.d7, 0)) + "円</span>";
-  }
-  setHtml("sc-chips", chips);
-
-  var box = document.getElementById("sc-verdict");
-  var lbl = document.getElementById("sc-verdict-lbl");
-  var why = document.getElementById("sc-verdict-why");
-  if (!box || !lbl || !why) { return; }
-  box.className = "sc-verdict";
-  if (cost <= 0) {
-    lbl.textContent = "値札を入れると判定します";
-    why.textContent = r > 0 ? "この商品の実売目安は " + yen(r) + "円・還元率 " + (ratio || 0).toFixed(1) +
-      "%。店頭価格とポイント%を入れてください。" : "店頭価格（円）とポイント還元率（%）を入れると、買いかスルーかを大きく表示します。";
-    return;
-  }
-  var net = cost * (1 - pct / 100);
-  var profit = p - net;
-  var margin = net > 0 ? (profit / net) * 100 : null;
-  if (profit >= 1500 && (margin === null || margin >= 8)) {
-    box.className = "sc-verdict buy";
-    lbl.textContent = "◎ 買い（+" + yen(Math.round(profit)) + "円）";
-    why.textContent = "実質仕入 " + yen(Math.round(net)) + "円で買取 " + yen(p) + "円。利益率 " +
-      (margin === null ? "—" : margin.toFixed(1) + "%") + "。このまま買取屋へ。";
-  } else if (profit > 0) {
-    box.className = "sc-verdict thin";
-    lbl.textContent = "△ 微妙（+" + yen(Math.round(profit)) + "円）";
-    why.textContent = "利益は出ますが薄いです（" + (margin === null ? "—" : margin.toFixed(1)) +
-      "%）。送料・交通費を足すと消えることがあります。";
-  } else {
-    box.className = "sc-verdict no";
-    lbl.textContent = "✕ スルー（" + yen(Math.round(profit)) + "円）";
-    why.textContent = "実質仕入 " + yen(Math.round(net)) + "円に対して買取は " + yen(p) + "円。この値札では損します。";
-  }
-}
-
-/* ---- タブのグループ切替 ---- */
-var TAB_GROUPS = {
-  sedori: ["scan", "genka", "trend", "budget", "pt"],
-  mnp: ["mnp", "lines", "check", "hikari", "dash", "tax"]
-};
-function applyGroup(g) {
-  var i, btns = document.querySelectorAll("#grpSeg button");
-  for (i = 0; i < btns.length; i++) {
-    btns[i].setAttribute("aria-pressed", btns[i].getAttribute("data-grp") === g ? "true" : "false");
-  }
-  var names = TAB_GROUPS[g] || [];
-  var cur = null;
-  for (i = 0; i < tabs.length; i++) {
-    var nm = tabs[i].getAttribute("data-tab");
-    var show = names.indexOf(nm) >= 0;
-    tabs[i].hidden = !show;
-    if (tabs[i].getAttribute("aria-selected") === "true") { cur = nm; }
-  }
-  if (names.indexOf(cur) < 0) { selectTab(names[0]); }
-}
-
-/* ---- イベント ---- */
-(function () {
-  var seg = document.getElementById("grpSeg");
-  if (seg) {
-    seg.addEventListener("click", function (ev) {
-      var t = ev.target;
-      while (t && t !== seg && !t.getAttribute("data-grp")) { t = t.parentNode; }
-      if (t && t.getAttribute && t.getAttribute("data-grp")) { applyGroup(t.getAttribute("data-grp")); }
-    });
-  }
-  var gk = document.getElementById("panel-genka");
-  if (gk) {
-    gk.addEventListener("click", function (ev) {
-      var t = ev.target;
-      while (t && t !== gk && !t.getAttribute("data-genre") && !t.getAttribute("data-prate") &&
-             !t.getAttribute("data-sort") && !t.getAttribute("data-id")) { t = t.parentNode; }
-      if (!t || !t.getAttribute) { return; }
-      if (t.getAttribute("data-genre")) {
-        GKS.genre = t.getAttribute("data-genre"); gkSetSeg("gk-genre", "data-genre", GKS.genre); renderGenka();
-      } else if (t.getAttribute("data-prate") !== null) {
-        GKS.prate = YS.num(t.getAttribute("data-prate"), 20); gkSetSeg("gk-point", "data-prate", GKS.prate); renderGenka();
-      } else if (t.getAttribute("data-sort")) {
-        GKS.sort = t.getAttribute("data-sort"); gkSetSeg("gk-sort", "data-sort", GKS.sort); renderGenka();
-      } else if (t.getAttribute("data-id")) {
-        pickScanId(t.getAttribute("data-id"));
-        selectTab("scan");
-      }
-    });
-  }
-  var tr = document.getElementById("panel-trend");
-  if (tr) {
-    tr.addEventListener("click", function (ev) {
-      var t = ev.target;
-      while (t && t !== tr && !t.getAttribute("data-id") && t.id !== "tr-refresh") { t = t.parentNode; }
-      if (!t || !t.getAttribute) { return; }
-      if (t.id === "tr-refresh") {
-        try { YS.scanSyncStart(); } catch (e) {}
-        setTimeout(function () { renderTrend(); }, 1500);
-        return;
-      }
-      if (t.getAttribute("data-id")) { pickScanId(t.getAttribute("data-id")); selectTab("scan"); }
-    });
-  }
-  var bd = document.getElementById("panel-budget");
-  if (bd) {
-    bd.addEventListener("click", function (ev) {
-      var t = ev.target;
-      if (t && t.getAttribute && (t.getAttribute("data-q") === "bd-budget" || t.getAttribute("data-q") === "bd-rate")) {
-        setVal(t.getAttribute("data-q"), t.getAttribute("data-v"));
-        renderBudget();
-        return;
-      }
-      while (t && t !== bd && !t.getAttribute("data-genre")) { t = t.parentNode; }
-      if (t && t.getAttribute && t.getAttribute("data-genre")) {
-        BDS.genre = t.getAttribute("data-genre"); gkSetSeg("bd-genre", "data-genre", BDS.genre); renderBudget();
-      }
-    });
-    ["bd-budget", "bd-rate"].forEach(function (id) {
-      var el = document.getElementById(id);
-      if (el) { el.addEventListener("input", function () { renderBudget(); }); }
-    });
-    var go = document.getElementById("bd-go");
-    if (go) { go.addEventListener("click", function () { renderBudget(); }); }
-  }
-  var pct = document.getElementById("sc-pct");
-  if (pct) {
-    pct.addEventListener("input", function () { syncPointFromPct(); scanRecalc(); });
-    pct.addEventListener("focus", function () { pct.select(); });
-  }
-  var cost = document.getElementById("sc-cost");
-  if (cost) {
-    cost.addEventListener("input", function () { syncPointFromPct(); });
-  }
-})();
-
-/* 既存の描画関数に新しいタブを登録 */
-renderers.genka = function () { renderGenka(); };
-renderers.trend = function () { renderTrend(); };
-renderers.budget = function () { renderBudget(); };
-
-/* 起動時: せどりグループ＋スキャンを最初に開く */
-applyGroup("sedori");
-selectTab("scan");
-
 
 /* 公開URL（GitHub Pages）で開いた時だけ、最新の買取価格を裏で読みに行く */
 YS.scanSyncStart();

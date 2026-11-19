@@ -853,7 +853,8 @@ def add_trend(db: dict, today: str) -> dict:
     p7q = (prev7 or {}).get("quotes") or {}
     snap: dict[str, dict] = {}
     up = down = flat = compared = 0
-    for rec in db.get("items") or []:
+    has_base = bool(prev or prev7)
+    for rec in (db.get("items") or []) if has_base else []:
         q = rec.get("quotes") or {}
         if not q:
             continue
@@ -880,9 +881,10 @@ def add_trend(db: dict, today: str) -> dict:
                     down += 1
                 else:
                     flat += 1
-    (HISTORY_DIR / f"{today}.json").write_text(
-        json.dumps({"date": today, "at": now_jst(), "quotes": snap},
-                   ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+    if snap:
+        (HISTORY_DIR / f"{today}.json").write_text(
+            json.dumps({"date": today, "at": now_jst(), "quotes": snap},
+                       ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
     # 古いスナップショットを掃除
     keep = {(d - dt.timedelta(days=i)).isoformat() for i in range(HIST_KEEP_DAYS)}
     for p in HISTORY_DIR.glob("*.json"):
@@ -891,6 +893,10 @@ def add_trend(db: dict, today: str) -> dict:
                 p.unlink()
             except OSError:
                 pass
+    if not has_base:
+        # 履歴を持たない環境（GitHub Actions など）では前回の前日比を消さない
+        return db.get("trend") or {"d1": "", "d7": "", "compared": 0, "up": 0, "down": 0,
+                                   "flat": 0, "at": now_jst()}
     trend = {"d1": yday if prev else "", "d7": wago if prev7 else "",
              "compared": compared, "up": up, "down": down, "flat": flat,
              "at": now_jst()}

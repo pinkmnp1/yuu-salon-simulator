@@ -1,0 +1,10 @@
+# 取得キャッシュ（毎時作り直すのでリポジトリに積まない）
+retail_cache.json
+wiki_cache.json
+# 日次スナップショット（VPSが正）
+history/
+# secrets / 一時ファイル
+.gh_token
+__pycache__/
+*.pyc
+*.tmp
