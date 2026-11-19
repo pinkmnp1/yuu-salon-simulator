@@ -7936,7 +7936,9 @@ function gkGenreOf(it) {
 }
 
 /* 「店頭に並ばない限定品・プレ値品」は高還元ランキングから外す */
-var GK_EXCLUDE = /多言語版|多言語対応|抽選|限定|予約|受注|特典|初回生産|コレクターズ|プレミア|福袋|海外版|並行輸入|ジャンク|中古|整備済|訳あり|未開封BOX|PSA|鑑定/;
+var GK_EXCLUDE = /多言語版|多言語対応|日英|2言語|二言語|言語設定|英語版|中国語版|抽選|限定|予約|受注|特典|初回生産|コレクターズ|プレミア|福袋|海外版|並行輸入|ジャンク|中古|整備済|訳あり|未開封BOX|PSA|鑑定/;
+/* 中古・リサイクル系の店が実売のときは「新品比較ではない」印を付ける */
+var GK_USED_SHOP = /駿河屋|ネットオフ|ブックオフ|古本|まんだらけ|リサイクル|質|ジャンク|ラクマ|メルカリ/;
 
 function gkRetail(it) { return YS.num(it.retail, 0) || 0; }
 function gkRatio(it) {
@@ -7976,7 +7978,9 @@ function gkRow(it, rank, prate) {
   h += '<span class="gk-nm">' + esc(it.name) + "</span>";
   h += '<span class="gk-ratio' + cls + '">' + ratio.toFixed(1) + "%</span></div>";
   h += '<div class="gk-meta"><span>買取 <b>' + yen(p) + '円</b></span><span>実売 <b>' + yen(r) + "円</b></span>";
-  if (it.retail_shop) { h += "<span>" + esc(it.retail_shop) + "</span>"; }
+  if (it.retail_shop) {
+    h += "<span>" + (GK_USED_SHOP.test(it.retail_shop) ? "⚠ " : "") + esc(it.retail_shop) + "</span>";
+  }
   h += "</div>";
   if (prof !== null) {
     h += '<div class="gk-profit ' + (prof > 0 ? "pos" : "neg") + '">ポイント' + prate + "% → 実質仕入 " +
@@ -7995,13 +7999,20 @@ function gkRow(it, rank, prate) {
 
 function renderGenka() {
   var list = gkCandidates(GKS.genre), prate = GKS.prate, h = "", i, it;
+  var cmp;
   if (GKS.sort === "profit") {
-    list.sort(function (a, b) { return (gkProfit(b, prate) || -1e9) - (gkProfit(a, prate) || -1e9); });
+    cmp = function (a, b) { return (gkProfit(b, prate) || -1e9) - (gkProfit(a, prate) || -1e9); };
   } else if (GKS.sort === "price") {
-    list.sort(function (a, b) { return YS.num(b.price, 0) - YS.num(a.price, 0); });
+    cmp = function (a, b) { return YS.num(b.price, 0) - YS.num(a.price, 0); };
   } else {
-    list.sort(function (a, b) { return (gkRatio(b) || 0) - (gkRatio(a) || 0); });
+    cmp = function (a, b) { return (gkRatio(b) || 0) - (gkRatio(a) || 0); };
   }
+  var fresh = [], used = [], q;
+  for (q = 0; q < list.length; q++) {
+    if (GK_USED_SHOP.test(list[q].retail_shop || "")) { used.push(list[q]); } else { fresh.push(list[q]); }
+  }
+  fresh.sort(cmp); used.sort(cmp);
+  list = fresh.concat(used);
   var total = list.length;
   for (i = 0; i < list.length && i < 40; i++) { h += gkRow(list[i], i + 1, prate); }
   setHtml("gk-list", h);
