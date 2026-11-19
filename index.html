@@ -8295,7 +8295,7 @@ function applyGroup(g) {
   }
   var cost = document.getElementById("sc-cost");
   if (cost) {
-    cost.addEventListener("input", function () { syncPointFromPct(); });
+    cost.addEventListener("input", function () { syncPointFromPct(); scanRecalc(); });
   }
 })();
 
