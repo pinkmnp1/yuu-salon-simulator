@@ -8,3 +8,9 @@ history/
 __pycache__/
 *.pyc
 *.tmp
+
+# テスト用の一時ファイル
+uitest/
+*.bak-*
+*.bak
+index-8.html.bak-*
