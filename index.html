@@ -9685,6 +9685,8 @@ var EXCEPT = {
   "wish5": "AQUOS wish5", "wish6": "AQUOS wish6"
 };
 var SUFFIX = ["pro", "fold", "ultra", "max", "plus", "xl"];
+/* v17: キャリア名トークン（商品名に含まれる表記） */
+var CARRIER_TOKEN = { "ワイモバイル": "Y!mobile", "UQモバイル": "UQモバイル", "楽天モバイル": "楽天モバイル" };
 var CP = { loaded: false, loading: false, items: null, db: null, updated: null, filter: "all" };
 
 function searchItems(key){
@@ -9713,6 +9715,40 @@ function matchBuyback(rec){
         if (String(cands[i].name || "").toLowerCase().indexOf(SUFFIX[s]) < 0) filt.push(cands[i]);
       }
       if (filt.length) cands = filt;
+    }
+  }
+  /* v17: キャリア名義の買取を優先（部分集合が空なら絞らない） */
+  var tok = CARRIER_TOKEN[rec.carrier];
+  if (tok) {
+    var cf = [];
+    for (var ci = 0; ci < cands.length; ci++) {
+      if (String(cands[ci].name || "").indexOf(tok) >= 0) cf.push(cands[ci]);
+    }
+    if (cf.length) cands = cf;
+  }
+  /* v17: 容量指定が無いレコードは最小スペック群に寄せる（上位スペックの価格を掴まない） */
+  if (!String(rec.storage || "")) {
+    var specOf = function(it){
+      var m = String(it.name || "").match(/(\d+)G\+(\d+)G/);
+      return m ? [Number(m[1]), Number(m[2])] : null;
+    };
+    var types = {}, tcount = 0, ti, sp;
+    for (ti = 0; ti < cands.length; ti++) {
+      sp = specOf(cands[ti]);
+      if (sp) { var tk = sp[0] + "+" + sp[1]; if (!types[tk]) { types[tk] = sp; tcount++; } }
+    }
+    if (tcount >= 2) {
+      var bs = null, kk;
+      for (kk in types) {
+        var vv = types[kk];
+        if (!bs || vv[1] < bs[1] || (vv[1] === bs[1] && vv[0] < bs[0])) bs = vv;
+      }
+      var gf = [];
+      for (var gi = 0; gi < cands.length; gi++) {
+        var sg = specOf(cands[gi]);
+        if (sg && sg[0] === bs[0] && sg[1] === bs[1]) gf.push(cands[gi]);
+      }
+      if (gf.length) cands = gf;
     }
   }
   var st = String(rec.storage || "");
