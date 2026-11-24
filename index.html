@@ -9246,15 +9246,29 @@ setTimeout(syncNotice,20000);
   document.addEventListener("click",function(ev){
     if(ev.target && ev.target.classList && ev.target.classList.contains("qchip")) setTimeout(resync,0);
   });
-  /* group tab memory */
+  /* group tab memory (v7: own listeners, binding-proof) */
   try{
-    if(typeof TAB_GROUPS!=="undefined" && typeof selectTab==="function" && typeof applyGroup==="function"){
-      var lastTab={};
-      function grpOf(n){ for(var k in TAB_GROUPS){ if(TAB_GROUPS[k].indexOf(n)>=0) return k; } return null; }
-      var _st=selectTab;
-      selectTab=function(n){ var g=grpOf(n); if(g) lastTab[g]=n; _st(n); };
-      var _ag=applyGroup;
-      applyGroup=function(g){ _ag(g); var t=lastTab[g]; if(t && TAB_GROUPS[g] && t!==TAB_GROUPS[g][0]){ try{ selectTab(t); }catch(e){} } };
+    if(typeof TAB_GROUPS!=="undefined" && typeof selectTab==="function"){
+      var lastTab2={};
+      function grpOf2(n){ for(var k in TAB_GROUPS){ if(TAB_GROUPS[k].indexOf(n)>=0) return k; } return null; }
+      document.addEventListener("click",function(ev){
+        var t=ev.target;
+        if(!t || !t.getAttribute) return;
+        var tab=t.getAttribute("data-tab");
+        if(tab){ var g=grpOf2(tab); if(g) lastTab2[g]=tab; }
+      },true);
+      var gs=document.getElementById("grpSeg");
+      if(gs) gs.addEventListener("click",function(ev){
+        var t=ev.target;
+        var g=t && t.getAttribute ? t.getAttribute("data-grp") : null;
+        if(!g) return;
+        setTimeout(function(){
+          var want=lastTab2[g];
+          if(want && TAB_GROUPS[g] && TAB_GROUPS[g][0]!==want){
+            try{ selectTab(want); }catch(e){}
+          }
+        },30);
+      });
     }
   }catch(e){}
 })();
