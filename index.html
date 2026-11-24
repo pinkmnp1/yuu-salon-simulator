@@ -9760,6 +9760,15 @@ function matchBuyback(rec){
     }
     if (sf.length) cands = sf;
   }
+  /* v18: 「キャリア版減額」注記付きはSIMフリー版価格（キャリア版は減額）なので除外。「減額なし」は対象外。空なら未突合 */
+  var nf = [];
+  for (var q = 0; q < cands.length; q++) {
+    var nmq = String(cands[q].name || "");
+    if (nmq.indexOf("キャリア版減額") >= 0 && nmq.indexOf("キャリア版減額なし") < 0) continue;
+    nf.push(cands[q]);
+  }
+  cands = nf;
+  if (!cands.length) return null;
   var best = null;
   for (var b = 0; b < cands.length; b++) {
     if (!best || (Number(cands[b].price) || 0) > (Number(best.price) || 0)) best = cands[b];
