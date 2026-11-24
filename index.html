@@ -874,6 +874,47 @@ textarea.csv{
 .bd-tip b{color:#ffe98a}
 .bd-tip2{font-size:10.5px;color:var(--muted);margin:8px 0 0;line-height:1.6}
 </style>
+<style>
+/* ===== プロテーマ (2026-11-24 統合) : ネオン/グラデーションを排した業務ツール向け再設計 ===== */
+:root{
+  --bg:#0B0E13; --bg2:#0E1219;
+  --card:#141922; --card2:#1A2029;
+  --line:#242C38; --line2:#2E3947;
+  --txt:#E9EDF3; --muted:#8B95A7;
+  --cyan:#4C8DFF; --violet:#6E6BD8; --pink:#4C8DFF;
+  --green:#35C26E; --yellow:#E5B83B; --red:#F0564A;
+  --radius:14px;
+  --shadow:0 1px 2px rgba(0,0,0,.35),0 10px 28px rgba(0,0,0,.20);
+}
+body{background:var(--bg)!important}
+::selection{background:rgba(76,141,255,.35)}
+.neon{background:none!important;-webkit-background-clip:initial!important;background-clip:initial!important;-webkit-text-fill-color:var(--txt)!important;color:var(--txt)!important;text-shadow:none!important}
+.card{background:var(--card);box-shadow:var(--shadow);-webkit-backdrop-filter:none;backdrop-filter:none}
+.btn{box-shadow:none}
+.btn.primary{background:var(--cyan);color:#fff;border-color:transparent;box-shadow:none}
+.btn.green{background:var(--green);color:#fff;border-color:transparent;box-shadow:none}
+.tabs{background:#10141B;box-shadow:0 6px 18px rgba(0,0,0,.35);-webkit-backdrop-filter:none;backdrop-filter:none}
+.tab{box-shadow:none}
+.tab[aria-selected="true"]{background:var(--cyan);color:#fff;box-shadow:none}
+.seg button{box-shadow:none}
+.seg button[aria-pressed="true"]{background:var(--cyan);color:#fff;border-color:transparent;box-shadow:none}
+.db-item,.hit{background:#10141B}
+.db-item .p,.hit .p,.scan-hero .v{font-variant-numeric:tabular-nums}
+.shop-btn{box-shadow:none}
+.shop-btn.best{border-color:var(--green);background:rgba(53,194,110,.12);box-shadow:none}
+.grade.buy{background:rgba(53,194,110,.16);color:var(--green)}
+.grade.thin{background:rgba(229,184,59,.14);color:var(--yellow)}
+.grade.no{background:rgba(240,86,74,.13);color:var(--red)}
+.sc-verdict{box-shadow:none}
+.sc-verdict.buy{border-color:rgba(53,194,110,.5);background:rgba(53,194,110,.10)}
+.sc-verdict.thin{border-color:rgba(229,184,59,.45);background:rgba(229,184,59,.08)}
+.sc-verdict.no{border-color:rgba(240,86,74,.45);background:rgba(240,86,74,.08)}
+.input-box{background:#0D1117;border:1px solid var(--line)}
+input:focus,select:focus,textarea:focus{outline:2px solid rgba(76,141,255,.55);outline-offset:0}
+.qchip{box-shadow:none}
+.rank-list .db-item .p{font-variant-numeric:tabular-nums}
+
+</style>
 </head>
 <body>
 <div class="wrap">
@@ -1263,6 +1304,24 @@ textarea.csv{
         </div>
         <div class="sc-chips" id="sc-chips"></div>
         <p class="scan-meta" id="sc-note"></p>
+
+        <style>
+#gk-verdict .gk2-box{border:1px solid rgba(127,127,127,.3);border-radius:10px;padding:9px 11px;margin:10px 0}
+#gk-verdict .gk2-title{font-weight:700;font-size:13px;margin-bottom:5px}
+#gk-verdict table{width:100%;border-collapse:collapse;font-size:12.5px}
+#gk-verdict th,#gk-verdict td{padding:5px 6px;border-bottom:1px solid rgba(127,127,127,.22);text-align:right;white-space:nowrap}
+#gk-verdict th{font-size:11.5px;opacity:.65}
+#gk-verdict td.l,#gk-verdict th.l{text-align:left}
+#gk-verdict tr.best td{background:rgba(245,179,83,.16);font-weight:700}
+#gk-verdict tr[data-rate]{cursor:pointer}
+#gk-verdict .gk-warn{background:#fef3c7;color:#92400e;border-radius:8px;padding:7px 10px;font-size:12px;margin:7px 0}
+#gk-verdict .scrollx{overflow-x:auto}
+.gk-ann{display:inline-block;font-size:11.5px;font-weight:700;margin-left:6px;padding:0 6px;border-radius:99px;background:rgba(10,125,59,.16);color:#0a7d3b}
+.gk-ann.neg{background:rgba(194,39,39,.14);color:#c22727}
+#gk-list .db-item .p{font-size:16px}
+#gk-list .db-item.hot{border-left:4px solid #0a7d3b}
+</style>
+<div id="gk-verdict"></div>
 
         <p class="card-title mt">店頭価格を入れて粗利を見る</p>
         <div class="grid two">
@@ -8966,6 +9025,118 @@ fetch("./scan_db.json").then(function(r){return r.json();}).then(function(d){
   Object.keys(cats).sort().forEach(function(c){var o=document.createElement("option");o.value=c;o.textContent=c;sel.appendChild(o);});
   render();
 }).catch(function(){ $("gk-count").textContent="買取DBの読み込みに失敗しました"; });
+})();
+
+</script>
+<script>
+(function(){
+"use strict";
+var R=[
+ {id:"yodobashi",name:"ヨドバシカメラ",type:"point",cash:10,card:8,conf:"公式確認"},
+ {id:"bic",name:"ビックカメラ",type:"point",cash:10,card:8,conf:"公式確認"},
+ {id:"yamada",name:"ヤマダデンキ",type:"point",cash:10,card:8,conf:"二次情報・表示制"},
+ {id:"edion",name:"エディオン",type:"point",cash:null,card:0,conf:"公式確認（カテゴリ別）",
+  catRates:{"家電":1,"PC":1,"カメラ":1,"端末":1,"タブレット":1,"オーディオ":1,"ウェアラブル":1,"XR":1,"ゲーム機":3,"トレカ":3,"おもちゃ":3,"お酒":0}},
+ {id:"joshin",name:"ジョーシン",type:"point",cash:10,card:8,conf:"想定（表示制）"},
+ {id:"nojima",name:"ノジマ",type:"point",cash:10,card:8,conf:"想定（表示制）"},
+ {id:"sofmap",name:"ソフマップ",type:"point",cash:5,card:5,conf:"想定（商品別設定）"},
+ {id:"ks",name:"ケーズデンキ",type:"discount",cash:0,card:0,conf:"公式（率は非公表）"}
+];
+var DBMAP=null, lastAutoId=null;
+function $(id){return document.getElementById(id);}
+function yen(n){return (n===null||n===undefined||isNaN(n))?"—":"¥"+Math.round(n).toLocaleString("ja-JP");}
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}
+function rateFor(r,item){ if(r.catRates){var c=r.catRates[item.cat]; return (c===undefined?1:c);} return r.cash; }
+function compute(item){
+  var quotes=item.quotes||{}; var nq=Object.keys(quotes).length;
+  var msrp=Number(item.msrp||0), price=Number(item.price||0);
+  var out={nq:nq,bestEff:null,bestShop:"",bestRate:0,profit:null,rows:[]};
+  if(msrp>0){
+    for(var i=0;i<R.length;i++){
+      var r=R[i], rate=rateFor(r,item); if(rate===null||rate===undefined)continue;
+      var pts=Math.floor(msrp*rate/100);
+      var eff=(r.type==="discount")?Math.round(msrp*(1-rate/100)):msrp-pts;
+      out.rows.push({name:r.name,rate:rate,pts:(r.type==="discount"?0:pts),eff:eff,profit:price-eff,conf:r.conf});
+      if(out.bestEff===null||eff<out.bestEff){out.bestEff=eff;out.bestShop=r.name;out.bestRate=rate;}
+    }
+    if(out.bestEff!==null)out.profit=price-out.bestEff;
+  }
+  out.rows.sort(function(a,b){return a.eff-b.eff;});
+  return out;
+}
+function full(id){ return DBMAP?DBMAP[id]:null; }
+function annotate(box){
+  if(!box||!DBMAP)return;
+  var rows=box.querySelectorAll("[data-pick]:not([data-gkdone])");
+  for(var i=0;i<rows.length;i++){
+    rows[i].setAttribute("data-gkdone","1");
+    var f=full(rows[i].getAttribute("data-pick")); if(!f||!(f.msrp>0))continue;
+    var c=compute(f); if(c.profit===null)continue;
+    var s=document.createElement("span");
+    s.className="gk-ann"+(c.profit<0?" neg":"");
+    s.textContent="実質 "+(c.profit>=0?"+":"")+yen(c.profit).replace("¥","¥");
+    var n=rows[i].querySelector(".n")||rows[i];
+    n.appendChild(s);
+  }
+}
+function observe(id){
+  var box=$(id); if(!box)return;
+  annotate(box);
+  if(window.MutationObserver){ new MutationObserver(function(){annotate(box);}).observe(box,{childList:true,subtree:true}); }
+}
+function setField(id,v){
+  var el=$(id); if(!el)return;
+  el.value=v;
+  el.dispatchEvent(new Event("input",{bubbles:true}));
+  el.dispatchEvent(new Event("change",{bubbles:true}));
+}
+function verdictPanel(item){
+  var box=$("gk-verdict"); if(!box)return;
+  var f=full(item.id)||item; var c=compute(f);
+  if(!(f.msrp>0)||c.bestEff===null){ box.innerHTML=""; return; }
+  var warns="";
+  if(c.nq===1)warns+='<div class="gk-warn">買取クオートが1店舗のみ。その店の価格変動・誤登録の影響を受けやすいので店舗ページで再確認を。</div>';
+  if(f.quote_alert)warns+='<div class="gk-warn">相場乖離を検出済み: '+esc(f.quote_alert)+'（最高値は裏取り済みの価格に是正）</div>';
+  if(f.cat==="ゲーム機"||f.cat==="トレカ")warns+='<div class="gk-warn">ゲーム機本体・トレカの還元率は各店の商品別表示が基準（公式にカテゴリ別率の明記なし）。</div>';
+  if(/iPhone|iPad|Mac|Apple Watch|AirPods/.test(f.name||""))warns+='<div class="gk-warn">Apple製品は量販店で還元対象外・低率になることが多い商品。店頭表示で要確認。</div>';
+  var curPct=Number(($("sc-pct")||{}).value||0);
+  var rh="";
+  for(var i=0;i<c.rows.length;i++){var r=c.rows[i];
+    rh+='<tr data-rate="'+r.rate+'"'+(r.rate===curPct?' class="best"':'')+'><td class="l">'+esc(r.name)+'</td><td>'+r.rate+'%</td><td>'+(r.pts?yen(r.pts):"—")+'</td><td>'+yen(r.eff)+'</td><td>'+yen(r.profit)+'</td></tr>';}
+  box.innerHTML='<div class="gk2-box"><div class="gk2-title">量販ポイント込みの実質仕入（定価 '+yen(f.msrp)+' 前提・現金/自社系）</div>'
+    +'<div class="scrollx"><table><tr><th class="l">量販店</th><th>還元率</th><th>ポイント</th><th>実質価格</th><th>実質利益</th></tr>'+rh+'</table></div>'
+    +'<p class="tip" style="margin-top:6px">行をタップすると、その店の還元率で下の判定を再計算します。店頭価格が定価と違う場合は「店頭価格」を上書きしてください。</p>'
+    +warns+'</div>';
+  var trs=box.querySelectorAll("tr[data-rate]");
+  for(var j=0;j<trs.length;j++){(function(tr){tr.addEventListener("click",function(){
+    setField("sc-pct",tr.getAttribute("data-rate"));
+    try{syncPointFromPct();scanRecalc();}catch(e){}
+    verdictPanel(item);
+  });})(trs[j]);}
+}
+function autoFill(item){
+  var f=full(item.id)||item; if(!(f.msrp>0))return;
+  var c=compute(f); if(c.bestEff===null)return;
+  setField("sc-cost",f.msrp);
+  setField("sc-pct",c.bestRate);
+  try{syncPointFromPct();scanRecalc();}catch(e){}
+  verdictPanel(item);
+}
+if(typeof showScanItem==="function"){
+  var origShow=showScanItem;
+  showScanItem=function(item){
+    origShow(item);
+    try{
+      if(item&&item.id!==lastAutoId){ lastAutoId=item.id; if(DBMAP){autoFill(item);} }
+      else if(item){ verdictPanel(item); }
+    }catch(e){}
+  };
+}
+fetch("./scan_db.json").then(function(r){return r.json();}).then(function(d){
+  DBMAP={}; d.items.forEach(function(it){DBMAP[it.id]=it;});
+  observe("sc-list"); observe("sc-db");
+  try{ if(typeof scanItem!=="undefined"&&scanItem){ verdictPanel(scanItem); if(scanItem.id!==lastAutoId){lastAutoId=scanItem.id; autoFill(scanItem);} } }catch(e){}
+}).catch(function(){});
 })();
 
 </script>
