@@ -1305,6 +1305,11 @@ input:focus,select:focus,textarea:focus{outline:2px solid rgba(76,141,255,.55);o
 
       <p class="tip warn" id="scan-support">…</p>
     </div>
+      <div class="card" id="sc-hits-card" hidden>
+      <p class="card-title" id="sc-hits-title">検索結果</p>
+      <div id="sc-list"></div>
+    </div>
+
 
     <div class="card" id="sc-hist-card" hidden>
       <p class="card-title">直近スキャン履歴 <span class="hint">最大5件・タップで即再表示</span></p>
@@ -1355,14 +1360,17 @@ input:focus,select:focus,textarea:focus{outline:2px solid rgba(76,141,255,.55);o
 #gk-verdict td.l,#gk-verdict th.l{text-align:left}
 #gk-verdict tr.best td{background:rgba(76,141,255,.18);font-weight:700}
 #gk-verdict tr[data-rate]{cursor:pointer}
-#gk-verdict .gk-warn{background:rgba(229,184,59,.12);color:#E5B83B;border:1px solid rgba(229,184,59,.35);border-radius:8px;padding:7px 10px;font-size:12px;margin:7px 0}
+#gk-verdict .gk-warn{background:rgba(229,184,59,.12);color:#E5B83B
+/* v6: placeholderを入力値と見間違えないよう薄く */
+input::placeholder{opacity:.35}
+;border:1px solid rgba(229,184,59,.35);border-radius:8px;padding:7px 10px;font-size:12px;margin:7px 0}
 #gk-verdict .scrollx{overflow-x:auto}
 .gk-ann{display:inline-block;font-size:11.5px;font-weight:700;margin-left:6px;padding:0 6px;border-radius:99px;background:rgba(10,125,59,.16);color:#0a7d3b}
 .gk-ann.neg{background:rgba(194,39,39,.14);color:#c22727}
 #gkx-list .db-item .p{font-size:16px}
 #gkx-list .db-item.hot{border-left:4px solid #0a7d3b}
 </style>
-<div id="gk-verdict"></div>
+
 
         <p class="card-title mt">店頭価格を入れて粗利を見る</p>
         <div class="grid two">
@@ -1414,6 +1422,7 @@ input:focus,select:focus,textarea:focus{outline:2px solid rgba(76,141,255,.55);o
           <div class="lbl" id="sc-verdict-lbl">店頭の値札を入れてください</div>
           <div class="why" id="sc-verdict-why">値札（円）とポイント還元率（%）を入れるだけで、買いかスルーかを大きく表示します。</div>
         </div>
+      <div id="gk-verdict"></div>
 
         <div class="shop-row" id="sc-shops"></div>
         <p class="scan-status" style="margin:8px 0 0">各店のボタンに出ている金額は内蔵DBの実測買取額（新品・未開封）。<b class="pos">最高値の店は緑枠</b>で並べ替えています。金額のない店は「サイトで確認↗」をタップすると各店のサイト内検索が開きます（JAN・型番がそのまま入ります。点線枠は各店のサイト内検索対応店）。</p>
@@ -1456,58 +1465,7 @@ input:focus,select:focus,textarea:focus{outline:2px solid rgba(76,141,255,.55);o
         <button class="btn" id="sc-cart-clear">クリア</button>
       </div>
     </div>
-
-    <div class="card" id="ys-rank-card">
-      <p class="card-title">🔥 みんながよく見てる人気商品 <span class="hint">タップで相場を見る</span></p>
-      <div class="seg" id="ys-rank-seg" role="group" aria-label="集計期間">
-        <button type="button" data-range="today" aria-pressed="false">今日</button>
-        <button type="button" data-range="week" aria-pressed="true">週間</button>
-        <button type="button" data-range="all" aria-pressed="false">累計</button>
-      </div>
-      <div class="rank-list" id="ys-rank-list"></div>
-      <p class="empty" id="ys-rank-empty" hidden>まだ集計がありません。<br>みんながスキャンすると、ここに人気順で並びます。</p>
-      <p class="tip" id="ys-rank-note">買取価格が見つかった商品を、端末ごとの乱数IDだけで匿名集計しています（名前・位置情報は送りません）。</p>
-    </div>
-
-    <div class="card" id="ys-rec-card">
-      <p class="card-title">🌟 メンバーのおすすめ <span class="hint">タップで相場を見る</span></p>
-      <div class="seg" id="ys-rec-seg" role="group" aria-label="並び順">
-        <button type="button" data-sort="votes" aria-pressed="true">おすすめ順</button>
-        <button type="button" data-sort="new" aria-pressed="false">新着順</button>
-      </div>
-      <div class="rank-list" id="ys-rec-list"></div>
-      <p class="empty" id="ys-rec-empty" hidden>まだおすすめがありません。<br>商品の判定結果で「👍 おすすめに追加」を押すと、みんなに共有されます。</p>
-      <p class="tip" id="ys-rec-note">おすすめは1端末につき商品1件まで（もう一度押すと解除）。ひとことは40文字までで、サロンのみんなに見えます。</p>
-    </div>
-
-    <div class="card" id="sc-hits-card" hidden>
-      <p class="card-title" id="sc-hits-title">検索結果</p>
-      <div id="sc-list"></div>
-    </div>
-
-    <div class="card">
-      <p class="card-title">内蔵 買取相場DB</p>
-      <p class="scan-status" id="sc-db-count">—</p>
-      <div class="db-wrap" id="sc-db"></div>
-      <p class="tip">価格は各社が公開している<b>新品・未開封</b>の買取上限を毎時集めたものです（画面上部の「時点」が取得時刻）。相場は毎日動くので、売る直前に必ず店のページで再確認してください。</p>
-    </div>
-<style>
-#gk-card .gk-nums{display:flex;flex-wrap:wrap;gap:10px;margin-top:4px;font-size:13px}
-#gk-card .gk-badge{display:inline-block;font-size:11px;padding:1px 6px;border-radius:99px;background:rgba(127,127,127,.18);margin-left:5px;vertical-align:1px}
-#gk-card .gk-badge.w{background:#fef3c7;color:#b45309;font-weight:700}
-#gk-card .gk-warn{background:#fef3c7;color:#92400e;border-radius:8px;padding:7px 10px;font-size:12px;margin:7px 0}
-#gk-card table{width:100%;border-collapse:collapse;font-size:13px}
-#gk-card th,#gk-card td{padding:6px 7px;border-bottom:1px solid rgba(127,127,127,.25);text-align:right;white-space:nowrap}
-#gk-card th{font-size:12px;opacity:.65}
-#gk-card td.l,#gk-card th.l{text-align:left;white-space:normal}
-#gk-card tr.best td{background:rgba(245,179,83,.16);font-weight:700}
-#gk-card .pos{font-weight:700}
-#gk-card .scrollx{overflow-x:auto}
-#gk-card select,#gk-card input[type=number]{padding:6px 8px;border-radius:8px;font-size:14px}
-#gk-card .gk-item{cursor:pointer}
-#gk-card .seg button[aria-pressed="true"]{background:#0b5fff;color:#fff}
-</style>
-    <div class="card" id="gk-card">
+      <div class="card" id="gk-card">
       <p class="card-title">💰 ポイント込み実質利益ランキング <span class="hint">量販ポイントを差し引いた「実質仕入」で全商品を判定</span></p>
       <div class="row" style="display:flex;flex-wrap:wrap;gap:8px;align-items:center">
         <span class="hint">支払い</span>
@@ -1539,6 +1497,55 @@ input:focus,select:focus,textarea:focus{outline:2px solid rgba(76,141,255,.55);o
       <div class="actions"><button class="btn" id="gk-more" hidden>さらに表示</button></div>
       <p class="tip">実質仕入 = 定価 − ポイント価値（量販8社の中で最安の店で計算）。還元率：ヨドバシ／ビックは現金10%・カード8%（公式確認）、エディオンはカテゴリ別（家電1%／ゲーム関連3%／ゲームソフト新品5%、他社クレカは付与なし・公式確認）。ヤマダ／ジョーシン／ノジマ／ソフマップは商品別表示制のため想定値、ケーズデンキはポイント制なし（現金値引・率非公表のため0%）。ゲーム機本体・Apple製品・トレカの還元率は各店の商品別表示が基準なので、店頭表示と違う場合は判定が変わります。</p>
     </div>
+
+    <div class="card" id="ys-rank-card">
+      <p class="card-title">🔥 みんながよく見てる人気商品 <span class="hint">タップで相場を見る</span></p>
+      <div class="seg" id="ys-rank-seg" role="group" aria-label="集計期間">
+        <button type="button" data-range="today" aria-pressed="false">今日</button>
+        <button type="button" data-range="week" aria-pressed="true">週間</button>
+        <button type="button" data-range="all" aria-pressed="false">累計</button>
+      </div>
+      <div class="rank-list" id="ys-rank-list"></div>
+      <p class="empty" id="ys-rank-empty" hidden>まだ集計がありません。<br>みんながスキャンすると、ここに人気順で並びます。</p>
+      <p class="tip" id="ys-rank-note">買取価格が見つかった商品を、端末ごとの乱数IDだけで匿名集計しています（名前・位置情報は送りません）。</p>
+    </div>
+
+    <div class="card" id="ys-rec-card">
+      <p class="card-title">🌟 メンバーのおすすめ <span class="hint">タップで相場を見る</span></p>
+      <div class="seg" id="ys-rec-seg" role="group" aria-label="並び順">
+        <button type="button" data-sort="votes" aria-pressed="true">おすすめ順</button>
+        <button type="button" data-sort="new" aria-pressed="false">新着順</button>
+      </div>
+      <div class="rank-list" id="ys-rec-list"></div>
+      <p class="empty" id="ys-rec-empty" hidden>まだおすすめがありません。<br>商品の判定結果で「👍 おすすめに追加」を押すと、みんなに共有されます。</p>
+      <p class="tip" id="ys-rec-note">おすすめは1端末につき商品1件まで（もう一度押すと解除）。ひとことは40文字までで、サロンのみんなに見えます。</p>
+    </div>
+
+    
+
+    <div class="card">
+      <p class="card-title">内蔵 買取相場DB</p>
+      <p class="scan-status" id="sc-db-count">—</p>
+      <div class="db-wrap" id="sc-db"></div>
+      <p class="tip">価格は各社が公開している<b>新品・未開封</b>の買取上限を毎時集めたものです（画面上部の「時点」が取得時刻）。相場は毎日動くので、売る直前に必ず店のページで再確認してください。</p>
+    </div>
+<style>
+#gk-card .gk-nums{display:flex;flex-wrap:wrap;gap:10px;margin-top:4px;font-size:13px}
+#gk-card .gk-badge{display:inline-block;font-size:11px;padding:1px 6px;border-radius:99px;background:rgba(127,127,127,.18);margin-left:5px;vertical-align:1px}
+#gk-card .gk-badge.w{background:#fef3c7;color:#b45309;font-weight:700}
+#gk-card .gk-warn{background:#fef3c7;color:#92400e;border-radius:8px;padding:7px 10px;font-size:12px;margin:7px 0}
+#gk-card table{width:100%;border-collapse:collapse;font-size:13px}
+#gk-card th,#gk-card td{padding:6px 7px;border-bottom:1px solid rgba(127,127,127,.25);text-align:right;white-space:nowrap}
+#gk-card th{font-size:12px;opacity:.65}
+#gk-card td.l,#gk-card th.l{text-align:left;white-space:normal}
+#gk-card tr.best td{background:rgba(245,179,83,.16);font-weight:700}
+#gk-card .pos{font-weight:700}
+#gk-card .scrollx{overflow-x:auto}
+#gk-card select,#gk-card input[type=number]{padding:6px 8px;border-radius:8px;font-size:14px}
+#gk-card .gk-item{cursor:pointer}
+#gk-card .seg button[aria-pressed="true"]{background:#0b5fff;color:#fff}
+</style>
+    
 
   </section>
 
@@ -1647,6 +1654,7 @@ input:focus,select:focus,textarea:focus{outline:2px solid rgba(76,141,255,.55);o
           <div class="v neutral" id="p-out-total">—</div>
           <div class="s">ポイント収支を1円=1円で評価</div>
         </div>
+        <p class="tip">2つの率の違い：<b>実質換金率</b>＝現金支出に対する戻り（ポイントを増やしても動きません）。<b>総合換金率</b>＝ポイントも1pt=1円として数えた全体の戻りです。</p>
         <div class="res">
           <div class="k">実質負担額</div>
           <div class="v neutral" id="p-out-pay">—</div>
@@ -1945,6 +1953,7 @@ input:focus,select:focus,textarea:focus{outline:2px solid rgba(76,141,255,.55);o
   <section class="panel" id="panel-check" role="tabpanel" aria-labelledby="tab-check" hidden>
     <div class="card">
       <p class="card-title">審査前チェック</p>
+      <p class="tip warn">このスコアは自己申告ベースの<b>目安</b>です。キャリアの実際の審査結果・ブラックリスト判定とは異なります。</p>
       <div class="seg" id="c-carrier" role="group" aria-label="対象キャリア">
         <button data-cc="docomo" aria-pressed="false">ドコモ</button>
         <button data-cc="au" aria-pressed="false">au</button>
@@ -4952,7 +4961,7 @@ function addPlan() {
   return r;
 }
 
-function removePlan(id) {
+function removePlan(id) { if (!window.confirm("削除しますか？")) { return; }
   var next = [], i;
   for (i = 0; i < planRows.length; i++) {
     if (planRows[i].id !== id) { next.push(planRows[i]); }
@@ -5538,7 +5547,7 @@ function addLine() {
   toast("回線を登録しました");
   return row;
 }
-function removeLine(id) {
+function removeLine(id) { if (!window.confirm("削除しますか？")) { return; }
   var next = [];
   for (var i = 0; i < lineRows.length; i++) {
     if (lineRows[i].id !== id) { next.push(lineRows[i]); }
@@ -6109,7 +6118,7 @@ function addDashEntry() {
   toast("実績を登録しました");
 }
 
-function removeDash(id) {
+function removeDash(id) { if (!window.confirm("削除しますか？")) { return; }
   var next = [];
   for (var i = 0; i < dashRows.length; i++) {
     if (dashRows[i].id !== id) { next.push(dashRows[i]); }
@@ -6299,7 +6308,7 @@ function addTaxRow() {
   toast("収支を登録しました");
   return row;
 }
-function removeTaxRow(id) {
+function removeTaxRow(id) { if (!window.confirm("削除しますか？")) { return; }
   var next = [];
   for (var i = 0; i < taxRows.length; i++) {
     if (taxRows[i].id !== id) { next.push(taxRows[i]); }
@@ -6388,7 +6397,7 @@ function renderTaxEst() {
   setV("t-tax-diff", yenMarkup(e.diff).text, e.diff > 0 ? "neg" : "neutral", false);
   setText("t-tax-diff-sub", e.diff > 0
     ? "事業所得があることで増える年税負担（事業なしの場合との差）"
-    : "事業所得がなければ増えない（損失なら減ることも）");
+    : "事業の損失で給与の税負担が減る見込み（損益通算の目安）。還付額そのものではありません");
   setV("t-tax-biz", yenMarkup(e.bizIncome).text, yenMarkup(e.bizIncome).cls, false);
   setText("t-tax-biz-sub", "差引 " + yen(e.bizSales) + "円 − 青色控除 " + yen(e.blueDeduction) + "円");
   setV("t-tax-total-income", yenMarkup(e.taxable).text, "neutral", false);
@@ -8757,7 +8766,7 @@ function scanExtra() {
       "%。店頭価格とポイント%を入れてください。" : "店頭価格（円）とポイント還元率（%）を入れると、買いかスルーかを大きく表示します。";
     return;
   }
-  var net = cost * (1 - pct / 100);
+  var net = cost - YS.num(val("sc-point"), 0);
   var profit = p - net;
   var margin = net > 0 ? (profit / net) * 100 : null;
   if (profit >= 1500 && (margin === null || margin >= 8)) {
@@ -9161,7 +9170,7 @@ function verdictPanel(item){
 }
 function syncChips(id){var el=$(id);if(!el)return;var v=String(el.value);var chips=document.querySelectorAll('[data-q="'+id+'"]');for(var i=0;i<chips.length;i++){chips[i].setAttribute("aria-pressed",chips[i].getAttribute("data-v")===v?"true":"false");}}
 function autoFill(item){
-  var f=full(item.id)||item; if(!(f.msrp>0))return;
+  var f=full(item.id)||item; if(!(f.msrp>0)){ verdictPanel(item); return; }
   if(GK2_DIRECT.test(f.name||"")){ verdictPanel(item); return; }
   var c=compute(f); if(c.bestEff===null)return;
   setField("sc-cost",f.msrp);
@@ -9219,6 +9228,36 @@ setTimeout(syncNotice,9000);
 setTimeout(syncNotice,20000);
 })();
 
+</script>
+
+<script>
+/* gk4: chip-state resync + per-group last-tab memory */
+(function(){
+  function resync(){
+    try{ if(typeof syncQuickAll==="function") syncQuickAll(); }catch(e){}
+    try{ if(typeof syncChips==="function"){ syncChips("sc-pct"); syncChips("sc-point"); syncChips("sc-cost"); } }catch(e){}
+  }
+  ["sc-cost","sc-point","sc-pct"].forEach(function(id){
+    var el=document.getElementById(id);
+    if(el){ el.addEventListener("input",resync); el.addEventListener("change",resync); }
+  });
+  var p10=document.getElementById("sc-point-10");
+  if(p10) p10.addEventListener("click",function(){ setTimeout(resync,0); });
+  document.addEventListener("click",function(ev){
+    if(ev.target && ev.target.classList && ev.target.classList.contains("qchip")) setTimeout(resync,0);
+  });
+  /* group tab memory */
+  try{
+    if(typeof TAB_GROUPS!=="undefined" && typeof selectTab==="function" && typeof applyGroup==="function"){
+      var lastTab={};
+      function grpOf(n){ for(var k in TAB_GROUPS){ if(TAB_GROUPS[k].indexOf(n)>=0) return k; } return null; }
+      var _st=selectTab;
+      selectTab=function(n){ var g=grpOf(n); if(g) lastTab[g]=n; _st(n); };
+      var _ag=applyGroup;
+      applyGroup=function(g){ _ag(g); var t=lastTab[g]; if(t && TAB_GROUPS[g] && t!==TAB_GROUPS[g][0]){ try{ selectTab(t); }catch(e){} } };
+    }
+  }catch(e){}
+})();
 </script>
 </body>
 </html>
