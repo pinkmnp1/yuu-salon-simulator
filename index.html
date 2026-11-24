@@ -1467,7 +1467,7 @@ input::placeholder{opacity:.35}
       </div>
     </div>
       <div class="card" id="gk-card">
-      <p class="card-title">💰 ポイント込み実質利益ランキング <span class="hint">量販ポイントを差し引いた「実質仕入」で全商品を判定</span></p>
+      <p class="card-title">💰 ポイント込み実質利益ランキング <span class="hint">量販ポイントを差し引いた「実質仕入」で全商品を判定</span><button type="button" id="gk7-toggle" aria-expanded="false">開く ▼</button></p>
       <div class="row" style="display:flex;flex-wrap:wrap;gap:8px;align-items:center">
         <span class="hint">支払い</span>
         <span class="seg" id="gk-payseg" role="group" aria-label="支払い方法">
@@ -9560,6 +9560,38 @@ var hb=$("gk6-hist-btn"); if(hb) hb.addEventListener("click", openHist);
 var cb=$("gk6-close"); if(cb) cb.addEventListener("click", closeHist);
 var bd=$("gk6-backdrop"); if(bd) bd.addEventListener("click", closeHist);
 document.addEventListener("keydown", function(ev){ if(ev.key==="Escape") closeHist(); });
+})();
+</script>
+<style>
+#gk-card.gk7-closed>*:not(.card-title){display:none!important}
+#gk-card.gk7-closed .card-title{margin-bottom:0}
+#gk7-toggle{margin-left:auto;flex:none;appearance:none;cursor:pointer;font-family:inherit;font-size:11px;font-weight:800;letter-spacing:0;text-transform:none;padding:6px 12px;border-radius:999px;border:1px solid var(--line);background:rgba(127,127,127,.14);color:var(--txt)}
+</style>
+<script>
+/* gk7: ポイント込み実質利益ランキングの折りたたみ (v11)。初期は閉。開閉状態は端末に保存 */
+(function(){
+"use strict";
+var KEY="ys_v2_gk7_rank_open_v1";
+function loadOpen(){
+  try{ if(window.LS&&typeof LS.get==="function") return LS.get(KEY,false)===true; }catch(e){}
+  try{ var v=window.localStorage.getItem(KEY); return v!==null&&JSON.parse(v)===true; }catch(e){}
+  return false;
+}
+function saveOpen(o){
+  try{ if(window.LS&&typeof LS.set==="function"){ LS.set(KEY,o); return; } }catch(e){}
+  try{ window.localStorage.setItem(KEY,JSON.stringify(o)); }catch(e){}
+}
+var card=document.getElementById("gk-card"), btn=document.getElementById("gk7-toggle");
+if(!card||!btn)return;
+var open=loadOpen();
+function apply(){
+  if(open){ card.classList.remove("gk7-closed"); }
+  else{ card.classList.add("gk7-closed"); }
+  btn.setAttribute("aria-expanded",open?"true":"false");
+  btn.textContent=open?"閉じる ▲":"開く ▼";
+}
+apply();
+btn.addEventListener("click",function(){ open=!open; saveOpen(open); apply(); });
 })();
 </script>
 </body>
