@@ -987,6 +987,9 @@ input:focus,select:focus,textarea:focus{outline:2px solid rgba(76,141,255,.55);o
     <button class="tab" role="tab" id="tab-mnp" aria-controls="panel-mnp" aria-selected="true" data-tab="mnp" data-grp="mnp">
       <span class="ico">🧮</span>MNP利益
     </button>
+    <button class="tab" role="tab" id="tab-cp" aria-controls="panel-cp" aria-selected="false" data-tab="cp" data-grp="mnp">
+      <span class="ico">📱</span>1円端末
+    </button>
     <button class="tab new glow" role="tab" id="tab-scan" aria-controls="panel-scan" aria-selected="false" data-tab="scan" data-grp="sedori">
       <span class="ico">📷</span>スキャン
     </button>
@@ -2571,6 +2574,23 @@ input::placeholder{opacity:.35}
       <div class="bd-plan" id="bd-plan"></div>
       <div class="bd-tail" id="bd-tail" hidden></div>
       <p class="empty" id="bd-empty">予算を入れると、一番利益が残る組み合わせを提案します。</p>
+    </div>
+  </section>
+
+  <section class="panel" id="panel-cp" role="tabpanel" aria-labelledby="tab-cp" hidden>
+    <div class="card">
+      <p class="card-title">📱 1円端末（一括割引）</p>
+      <p class="cp-note">キャリア公式オンラインショップの一括割引価格と、買取相場DBの最高買取を突き合わせた利益順リスト。価格は1日2回（9:05／17:05）自動取得しています。割引条件は必ず公式ページで確認してください。</p>
+      <div class="seg" id="cp-filter" role="group" aria-label="キャリア絞り込み">
+        <button type="button" data-cp-filter="all" aria-pressed="true">全部</button>
+        <button type="button" data-cp-filter="UQモバイル" aria-pressed="false">UQモバイル</button>
+        <button type="button" data-cp-filter="楽天モバイル" aria-pressed="false">楽天モバイル</button>
+      </div>
+      <div id="cp-fresh"></div>
+      <div id="cp-list"><p class="cp-note">読み込み中…</p></div>
+      <p class="card-title">↩️ 返却前提（実質）プログラム</p>
+      <p class="cp-note">端末の返却が前提の実質価格です。一括購入とは仕組みが異なるため分けて表示しています。</p>
+      <div id="cp-list-return"><p class="cp-note">読み込み中…</p></div>
     </div>
   </section>
 
@@ -8790,7 +8810,7 @@ function scanExtra() {
 /* ---- タブのグループ切替 ---- */
 var TAB_GROUPS = {
   sedori: ["scan", "genka", "trend", "budget", "pt"],
-  mnp: ["mnp", "lines", "check", "hikari", "dash", "tax"]
+  mnp: ["mnp", "cp", "lines", "check", "hikari", "dash", "tax"]
 };
 function applyGroup(g) {
   var i, btns = document.querySelectorAll("#grpSeg button");
@@ -9609,5 +9629,187 @@ btn.addEventListener("click",function(){ open=!open; saveOpen(open); apply(); })
 #bd-mode{display:none!important}
 #bd-modehint{display:none!important}
 </style>
+<style id="gk10-style">
+/* gk10 (v14): 1円端末タブの行レイアウト */
+.cp-note{font-size:12px;line-height:1.6;opacity:.75;margin:6px 0}
+#cp-fresh{font-size:12px;margin:8px 0 2px}
+#cp-fresh .cp-warn{display:block;background:rgba(229,184,59,.14);border:1px solid rgba(229,184,59,.55);color:#E5B83B;border-radius:10px;padding:8px 10px;line-height:1.6}
+.cp-row{border-bottom:1px solid rgba(127,140,160,.18);padding:10px 2px}
+.cp-row:last-child{border-bottom:none}
+.cp-row-head{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.cp-carrier{font-size:11px;font-weight:700;background:rgba(76,141,255,.16);color:#4C8DFF;border-radius:6px;padding:1px 6px}
+.cp-name{font-weight:700;font-size:14px}
+.cp-profit{margin-left:auto;font-weight:800;font-size:15px;font-variant-numeric:tabular-nums}
+.cp-profit.plus{color:#35C26E}
+.cp-profit.minus{color:#F0564A}
+.cp-nums{font-size:12.5px;line-height:1.7;margin-top:2px;font-variant-numeric:tabular-nums}
+.cp-cond{font-size:11.5px;line-height:1.6;opacity:.7;margin-top:2px}
+.cp-meta{font-size:11px;opacity:.55;margin-top:2px}
+.cp-meta a{color:#4C8DFF}
+</style>
+<script>
+(function(){
+"use strict";
+/* gk10 (v14): 1円端末 — carrier_prices.json × scan_db.json 突合・利益順表示 */
+function $(id){ return document.getElementById(id); }
+function esc(s){ return String(s==null?"":s).replace(/[&<>"']/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); }
+function yen(n){ return Math.round(n).toLocaleString("ja-JP"); }
+var EXCEPT = {
+  "A502OP": "OPPO A5",
+  "IP17E": "iPhone 17e", "PX10A": "Pixel 10a", "FCG04": "arrows We3",
+  "KYG04": "BASIO active3", "FCG03": "らくらくスマートフォン Lite",
+  "MOG02": "motorola edge 60", "OPG08": "Reno15 A", "OPG05": "Reno13 A",
+  "SHG15": "sense10", "SOG16": "Xperia 10 VII",
+  "google-pixel-10a": "Pixel 10a", "google-pixel-10": "Pixel 10",
+  "google-pixel-11": "Pixel 11", "google-pixel-11-pro": "Pixel 11 Pro",
+  "phone-3": "Phone (3)", "phone-3a-lite": "Phone (3a) Lite",
+  "samsung-galaxy-z-flip8": "Galaxy Z Flip8",
+  "samsung-galaxy-z-fold8": "Galaxy Z Fold8",
+  "samsung-galaxy-z-fold8-ultra": "Galaxy Z Fold8 Ultra",
+  "aquos-sense11": "sense11", "iphone-17e": "iPhone 17e"
+};
+var SUFFIX = ["pro", "fold", "ultra", "max", "plus", "xl"];
+var CP = { loaded: false, loading: false, items: null, db: null, updated: null, filter: "all" };
+
+function searchItems(key){
+  if (!key || !CP.db) return [];
+  var k = String(key).toLowerCase();
+  var out = [];
+  for (var i = 0; i < CP.db.length; i++) {
+    var it = CP.db[i];
+    var hay = (String(it.name || "") + " " + String(it.model || "")).toLowerCase();
+    if (hay.indexOf(k) >= 0) out.push(it);
+  }
+  return out;
+}
+function matchBuyback(rec){
+  var code = String(rec.model_code || "").trim();
+  var cands = searchItems(code);
+  var keyUsed = code;
+  if (!cands.length && EXCEPT[code]) { cands = searchItems(EXCEPT[code]); keyUsed = EXCEPT[code]; }
+  if (!cands.length) return null;
+  var ku = String(keyUsed || "").toLowerCase();
+  for (var s = 0; s < SUFFIX.length; s++) {
+    if (ku.indexOf(SUFFIX[s]) < 0) {
+      var filt = [];
+      for (var i = 0; i < cands.length; i++) {
+        if (String(cands[i].name || "").toLowerCase().indexOf(SUFFIX[s]) < 0) filt.push(cands[i]);
+      }
+      if (filt.length) cands = filt;
+    }
+  }
+  var st = String(rec.storage || "");
+  var dm = st.match(/^(\d+)/);
+  if (dm) {
+    var sf = [];
+    for (var j = 0; j < cands.length; j++) {
+      if (String(cands[j].name || "").indexOf(dm[1]) >= 0) sf.push(cands[j]);
+    }
+    if (sf.length) cands = sf;
+  }
+  var best = null;
+  for (var b = 0; b < cands.length; b++) {
+    if (!best || (Number(cands[b].price) || 0) > (Number(best.price) || 0)) best = cands[b];
+  }
+  return best;
+}
+function fmtAt(iso){
+  if (!iso) return "—";
+  var d = new Date(iso);
+  if (isNaN(d.getTime())) return String(iso).slice(0, 16).replace("T", " ");
+  function p(n){ return (n < 10 ? "0" : "") + n; }
+  return d.getFullYear() + "-" + p(d.getMonth() + 1) + "-" + p(d.getDate()) + " " + p(d.getHours()) + ":" + p(d.getMinutes());
+}
+function rowHtml(row){
+  var rec = row.rec, buy = row.buy;
+  var profitHtml;
+  if (buy) {
+    var pf = row.profit;
+    profitHtml = '<span class="cp-profit ' + (pf >= 0 ? "plus" : "minus") + '">' + (pf >= 0 ? "+" : "−") + yen(Math.abs(pf)) + "円</span>";
+  } else {
+    profitHtml = '<span class="cp-profit">—</span>';
+  }
+  var nums;
+  if (buy) {
+    var rate = rec.list_price > 0 ? Math.round(buy.price / rec.list_price * 100) : 0;
+    nums = "一括 <b>" + yen(rec.lump_price) + "円</b>（定価 " + yen(rec.list_price) + "円）｜最高買取 <b>" + yen(buy.price) + "円</b>（" + esc(buy.shop || "") + "）｜換金率 " + rate + "%";
+  } else {
+    nums = "一括 <b>" + yen(rec.lump_price) + "円</b>（定価 " + yen(rec.list_price) + "円）｜最高買取 —（買取相場DBに未収録）";
+  }
+  return '<div class="cp-row">' +
+    '<div class="cp-row-head"><span class="cp-carrier">' + esc(rec.carrier) + "</span>" +
+    '<span class="cp-name">' + esc(rec.model_name) + (rec.storage ? " " + esc(rec.storage) : "") + "</span>" + profitHtml + "</div>" +
+    '<div class="cp-nums">' + nums + "</div>" +
+    (rec.conditions ? '<div class="cp-cond">' + esc(rec.conditions) + "</div>" : "") +
+    '<div class="cp-meta">取得 ' + fmtAt(rec.fetched_at) + ' ・ <a href="' + esc(rec.source_url) + '" target="_blank" rel="noopener">公式ページ</a></div>' +
+    "</div>";
+}
+function render(){
+  var listEl = $("cp-list"), retEl = $("cp-list-return"), freshEl = $("cp-fresh");
+  if (!listEl || !retEl) return;
+  if (!CP.loaded) {
+    listEl.innerHTML = '<p class="cp-note">読み込み中…</p>';
+    retEl.innerHTML = '<p class="cp-note">読み込み中…</p>';
+    return;
+  }
+  var lump = [], ret = [];
+  for (var i = 0; i < CP.items.length; i++) {
+    var rec = CP.items[i];
+    if (CP.filter !== "all" && rec.carrier !== CP.filter) continue;
+    var buy = matchBuyback(rec);
+    var row = { rec: rec, buy: buy, profit: buy ? (Number(buy.price) || 0) - rec.lump_price : -Infinity };
+    if (rec.price_type === "return") ret.push(row); else lump.push(row);
+  }
+  function byProfit(a, b){ return b.profit - a.profit; }
+  lump.sort(byProfit); ret.sort(byProfit);
+  listEl.innerHTML = lump.length ? lump.map(rowHtml).join("") : '<p class="cp-note">該当する一括割引データがありません。</p>';
+  retEl.innerHTML = ret.length ? ret.map(rowHtml).join("") : '<p class="cp-note">該当する返却前提プログラムがありません。</p>';
+  if (freshEl) {
+    var ageDays = CP.updated ? (Date.now() - new Date(CP.updated).getTime()) / 86400000 : Infinity;
+    if (ageDays >= 2) {
+      freshEl.innerHTML = '<span class="cp-warn">⚠ 価格データが2日以上前のものです（最終取得: ' + fmtAt(CP.updated) + "）。最新の施策は公式ページで確認してください。</span>";
+    } else {
+      freshEl.textContent = "最終取得: " + fmtAt(CP.updated) + "（一括 " + lump.length + "件／返却前提 " + ret.length + "件）";
+    }
+  }
+}
+function load(){
+  if (CP.loaded) { render(); return; }
+  if (CP.loading) return;
+  CP.loading = true;
+  render();
+  Promise.all([
+    fetch("./carrier_prices.json").then(function(r){ return r.json(); }),
+    fetch("./scan_db.json").then(function(r){ return r.json(); })
+  ]).then(function(res){
+    CP.items = (res[0] && res[0].items) || [];
+    CP.updated = res[0] && res[0].updated_at;
+    CP.db = (res[1] && res[1].items) || [];
+    CP.loaded = true; CP.loading = false;
+    render();
+  }).catch(function(){
+    CP.loading = false;
+    var listEl = $("cp-list");
+    if (listEl) listEl.innerHTML = '<p class="cp-note">データの読み込みに失敗しました。通信環境を確認して開き直してください。</p>';
+  });
+}
+window.gk10Render = function(){ load(); };
+if (typeof renderers !== "undefined") { renderers.cp = window.gk10Render; }
+var seg = $("cp-filter");
+if (seg) {
+  seg.addEventListener("click", function(ev){
+    var t = ev.target;
+    while (t && t !== seg && !(t.getAttribute && t.getAttribute("data-cp-filter"))) { t = t.parentNode; }
+    if (!t || !t.getAttribute) return;
+    CP.filter = t.getAttribute("data-cp-filter");
+    var btns = seg.querySelectorAll("button");
+    for (var i = 0; i < btns.length; i++) {
+      btns[i].setAttribute("aria-pressed", btns[i] === t ? "true" : "false");
+    }
+    render();
+  });
+}
+})();
+</script>
 </body>
 </html>
