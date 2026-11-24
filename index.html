@@ -2515,9 +2515,9 @@ input::placeholder{opacity:.35}
             <button class="qchip" type="button" data-q="bd-budget" data-v="200000">20万</button>
           </div>
         </div>
-        <div class="field">
+        <div class="field" id="gk9-ratefield">
           <label for="bd-rate">ポイント還元率 <span class="hint">%</span></label>
-          <div class="input-box"><input id="bd-rate" type="number" inputmode="numeric" min="0" max="50" step="1" value="20"><span class="unit">%</span></div>
+          <div class="input-box"><input id="bd-rate" type="number" inputmode="numeric" min="0" max="50" step="1" value="0"><span class="unit">%</span></div>
           <div class="qchips" id="q-bdrate">
             <button class="qchip" type="button" data-q="bd-rate" data-v="0">0%</button>
             <button class="qchip" type="button" data-q="bd-rate" data-v="10">10%</button>
@@ -8542,12 +8542,12 @@ function bdNoProfit(rows, prate) {
   var top = rows.slice(0, 5), h = "", i, row, need;
   bdSumHide();
   need = Math.max(0, 100 - top[0].ratio);
-  h += '<div class="bd-tip">還元率 <b>' + prate + "%</b> では、どの商品も<b>買取 ＜ 実質仕入</b> で利益が出ません。" +
-    "いちばん惜しい <b>" + esc(top[0].it.name) + "</b> は還元率 <b>" + top[0].ratio.toFixed(1) + "%</b> なので、" +
-    "<b>ポイント " + Math.ceil(need) + "%以上</b>なら黒字になります。<br>下は参考：いまの実売・買取での上位5件です。</div>";
+  h += '<div class="bd-tip">いまの実売・買取では、どの商品も<b>買取 ＜ 実売</b> で利益が出ません。" +
+    "いちばん惜しい <b>" + esc(top[0].it.name) + "</b> は買取が実売の <b>" + top[0].ratio.toFixed(1) + "%</b> まで付いているので、" +
+    "<b>ポイント " + Math.ceil(need) + "%以上</b>の還元があれば黒字になります。<br>下は参考：いまの実売・買取での上位5件です。</div>";
   for (i = 0; i < top.length; i++) { h += bdCard(top[i], i + 1, 1, 100 - top[i].ratio); }
   setHtml("bd-plan", h);
-  bdEmpty("ポイント還元率を上げるか、ジャンルを変えると組み合わせが出ます。");
+  bdEmpty("ジャンルを変えると組み合わせが出ることがあります。");
 }
 
 var bdTimer = null;
@@ -8726,7 +8726,7 @@ function renderBudget() {
         th += '<p class="h">残り <b>' + yen(leftAmt) + "円</b>：この枠に1点で収まる候補はありません（最小 " +
           yen(minCost) + "円〜）。予算を増やすか、除外をリセットしてください。</p>";
       } else {
-        th += '<p class="h">残り <b>' + yen(leftAmt) + "円</b>：いまの条件で利益の出る追加候補はありません。除外をリセットするか、還元率を変えてみてください。</p>";
+        th += '<p class="h">残り <b>' + yen(leftAmt) + "円</b>：いまの条件で利益の出る追加候補はありません。除外をリセットしてみてください。</p>";
       }
     }
     if (th) { tailBox.innerHTML = th; tailBox.hidden = false; }
@@ -9599,6 +9599,15 @@ btn.addEventListener("click",function(){ open=!open; saveOpen(open); apply(); })
    要素自体は残す: syncPointFromPct / autoFill / verdictPanel が
    sc-pct の値を内部状態として参照しているため。 */
 #gk8-pctfield{display:none!important}
+</style>
+<style id="gk9-style">
+/* gk9 (v13): 予算逆算のポイント還元率を廃止し 0% 固定にする。
+   入力欄 (bd-rate) は要素を残して隠す (renderBudget が値を読むため)。
+   モード切替 (bd-mode) とヒント行も隠す: 0% では実質=実売となり
+   ポイント消化/実質負担の両モードが同一結果になるため。 */
+#gk9-ratefield{display:none!important}
+#bd-mode{display:none!important}
+#bd-modehint{display:none!important}
 </style>
 </body>
 </html>
