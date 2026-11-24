@@ -987,9 +987,6 @@ input:focus,select:focus,textarea:focus{outline:2px solid rgba(76,141,255,.55);o
     <button class="tab" role="tab" id="tab-mnp" aria-controls="panel-mnp" aria-selected="true" data-tab="mnp" data-grp="mnp">
       <span class="ico">🧮</span>MNP利益
     </button>
-    <button class="tab" role="tab" id="tab-cp" aria-controls="panel-cp" aria-selected="false" data-tab="cp" data-grp="mnp">
-      <span class="ico">📱</span>1円端末
-    </button>
     <button class="tab new glow" role="tab" id="tab-scan" aria-controls="panel-scan" aria-selected="false" data-tab="scan" data-grp="sedori">
       <span class="ico">📷</span>スキャン
     </button>
@@ -1005,10 +1002,13 @@ input:focus,select:focus,textarea:focus{outline:2px solid rgba(76,141,255,.55);o
     <button class="tab" role="tab" id="tab-pt" aria-controls="panel-pt" aria-selected="false" data-tab="pt" data-grp="sedori">
       <span class="ico">💎</span>ポイント
     </button>
+    <button class="tab" role="tab" id="tab-cp" aria-controls="panel-cp" aria-selected="false" data-tab="cp" data-grp="sedori">
+      <span class="ico">📱</span>1円端末
+    </button>
     <button class="tab" role="tab" id="tab-lines" aria-controls="panel-lines" aria-selected="false" data-tab="lines" data-grp="mnp">
       <span class="ico">📋</span>回線管理
     </button>
-    <button class="tab" role="tab" id="tab-check" aria-controls="panel-check" aria-selected="false" data-tab="check" data-grp="mnp">
+    <button class="tab" role="tab" id="tab-check" aria-controls="panel-check" aria-selected="false" data-tab="check" data-grp="sedori">
       <span class="ico">🚦</span>審査・BL
     </button>
     <button class="tab" role="tab" id="tab-hikari" aria-controls="panel-hikari" aria-selected="false" data-tab="hikari" data-grp="mnp">
@@ -1017,7 +1017,7 @@ input:focus,select:focus,textarea:focus{outline:2px solid rgba(76,141,255,.55);o
     <button class="tab" role="tab" id="tab-dash" aria-controls="panel-dash" aria-selected="false" data-tab="dash" data-grp="mnp">
       <span class="ico">📈</span>実績
     </button>
-    <button class="tab" role="tab" id="tab-tax" aria-controls="panel-tax" aria-selected="false" data-tab="tax" data-grp="mnp">
+    <button class="tab" role="tab" id="tab-tax" aria-controls="panel-tax" aria-selected="false" data-tab="tax" data-grp="sedori">
       <span class="ico">🧾</span>申告メモ
     </button>
   </div>
@@ -8809,10 +8809,15 @@ function scanExtra() {
 
 /* ---- タブのグループ切替 ---- */
 var TAB_GROUPS = {
-  sedori: ["scan", "genka", "trend", "budget", "pt"],
-  mnp: ["mnp", "cp", "lines", "check", "hikari", "dash", "tax"]
+  /* v15: MNP・回線グループを廃止し、せどり・買取のみに統合。
+     旧mnp構成: ["mnp", "cp", "lines", "check", "hikari", "dash", "tax"]
+     mnp/lines/hikari/dash は画面から除外（コード・データは残置、戻すなら旧構成へ）。
+     cp/check/tax は せどり側へ移設。 */
+  sedori: ["scan", "genka", "trend", "budget", "pt", "cp", "check", "tax"],
+  mnp: []
 };
 function applyGroup(g) {
+  if (!TAB_GROUPS[g] || !TAB_GROUPS[g].length) { g = "sedori"; } /* v15: 廃止グループ対策 */
   var i, btns = document.querySelectorAll("#grpSeg button");
   for (i = 0; i < btns.length; i++) {
     btns[i].setAttribute("aria-pressed", btns[i].getAttribute("data-grp") === g ? "true" : "false");
@@ -9773,6 +9778,22 @@ function render(){
     }
   }
 }
+function buildFilter(){
+  /* v15: carrier_prices.json に実在するキャリアからフィルタボタンを自動生成 */
+  var seg = $("cp-filter");
+  if (!seg || !CP.items) return;
+  var seen = {}, carriers = [];
+  for (var i = 0; i < CP.items.length; i++) {
+    var c = CP.items[i] && CP.items[i].carrier;
+    if (c && !seen[c]) { seen[c] = 1; carriers.push(c); }
+  }
+  if (CP.filter !== "all" && !seen[CP.filter]) { CP.filter = "all"; }
+  var h = '<button type="button" data-cp-filter="all" aria-pressed="' + (CP.filter === "all" ? "true" : "false") + '">全部</button>';
+  for (var j = 0; j < carriers.length; j++) {
+    h += '<button type="button" data-cp-filter="' + esc(carriers[j]) + '" aria-pressed="' + (CP.filter === carriers[j] ? "true" : "false") + '">' + esc(carriers[j]) + "</button>";
+  }
+  seg.innerHTML = h;
+}
 function load(){
   if (CP.loaded) { render(); return; }
   if (CP.loading) return;
@@ -9786,6 +9807,7 @@ function load(){
     CP.updated = res[0] && res[0].updated_at;
     CP.db = (res[1] && res[1].items) || [];
     CP.loaded = true; CP.loading = false;
+    buildFilter();
     render();
   }).catch(function(){
     CP.loading = false;
@@ -9809,6 +9831,26 @@ if (seg) {
     render();
   });
 }
+})();
+</script>
+<style id="gk11-style">
+/* gk11 (v15): グループ切替UIを廃止（せどり・買取のみに統合） */
+#grpSeg{display:none!important}
+</style>
+<script>
+(function(){
+"use strict";
+/* gk11 (v15): 旧グループ/削除タブの記憶が残っていてもスキャンで開くフォールバック。
+   起動処理（applyGroup("sedori") + selectTab("scan")）の保険として、
+   選択中タブが削除タブ（mnp/lines/hikari/dash）または非表示なら scan を開き直す。 */
+try {
+  var removed = { mnp: 1, lines: 1, hikari: 1, dash: 1 };
+  var sel = document.querySelector('.tab[aria-selected="true"]');
+  var nm = sel && sel.getAttribute ? sel.getAttribute("data-tab") : null;
+  if (!sel || removed[nm] || sel.hidden) {
+    if (typeof selectTab === "function") { selectTab("scan"); }
+  }
+} catch (e) {}
 })();
 </script>
 </body>
