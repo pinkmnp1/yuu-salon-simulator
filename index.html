@@ -1393,7 +1393,7 @@ input::placeholder{opacity:.35}
           </div>
         </div>
 
-        <div class="field" style="margin-top:10px">
+        <div class="field" id="gk8-pctfield" style="margin-top:10px">
           <label for="sc-pct">ポイント還元率 <span class="hint">店頭の付与率（%）</span></label>
           <div class="input-box"><input id="sc-pct" type="number" inputmode="numeric" min="0" max="50" step="1" value="0"><span class="unit">%</span></div>
           <div class="qchips" id="q-scpct">
@@ -9594,5 +9594,11 @@ apply();
 btn.addEventListener("click",function(){ open=!open; saveOpen(open); apply(); });
 })();
 </script>
+<style id="gk8-style">
+/* gk8 (v12): ポイント還元率の入力欄を非表示にする。
+   要素自体は残す: syncPointFromPct / autoFill / verdictPanel が
+   sc-pct の値を内部状態として参照しているため。 */
+#gk8-pctfield{display:none!important}
+</style>
 </body>
 </html>
