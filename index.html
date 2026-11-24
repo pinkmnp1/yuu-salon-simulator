@@ -9671,7 +9671,18 @@ var EXCEPT = {
   "samsung-galaxy-z-flip8": "Galaxy Z Flip8",
   "samsung-galaxy-z-fold8": "Galaxy Z Fold8",
   "samsung-galaxy-z-fold8-ultra": "Galaxy Z Fold8 Ultra",
-  "aquos-sense11": "sense11", "iphone-17e": "iPhone 17e"
+  "aquos-sense11": "sense11", "iphone-17e": "iPhone 17e",
+  /* v16: ワイモバイルのスラッグ形式コード → 検索フレーズ */
+  "oppo_a5": "OPPO A5", "galaxy_a25": "Galaxy A25",
+  "reno13a": "Reno13 A", "reno15a": "Reno15 A",
+  "nubia_s2": "nubia S2", "motog66y": "moto g66y",
+  "pixel10a": "Pixel 10a",
+  "iphone16e": "iPhone 16e", "iphone16": "iPhone 16", "iphone17e": "iPhone 17e",
+  "kantan5": "かんたんスマホ5", "rakurakua": "らくらくスマートフォン",
+  "aquos4": "AQUOS ケータイ4", "digno4": "A202KC",
+  "nubiaflip2": "nubia Flip 2", "nubiaflip3": "nubia Flip 3",
+  "nubia_fold": "nubia Fold",
+  "wish5": "AQUOS wish5", "wish6": "AQUOS wish6"
 };
 var SUFFIX = ["pro", "fold", "ultra", "max", "plus", "xl"];
 var CP = { loaded: false, loading: false, items: null, db: null, updated: null, filter: "all" };
@@ -9692,6 +9703,7 @@ function matchBuyback(rec){
   var cands = searchItems(code);
   var keyUsed = code;
   if (!cands.length && EXCEPT[code]) { cands = searchItems(EXCEPT[code]); keyUsed = EXCEPT[code]; }
+  if (!cands.length && rec.model_name) { cands = searchItems(rec.model_name); keyUsed = rec.model_name; }
   if (!cands.length) return null;
   var ku = String(keyUsed || "").toLowerCase();
   for (var s = 0; s < SUFFIX.length; s++) {
