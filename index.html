@@ -9800,8 +9800,8 @@ function load(){
   CP.loading = true;
   render();
   Promise.all([
-    fetch("./carrier_prices.json").then(function(r){ return r.json(); }),
-    fetch("./scan_db.json").then(function(r){ return r.json(); })
+    fetch("./carrier_prices.json", { cache: "no-store" }).then(function(r){ return r.json(); }),
+    fetch("./scan_db.json", { cache: "no-store" }).then(function(r){ return r.json(); })
   ]).then(function(res){
     CP.items = (res[0] && res[0].items) || [];
     CP.updated = res[0] && res[0].updated_at;
