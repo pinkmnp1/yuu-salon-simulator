@@ -8542,7 +8542,7 @@ function bdNoProfit(rows, prate) {
   var top = rows.slice(0, 5), h = "", i, row, need;
   bdSumHide();
   need = Math.max(0, 100 - top[0].ratio);
-  h += '<div class="bd-tip">いまの実売・買取では、どの商品も<b>買取 ＜ 実売</b> で利益が出ません。" +
+  h += '<div class="bd-tip">いまの実売・買取では、どの商品も<b>買取 ＜ 実売</b> で利益が出ません。' +
     "いちばん惜しい <b>" + esc(top[0].it.name) + "</b> は買取が実売の <b>" + top[0].ratio.toFixed(1) + "%</b> まで付いているので、" +
     "<b>ポイント " + Math.ceil(need) + "%以上</b>の還元があれば黒字になります。<br>下は参考：いまの実売・買取での上位5件です。</div>";
   for (i = 0; i < top.length; i++) { h += bdCard(top[i], i + 1, 1, 100 - top[i].ratio); }
