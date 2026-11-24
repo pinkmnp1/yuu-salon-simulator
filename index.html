@@ -9647,6 +9647,7 @@ btn.addEventListener("click",function(){ open=!open; saveOpen(open); apply(); })
 .cp-profit{margin-left:auto;font-weight:800;font-size:15px;font-variant-numeric:tabular-nums}
 .cp-profit.plus{color:#35C26E}
 .cp-profit.minus{color:#F0564A}
+.cp-cbmark{display:inline-block;font-size:10.5px;font-weight:700;color:#4C8DFF;border:1px solid rgba(76,141,255,.6);border-radius:6px;padding:0 5px;margin-left:4px}
 .cp-nums{font-size:12.5px;line-height:1.7;margin-top:2px;font-variant-numeric:tabular-nums}
 .cp-cond{font-size:11.5px;line-height:1.6;opacity:.7;margin-top:2px}
 .cp-meta{font-size:11px;opacity:.55;margin-top:2px}
@@ -9687,7 +9688,7 @@ var EXCEPT = {
 var SUFFIX = ["pro", "fold", "ultra", "max", "plus", "xl"];
 /* v17: キャリア名トークン（商品名に含まれる表記） */
 var CARRIER_TOKEN = { "ワイモバイル": "Y!mobile", "UQモバイル": "UQモバイル", "楽天モバイル": "楽天モバイル" };
-var CP = { loaded: false, loading: false, items: null, db: null, updated: null, filter: "all" };
+var CP = { loaded: false, loading: false, items: null, db: null, cb: null, updated: null, filter: "all" };
 
 function searchItems(key){
   if (!key || !CP.db) return [];
@@ -9699,6 +9700,25 @@ function searchItems(key){
     if (hay.indexOf(k) >= 0) out.push(it);
   }
   return out;
+}
+/* v19: キャリア版買取の対応表（carrier_buyback.json、監査済み価格）を先に引く。
+   codes は carrier_prices.json のレコード側 model_code に合わせる。storage を持つ
+   エントリは容量一致時のみ適用（空文字エントリは容量不問）。 */
+function tableBuyback(rec){
+  if (!CP.cb || !CP.cb.length) return null;
+  var code = String(rec.model_code || "").trim();
+  if (!code) return null;
+  var st = String(rec.storage || "");
+  for (var i = 0; i < CP.cb.length; i++) {
+    var e = CP.cb[i];
+    if (!e || !e.codes) continue;
+    var hit = false;
+    for (var j = 0; j < e.codes.length; j++) { if (String(e.codes[j]) === code) { hit = true; break; } }
+    if (!hit) continue;
+    if (e.storage && String(e.storage) !== st) continue;
+    return { price: Number(e.price) || 0, shop: e.shop || "", carrierPrice: true };
+  }
+  return null;
 }
 function matchBuyback(rec){
   var code = String(rec.model_code || "").trim();
@@ -9794,7 +9814,7 @@ function rowHtml(row){
   var nums;
   if (buy) {
     var rate = rec.list_price > 0 ? Math.round(buy.price / rec.list_price * 100) : 0;
-    nums = "一括 <b>" + yen(rec.lump_price) + "円</b>（定価 " + yen(rec.list_price) + "円）｜最高買取 <b>" + yen(buy.price) + "円</b>（" + esc(buy.shop || "") + "）｜換金率 " + rate + "%";
+    nums = "一括 <b>" + yen(rec.lump_price) + "円</b>（定価 " + yen(rec.list_price) + "円）｜最高買取 <b>" + yen(buy.price) + "円</b>（" + esc(buy.shop || "") + "）" + (buy.carrierPrice ? '<span class="cp-cbmark">キャリア版価格</span>' : "") + "｜換金率 " + rate + "%";
   } else {
     nums = "一括 <b>" + yen(rec.lump_price) + "円</b>（定価 " + yen(rec.list_price) + "円）｜最高買取 —（買取相場DBに未収録）";
   }
@@ -9818,7 +9838,7 @@ function render(){
   for (var i = 0; i < CP.items.length; i++) {
     var rec = CP.items[i];
     if (CP.filter !== "all" && rec.carrier !== CP.filter) continue;
-    var buy = matchBuyback(rec);
+    var buy = tableBuyback(rec) || matchBuyback(rec);
     var row = { rec: rec, buy: buy, profit: buy ? (Number(buy.price) || 0) - rec.lump_price : -Infinity };
     if (rec.price_type === "return") ret.push(row); else lump.push(row);
   }
@@ -9858,11 +9878,13 @@ function load(){
   render();
   Promise.all([
     fetch("./carrier_prices.json", { cache: "no-store" }).then(function(r){ return r.json(); }),
-    fetch("./scan_db.json", { cache: "no-store" }).then(function(r){ return r.json(); })
+    fetch("./scan_db.json", { cache: "no-store" }).then(function(r){ return r.json(); }),
+    fetch("./carrier_buyback.json", { cache: "no-store" }).then(function(r){ return r.json(); }).catch(function(){ return null; })
   ]).then(function(res){
     CP.items = (res[0] && res[0].items) || [];
     CP.updated = res[0] && res[0].updated_at;
     CP.db = (res[1] && res[1].items) || [];
+    CP.cb = (res[2] && res[2].entries) || [];
     CP.loaded = true; CP.loading = false;
     buildFilter();
     render();
