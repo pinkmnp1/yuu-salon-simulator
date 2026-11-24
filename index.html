@@ -915,6 +915,47 @@ input:focus,select:focus,textarea:focus{outline:2px solid rgba(76,141,255,.55);o
 .rank-list .db-item .p{font-variant-numeric:tabular-nums}
 
 </style>
+<style>
+/* ===== プロテーマ v2: 残存グラデーションの全面フラット化 ===== */
+.btn.primary,.btn.green,
+.tab[aria-selected="true"],
+.seg button[aria-pressed="true"],
+.grpseg button[aria-pressed="true"],
+.qchip[aria-pressed="true"],
+.chip-btn[aria-pressed="true"],
+.bd-mode button[aria-pressed="true"],
+.bd-qtyseg button[aria-pressed="true"],
+.bd-nettog[aria-pressed="true"]{
+  background:var(--cyan);background-image:none;color:#fff;border-color:transparent;box-shadow:none}
+.scan-hero{background:var(--card2);background-image:none;border-color:var(--line)}
+.usage-btn{background:var(--card2);background-image:none;border-color:var(--line);box-shadow:none}
+.preset,.mini,.res,.bd-sum,.rec.top,.gk-row.top1,.bd-card.top1{background-image:none}
+.res.main{background:var(--card2)}
+.ys-modal-box{background-image:none}
+.card-title::before{background:var(--cyan);background-image:none}
+.tab.glow{box-shadow:none}
+.tab.new::after{background:var(--red);background-image:none}
+.verdict{background-image:none}
+.verdict.safe{background:rgba(53,194,110,.12)}
+.verdict.warn{background:rgba(229,184,59,.10)}
+.verdict.danger{background:rgba(240,86,74,.10)}
+.badge.green{background:rgba(53,194,110,.15);background-image:none}
+.badge.yellow{background:rgba(229,184,59,.14);background-image:none}
+.badge.red{background:rgba(240,86,74,.14);background-image:none}
+.cmp-slot.win,.route.win{background:rgba(53,194,110,.10);background-image:none}
+.adv-badge{background:var(--card2);background-image:none}
+.gk-ratio{background:var(--card2);background-image:none}
+.pbar i,.line .bar i,.q-bar i,.bd-bar i,.mchart .bar{background:var(--cyan);background-image:none}
+.pbar.done i,.line .bar i.ok,.q-bar i.ok{background:var(--green)}
+.line .bar i.soon,.q-bar i.soon{background:var(--yellow)}
+.q-bar i.over,.mchart .bar.neg{background:var(--red)}
+.hit.rank:nth-child(1) .rk{background:#C9A227;background-image:none}
+.hit.rank:nth-child(2) .rk{background:#8B95A7;background-image:none}
+.hit.rank:nth-child(3) .rk{background:#A9713F;background-image:none}
+.bd-qtybadge{background:var(--cyan);background-image:none}
+.bd-sugg .sa{background-image:none}
+
+</style>
 </head>
 <body>
 <div class="wrap">
@@ -1312,9 +1353,9 @@ input:focus,select:focus,textarea:focus{outline:2px solid rgba(76,141,255,.55);o
 #gk-verdict th,#gk-verdict td{padding:5px 6px;border-bottom:1px solid rgba(127,127,127,.22);text-align:right;white-space:nowrap}
 #gk-verdict th{font-size:11.5px;opacity:.65}
 #gk-verdict td.l,#gk-verdict th.l{text-align:left}
-#gk-verdict tr.best td{background:rgba(245,179,83,.16);font-weight:700}
+#gk-verdict tr.best td{background:rgba(76,141,255,.18);font-weight:700}
 #gk-verdict tr[data-rate]{cursor:pointer}
-#gk-verdict .gk-warn{background:#fef3c7;color:#92400e;border-radius:8px;padding:7px 10px;font-size:12px;margin:7px 0}
+#gk-verdict .gk-warn{background:rgba(229,184,59,.12);color:#E5B83B;border:1px solid rgba(229,184,59,.35);border-radius:8px;padding:7px 10px;font-size:12px;margin:7px 0}
 #gk-verdict .scrollx{overflow-x:auto}
 .gk-ann{display:inline-block;font-size:11.5px;font-weight:700;margin-left:6px;padding:0 6px;border-radius:99px;background:rgba(10,125,59,.16);color:#0a7d3b}
 .gk-ann.neg{background:rgba(194,39,39,.14);color:#c22727}
@@ -9110,15 +9151,18 @@ function verdictPanel(item){
   var trs=box.querySelectorAll("tr[data-rate]");
   for(var j=0;j<trs.length;j++){(function(tr){tr.addEventListener("click",function(){
     setField("sc-pct",tr.getAttribute("data-rate"));
+    syncChips("sc-pct");syncChips("sc-point");
     try{syncPointFromPct();scanRecalc();}catch(e){}
     verdictPanel(item);
   });})(trs[j]);}
 }
+function syncChips(id){var el=$(id);if(!el)return;var v=String(el.value);var chips=document.querySelectorAll('[data-q="'+id+'"]');for(var i=0;i<chips.length;i++){chips[i].setAttribute("aria-pressed",chips[i].getAttribute("data-v")===v?"true":"false");}}
 function autoFill(item){
   var f=full(item.id)||item; if(!(f.msrp>0))return;
   var c=compute(f); if(c.bestEff===null)return;
   setField("sc-cost",f.msrp);
   setField("sc-pct",c.bestRate);
+  syncChips("sc-pct");syncChips("sc-point");syncChips("sc-cost");
   try{syncPointFromPct();scanRecalc();}catch(e){}
   verdictPanel(item);
 }
