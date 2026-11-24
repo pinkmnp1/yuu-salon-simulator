@@ -9273,5 +9273,98 @@ setTimeout(syncNotice,20000);
   }catch(e){}
 })();
 </script>
+
+<script>
+/* gk5: ポイントタブに商品ピッカー（DBから自動入力） */
+(function(){
+  function $(id){ return document.getElementById(id); }
+  function num(x){ var n=parseFloat(x); return isFinite(n)?n:0; }
+  function yen(n){ return Math.round(n).toLocaleString("ja-JP"); }
+  function setF(id,v){
+    var el=$(id); if(!el) return;
+    if(typeof setVal==="function"){ setVal(id,v); }
+    else { el.value=v; }
+    el.dispatchEvent(new Event("input",{bubbles:true}));
+    el.dispatchEvent(new Event("change",{bubbles:true}));
+  }
+  function fill(item){
+    if(!item) return;
+    var price = num(item.retail)>0 ? num(item.retail) : num(item.msrp);
+    var buy = num(item.price);
+    if(price>0){
+      setF("p-price", price);
+      setF("p-rate", 10);
+      setF("p-pt", Math.round(price*0.10));
+    }
+    if(buy>0){ setF("p-buy", buy); setF("s-kaitori", buy); }
+    var note=$("gk5-note");
+    if(note) note.innerHTML = "取込済み：<b>"+String(item.name||"").slice(0,60)+"</b>"+
+      (price>0 ? " ／ 価格 "+yen(price)+"円（"+(num(item.retail)>0?"実売":"定価")+"）" : " ／ 価格データなし（販売価格は手入力を）")+
+      (buy>0 ? " ／ 最高買取 "+yen(buy)+"円" : "");
+  }
+  function dbItems(){
+    var out=[];
+    try{
+      if(typeof SCAN_DB_BY_ID!=="undefined" && SCAN_DB_BY_ID && SCAN_DB_BY_ID.forEach){
+        SCAN_DB_BY_ID.forEach(function(v){ out.push(v); });
+      }
+    }catch(e){}
+    return out;
+  }
+  function build(){
+    var panel=$("panel-pt"); if(!panel) return;
+    var card=panel.querySelector(".card"); if(!card) return;
+    if($("gk5-box")) return;
+    var box=document.createElement("div");
+    box.id="gk5-box";
+    box.style.cssText="border:1px solid var(--line);border-radius:10px;padding:10px;margin-bottom:10px;background:rgba(76,141,255,.06)";
+    box.innerHTML='<div style="font-weight:700;font-size:13px;margin-bottom:6px">📦 商品を選んで自動入力（手入力不要）</div>'+
+      '<div style="display:flex;gap:6px;flex-wrap:wrap">'+
+      '<input id="gk5-q" type="text" placeholder="商品名・型番・JANで検索" style="flex:1;min-width:160px">'+
+      '<button type="button" id="gk5-cur" class="btn">スキャン中の商品を使う</button></div>'+
+      '<div id="gk5-list" style="margin-top:6px"></div>'+
+      '<div id="gk5-note" style="font-size:12px;margin-top:6px"></div>';
+    card.insertBefore(box, card.children[1] || null);
+    var q=$("gk5-q"), list=$("gk5-list"), timer=null;
+    q.addEventListener("input",function(){
+      clearTimeout(timer);
+      timer=setTimeout(function(){
+        var t=q.value.trim().toLowerCase();
+        if(t.length<2){ list.innerHTML=""; return; }
+        var items=dbItems(), hits=[];
+        for(var i=0;i<items.length && hits.length<8;i++){
+          var it=items[i];
+          var hay=((it.name||"")+" "+(it.model||"")+" "+(it.jan||"")).toLowerCase();
+          if(hay.indexOf(t)>=0) hits.push(it);
+        }
+        if(!hits.length){ list.innerHTML='<div style="font-size:12px;opacity:.7">該当なし（DB同期直後は少し待ってください）</div>'; return; }
+        list.innerHTML="";
+        hits.forEach(function(it){
+          var b=document.createElement("button");
+          b.type="button"; b.className="btn";
+          b.style.cssText="display:block;width:100%;text-align:left;margin:3px 0";
+          b.textContent=(it.name||"").slice(0,44)+" ｜ 買取 "+yen(num(it.price))+"円";
+          b.addEventListener("click",function(){ fill(it); list.innerHTML=""; });
+          list.appendChild(b);
+        });
+      },200);
+    });
+    $("gk5-cur").addEventListener("click",function(){
+      var it=null;
+      try{ it = (typeof scanItem!=="undefined") ? scanItem : null; }catch(e){}
+      if(it && it.id && typeof SCAN_DB_BY_ID!=="undefined"){
+        var f=SCAN_DB_BY_ID.get(it.id); if(f) it=f;
+      }
+      if(it){ fill(it); }
+      else {
+        var note=$("gk5-note");
+        if(note) note.textContent="スキャンタブで商品を開いてから押してください。";
+      }
+    });
+  }
+  if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",build);
+  else build();
+})();
+</script>
 </body>
 </html>
