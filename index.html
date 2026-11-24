@@ -9302,14 +9302,22 @@ setTimeout(syncNotice,20000);
       (price>0 ? " ／ 価格 "+yen(price)+"円（"+(num(item.retail)>0?"実売":"定価")+"）" : " ／ 価格データなし（販売価格は手入力を）")+
       (buy>0 ? " ／ 最高買取 "+yen(buy)+"円" : "");
   }
-  function dbItems(){
-    var out=[];
-    try{
-      if(typeof SCAN_DB_BY_ID!=="undefined" && SCAN_DB_BY_ID && SCAN_DB_BY_ID.forEach){
-        SCAN_DB_BY_ID.forEach(function(v){ out.push(v); });
-      }
-    }catch(e){}
-    return out;
+  var DB_CACHE=null, DB_LOADING=false, DB_WAITERS=[];
+  function dbItems(cb){
+    if(DB_CACHE){ cb(DB_CACHE); return; }
+    DB_WAITERS.push(cb);
+    if(DB_LOADING) return;
+    DB_LOADING=true;
+    fetch("./scan_db.json").then(function(r){ return r.json(); }).then(function(d){
+      DB_CACHE=(d && d.items) || [];
+      DB_LOADING=false;
+      var w=DB_WAITERS; DB_WAITERS=[];
+      w.forEach(function(f){ f(DB_CACHE); });
+    }).catch(function(){
+      DB_LOADING=false; DB_CACHE=[];
+      var w=DB_WAITERS; DB_WAITERS=[];
+      w.forEach(function(f){ f(DB_CACHE); });
+    });
   }
   function build(){
     var panel=$("panel-pt"); if(!panel) return;
@@ -9331,30 +9339,31 @@ setTimeout(syncNotice,20000);
       timer=setTimeout(function(){
         var t=q.value.trim().toLowerCase();
         if(t.length<2){ list.innerHTML=""; return; }
-        var items=dbItems(), hits=[];
-        for(var i=0;i<items.length && hits.length<8;i++){
-          var it=items[i];
-          var hay=((it.name||"")+" "+(it.model||"")+" "+(it.jan||"")).toLowerCase();
-          if(hay.indexOf(t)>=0) hits.push(it);
-        }
-        if(!hits.length){ list.innerHTML='<div style="font-size:12px;opacity:.7">該当なし（DB同期直後は少し待ってください）</div>'; return; }
-        list.innerHTML="";
-        hits.forEach(function(it){
-          var b=document.createElement("button");
-          b.type="button"; b.className="btn";
-          b.style.cssText="display:block;width:100%;text-align:left;margin:3px 0";
-          b.textContent=(it.name||"").slice(0,44)+" ｜ 買取 "+yen(num(it.price))+"円";
-          b.addEventListener("click",function(){ fill(it); list.innerHTML=""; });
-          list.appendChild(b);
+        list.innerHTML='<div style="font-size:12px;opacity:.7">検索中…</div>';
+        dbItems(function(items){
+          if(q.value.trim().toLowerCase()!==t) return;
+          var hits=[];
+          for(var i=0;i<items.length && hits.length<8;i++){
+            var it=items[i];
+            var hay=((it.name||"")+" "+(it.model||"")+" "+(it.jan||"")).toLowerCase();
+            if(hay.indexOf(t)>=0) hits.push(it);
+          }
+          if(!hits.length){ list.innerHTML='<div style="font-size:12px;opacity:.7">該当なし</div>'; return; }
+          list.innerHTML="";
+          hits.forEach(function(it){
+            var b=document.createElement("button");
+            b.type="button"; b.className="btn";
+            b.style.cssText="display:block;width:100%;text-align:left;margin:3px 0";
+            b.textContent=(it.name||"").slice(0,44)+" ｜ 買取 "+yen(num(it.price))+"円";
+            b.addEventListener("click",function(){ fill(it); list.innerHTML=""; });
+            list.appendChild(b);
+          });
         });
       },200);
     });
     $("gk5-cur").addEventListener("click",function(){
       var it=null;
       try{ it = (typeof scanItem!=="undefined") ? scanItem : null; }catch(e){}
-      if(it && it.id && typeof SCAN_DB_BY_ID!=="undefined"){
-        var f=SCAN_DB_BY_ID.get(it.id); if(f) it=f;
-      }
       if(it){ fill(it); }
       else {
         var note=$("gk5-note");
