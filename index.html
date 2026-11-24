@@ -1268,7 +1268,7 @@ input:focus,select:focus,textarea:focus{outline:2px solid rgba(76,141,255,.55);o
       <p class="card-title">📷 スキャン / 利益判定 <span class="hint">3ステップ</span></p>
       <div class="steps">
         <div class="step"><b>① よみとる</b><span>バーコードを撮る<br>or JANを入れる</span></div>
-        <div class="step"><b>② 値札を入れる</b><span>店頭価格と<br>ポイント%</span></div>
+        <div class="step"><b>② 値札を入れる</b><span>店頭価格と<br>ポイント（円）</span></div>
         <div class="step"><b>③ 判定を見る</b><span>買い / スルーが<br>大きく出る</span></div>
       </div>
       <p class="card-title">JAN・型番で買取価格を引く</p>
@@ -1421,7 +1421,7 @@ input::placeholder{opacity:.35}
 
         <div class="sc-verdict" id="sc-verdict">
           <div class="lbl" id="sc-verdict-lbl">店頭の値札を入れてください</div>
-          <div class="why" id="sc-verdict-why">値札（円）とポイント還元率（%）を入れるだけで、買いかスルーかを大きく表示します。</div>
+          <div class="why" id="sc-verdict-why">値札（円）とポイント充当（円）を入れるだけで、買いかスルーかを大きく表示します。</div>
         </div>
       <div id="gk-verdict"></div>
 
@@ -8764,7 +8764,7 @@ function scanExtra() {
   if (cost <= 0) {
     lbl.textContent = "値札を入れると判定します";
     why.textContent = r > 0 ? "この商品の実売目安は " + yen(r) + "円・還元率 " + (ratio || 0).toFixed(1) +
-      "%。店頭価格とポイント%を入れてください。" : "店頭価格（円）とポイント還元率（%）を入れると、買いかスルーかを大きく表示します。";
+      "%。店頭価格とポイント充当（円）を入れてください。" : "店頭価格（円）とポイント充当（円）を入れると、買いかスルーかを大きく表示します。";
     return;
   }
   var net = cost - YS.num(val("sc-point"), 0);
