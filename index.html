@@ -1193,9 +1193,6 @@ textarea.csv{
 
       <video class="scan-video" id="scan-video" playsinline muted hidden></video>
       <p class="scan-status" id="scan-status">カメラを起動するか、JAN・型番・商品名を入れてください。</p>
-      <div class="actions">
-        <a class="btn primary" href="./god.html" style="text-decoration:none">✨ 神スキャナー（ポイント込み実質利益ランキング）</a>
-      </div>
 
       <div class="actions" style="margin-top:0">
         <button class="btn primary" id="scan-start">📷 カメラでスキャン</button>
@@ -1394,6 +1391,55 @@ textarea.csv{
       <div class="db-wrap" id="sc-db"></div>
       <p class="tip">価格は各社が公開している<b>新品・未開封</b>の買取上限を毎時集めたものです（画面上部の「時点」が取得時刻）。相場は毎日動くので、売る直前に必ず店のページで再確認してください。</p>
     </div>
+<style>
+#gk-card .gk-nums{display:flex;flex-wrap:wrap;gap:10px;margin-top:4px;font-size:13px}
+#gk-card .gk-badge{display:inline-block;font-size:11px;padding:1px 6px;border-radius:99px;background:rgba(127,127,127,.18);margin-left:5px;vertical-align:1px}
+#gk-card .gk-badge.w{background:#fef3c7;color:#b45309;font-weight:700}
+#gk-card .gk-warn{background:#fef3c7;color:#92400e;border-radius:8px;padding:7px 10px;font-size:12px;margin:7px 0}
+#gk-card table{width:100%;border-collapse:collapse;font-size:13px}
+#gk-card th,#gk-card td{padding:6px 7px;border-bottom:1px solid rgba(127,127,127,.25);text-align:right;white-space:nowrap}
+#gk-card th{font-size:12px;opacity:.65}
+#gk-card td.l,#gk-card th.l{text-align:left;white-space:normal}
+#gk-card tr.best td{background:rgba(245,179,83,.16);font-weight:700}
+#gk-card .pos{font-weight:700}
+#gk-card .scrollx{overflow-x:auto}
+#gk-card select,#gk-card input[type=number]{padding:6px 8px;border-radius:8px;font-size:14px}
+#gk-card .gk-item{cursor:pointer}
+#gk-card .seg button[aria-pressed="true"]{background:#0b5fff;color:#fff}
+</style>
+    <div class="card" id="gk-card">
+      <p class="card-title">💰 ポイント込み実質利益ランキング <span class="hint">量販ポイントを差し引いた「実質仕入」で全商品を判定</span></p>
+      <div class="row" style="display:flex;flex-wrap:wrap;gap:8px;align-items:center">
+        <span class="hint">支払い</span>
+        <span class="seg" id="gk-payseg" role="group" aria-label="支払い方法">
+          <button type="button" data-v="cash" aria-pressed="true">現金・自社系</button>
+          <button type="button" data-v="card" aria-pressed="false">他社クレカ</button>
+        </span>
+        <span class="hint">ポイント評価</span>
+        <span class="seg" id="gk-pvseg" role="group" aria-label="ポイント評価">
+          <button type="button" data-v="1" aria-pressed="true">1pt=1円</button>
+          <button type="button" data-v="0.85" aria-pressed="false">85%換金</button>
+        </span>
+      </div>
+      <div class="row" style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:8px">
+        <label class="hint">カテゴリ <select id="gk-cat"><option value="">全部</option></select></label>
+        <label class="hint">最低実質利益 <input type="number" id="gk-minp" value="0" step="500" style="width:96px"></label>
+        <label class="hint">並び順 <select id="gk-sort">
+          <option value="profit">実質利益が高い順</option>
+          <option value="margin">利益率が高い順</option>
+          <option value="price">買取額が高い順</option>
+          <option value="d1">前日比（上昇）順</option>
+        </select></label>
+        <label class="hint"><input type="checkbox" id="gk-multi" checked> 複数店舗クオートのみ</label>
+        <label class="hint"><input type="checkbox" id="gk-nodisc" checked> 終売を除外</label>
+      </div>
+      <p class="scan-status" id="gk-count">読み込み中…</p>
+      <div id="gk-detail"></div>
+      <div class="db-wrap" id="gk-list"></div>
+      <div class="actions"><button class="btn" id="gk-more" hidden>さらに表示</button></div>
+      <p class="tip">実質仕入 = 定価 − ポイント価値（量販8社の中で最安の店で計算）。還元率：ヨドバシ／ビックは現金10%・カード8%（公式確認）、エディオンはカテゴリ別（家電1%／ゲーム関連3%／ゲームソフト新品5%、他社クレカは付与なし・公式確認）。ヤマダ／ジョーシン／ノジマ／ソフマップは商品別表示制のため想定値、ケーズデンキはポイント制なし（現金値引・率非公表のため0%）。ゲーム機本体・Apple製品・トレカの還元率は各店の商品別表示が基準なので、店頭表示と違う場合は判定が変わります。</p>
+    </div>
+
   </section>
 
   <!-- ================= TAB 3 : POINT ================= -->
@@ -8789,6 +8835,139 @@ YS.scanSyncStart();
 
 /* 利用状況の集計（端末IDの用意・今日の記録・人気商品の表示） */
 try { YS.statsInit(); } catch (e) { /* 集計が死んでもスキャナーは動かす */ }
+</script>
+<script>
+(function(){
+"use strict";
+var RETAILERS=[
+ {id:"yodobashi",name:"ヨドバシカメラ",type:"point",cash:10,card:8,conf:"公式確認"},
+ {id:"bic",name:"ビックカメラ",type:"point",cash:10,card:8,conf:"公式確認"},
+ {id:"yamada",name:"ヤマダデンキ",type:"point",cash:10,card:8,conf:"二次情報・表示制"},
+ {id:"edion",name:"エディオン",type:"point",cash:null,card:0,conf:"公式確認（カテゴリ別）",
+  catRates:{"家電":1,"PC":1,"カメラ":1,"端末":1,"タブレット":1,"オーディオ":1,"ウェアラブル":1,"XR":1,"ゲーム機":3,"トレカ":3,"おもちゃ":3,"お酒":0}},
+ {id:"joshin",name:"ジョーシン",type:"point",cash:10,card:8,conf:"想定（表示制）"},
+ {id:"nojima",name:"ノジマ",type:"point",cash:10,card:8,conf:"想定（表示制）"},
+ {id:"sofmap",name:"ソフマップ",type:"point",cash:5,card:5,conf:"想定（商品別設定）"},
+ {id:"ks",name:"ケーズデンキ",type:"discount",cash:0,card:0,conf:"公式（率は非公表）"}
+];
+var DB=null,LIMIT=200,state={pay:"cash",pv:1};
+function $(id){return document.getElementById(id);}
+function yen(n){return (n===null||n===undefined||isNaN(n))?"—":"¥"+Math.round(n).toLocaleString("ja-JP");}
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}
+function rateFor(r,item){
+  if(r.catRates){ if(state.pay==="card")return 0; var c=r.catRates[item.cat]; return (c===undefined?1:c); }
+  return state.pay==="cash"?r.cash:r.card;
+}
+function compute(item){
+  var quotes=item.quotes||{}; var nq=Object.keys(quotes).length;
+  var msrp=Number(item.msrp||0), price=Number(item.price||0);
+  var out={nq:nq,bestEff:null,bestShop:"",bestRate:0,profit:null,margin:null,rows:[]};
+  if(msrp>0){
+    for(var i=0;i<RETAILERS.length;i++){
+      var r=RETAILERS[i]; var rate=rateFor(r,item); if(rate===null||rate===undefined)continue;
+      var pts=Math.floor(msrp*rate/100);
+      var eff=(r.type==="discount")?Math.round(msrp*(1-rate/100)):msrp-Math.round(pts*state.pv);
+      out.rows.push({name:r.name,rate:rate,pts:(r.type==="discount"?0:pts),eff:eff,profit:price-eff,conf:r.conf});
+      if(out.bestEff===null||eff<out.bestEff){out.bestEff=eff;out.bestShop=r.name;out.bestRate=rate;}
+    }
+    if(out.bestEff!==null){out.profit=price-out.bestEff;out.margin=out.bestEff>0?(out.profit/out.bestEff*100):null;}
+  }
+  out.rows.sort(function(a,b){return a.eff-b.eff;});
+  return out;
+}
+function isDisc(item){var s=String(item.prod_status||"");return s.indexOf("終売")>=0||s.indexOf("生産終了")>=0||s.indexOf("販売終了")>=0;}
+function badges(item,c){
+  var b="";
+  if(c.nq===1)b+='<span class="gk-badge w">単独店舗クオート</span>';
+  if(item.quote_alert)b+='<span class="gk-badge w">相場乖離あり</span>';
+  if(isDisc(item))b+='<span class="gk-badge">終売</span>';
+  return b;
+}
+function filtered(){
+  var cat=$("gk-cat").value, minp=Number($("gk-minp").value||0);
+  var multi=$("gk-multi").checked, nodisc=$("gk-nodisc").checked, sort=$("gk-sort").value;
+  var out=[];
+  for(var i=0;i<DB.items.length;i++){
+    var it=DB.items[i]; if(!(it.msrp>0))continue;
+    var c=compute(it);
+    if(cat&&it.cat!==cat)continue;
+    if(multi&&c.nq<2)continue;
+    if(nodisc&&isDisc(it))continue;
+    if(c.profit===null||c.profit<minp)continue;
+    out.push({it:it,c:c});
+  }
+  out.sort(function(a,b){
+    if(sort==="margin")return (b.c.margin||-1e9)-(a.c.margin||-1e9);
+    if(sort==="price")return b.it.price-a.it.price;
+    if(sort==="d1")return (b.it.d1||0)-(a.it.d1||0);
+    return (b.c.profit||-1e9)-(a.c.profit||-1e9);
+  });
+  return out;
+}
+function render(){
+  if(!DB)return;
+  var rows=filtered();
+  $("gk-count").textContent="該当 "+rows.length.toLocaleString()+" 件（上位 "+Math.min(LIMIT,rows.length)+" 件）／ タップで量販別の内訳";
+  var h="";
+  for(var i=0;i<Math.min(LIMIT,rows.length);i++){
+    var it=rows[i].it,c=rows[i].c;
+    var sub=it.cat+"・定価 "+yen(it.msrp)+"・買取 "+yen(it.price)+"（"+(it.shop||"")+"／"+c.nq+"店）";
+    if(it.d1)sub+="・前日 "+(it.d1>0?"+":"")+Number(it.d1).toLocaleString()+"円";
+    h+='<div class="db-item gk-item" data-gk="'+esc(it.id)+'"><div class="n">'+esc(it.name)+badges(it,c)+"<span>"+esc(sub)+'</span>'
+      +'<span>実質仕入 '+yen(c.bestEff)+'（'+esc(c.bestShop)+' '+c.bestRate+'%）</span></div>'
+      +'<div class="p">'+yen(c.profit)+'<span style="display:block;font-size:11px;opacity:.7">実質利益'+(c.margin===null?"":" "+c.margin.toFixed(1)+"%")+'</span></div></div>';
+  }
+  $("gk-list").innerHTML=h||'<p class="empty">該当なし。条件を緩めてください。</p>';
+  $("gk-more").hidden=rows.length<=LIMIT;
+  var items=document.querySelectorAll(".gk-item");
+  for(var j=0;j<items.length;j++){items[j].addEventListener("click",function(){showDetail(this.getAttribute("data-gk"));});}
+}
+function showDetail(id){
+  var it=null; for(var i=0;i<DB.items.length;i++){if(DB.items[i].id===id){it=DB.items[i];break;}}
+  if(!it)return;
+  var c=compute(it); var warns="";
+  if(c.nq===1)warns+='<div class="gk-warn">買取クオートが1店舗のみです。その店の価格変動・誤登録の影響を受けやすいので、店舗ページで再確認してください。</div>';
+  if(it.quote_alert)warns+='<div class="gk-warn">相場乖離を検出済み: '+esc(it.quote_alert)+'（最高値は裏取りの取れた価格に是正済み）</div>';
+  if(it.cat==="ゲーム機"||it.cat==="トレカ")warns+='<div class="gk-warn">ゲーム機本体・トレカの還元率は各店の商品別表示が基準です（公式の一般案内にカテゴリ別率の明記なし）。</div>';
+  if(/iPhone|iPad|Mac|Apple Watch|AirPods/.test(it.name||""))warns+='<div class="gk-warn">Apple製品は量販店で還元対象外・低率になることが多い商品です。店頭表示で要確認。</div>';
+  var rh="";
+  for(var i=0;i<c.rows.length;i++){var r=c.rows[i];
+    rh+='<tr'+(r.name===c.bestShop?' class="best"':'')+'><td class="l">'+esc(r.name)+'</td><td>'+r.rate+'%</td><td>'+(r.pts?yen(r.pts):"—")+'</td><td>'+yen(r.eff)+'</td><td class="'+(r.profit>=0?"pos":"")+'">'+yen(r.profit)+'</td><td class="l">'+esc(r.conf)+'</td></tr>';}
+  var qs=Object.keys(it.quotes||{}).map(function(k){return [k,it.quotes[k]];}).sort(function(a,b){return b[1]-a[1];});
+  var qh="";
+  for(var j=0;j<qs.length;j++){qh+='<tr'+(qs[j][0]===it.shop?' class="best"':'')+'><td class="l">'+esc(qs[j][0])+'</td><td>'+yen(qs[j][1])+'</td></tr>';}
+  var retail=(it.retail>0)?'<p class="tip">量販実売の最安: '+yen(it.retail)+'（'+esc(it.retail_shop||"")+'）→ その価格で買えた場合の利益 '+yen(it.price-it.retail)+' ※実売店のポイントは未考慮</p>':"";
+  $("gk-detail").innerHTML='<div class="card" style="margin:10px 0"><p class="card-title">'+esc(it.name)+badges(it,c)+'</p>'
+    +'<p class="scan-status">'+esc(it.cat)+' / JAN '+esc(it.jan||"—")+' / 定価 '+yen(it.msrp)+' / 最高買取 '+yen(it.price)+'（'+esc(it.shop||"")+'） / 最安実質仕入 '+yen(c.bestEff)+'（'+esc(c.bestShop)+'） / 実質利益 <b>'+yen(c.profit)+'</b></p>'
+    +warns+retail
+    +'<p class="card-title" style="margin-top:10px">量販店別の実質仕入（定価前提）</p><div class="scrollx"><table><tr><th class="l">量販店</th><th>還元率</th><th>ポイント</th><th>実質価格</th><th>実質利益</th><th class="l">根拠</th></tr>'+rh+'</table></div>'
+    +'<p class="card-title" style="margin-top:10px">買取クオート（'+c.nq+'店）</p><div class="scrollx"><table><tr><th class="l">買取店</th><th>買取額</th></tr>'+qh+'</table></div>'
+    +(it.note?'<p class="tip">'+esc(it.note)+'</p>':"")
+    +'<div class="actions"><button class="btn" id="gk-close">閉じる</button></div></div>';
+  $("gk-close").addEventListener("click",function(){$("gk-detail").innerHTML="";});
+  $("gk-detail").scrollIntoView({behavior:"smooth",block:"start"});
+}
+function seg(id,fn){var el=$(id);if(!el)return;var bs=el.querySelectorAll("button");
+  for(var i=0;i<bs.length;i++){(function(btn){btn.addEventListener("click",function(){
+    for(var j=0;j<bs.length;j++)bs[j].setAttribute("aria-pressed","false");
+    btn.setAttribute("aria-pressed","true"); fn(btn.getAttribute("data-v")); LIMIT=200; render();
+  });})(bs[i]);}}
+seg("gk-payseg",function(v){state.pay=v;});
+seg("gk-pvseg",function(v){state.pv=Number(v);});
+["gk-cat","gk-minp","gk-sort","gk-multi","gk-nodisc"].forEach(function(id){
+  var el=$(id); if(!el)return;
+  el.addEventListener("input",function(){LIMIT=200;render();});
+  el.addEventListener("change",function(){LIMIT=200;render();});});
+var more=$("gk-more"); if(more)more.addEventListener("click",function(){LIMIT+=300;render();});
+fetch("./scan_db.json").then(function(r){return r.json();}).then(function(d){
+  DB=d;
+  var cats={}; d.items.forEach(function(it){cats[it.cat]=1;});
+  var sel=$("gk-cat");
+  Object.keys(cats).sort().forEach(function(c){var o=document.createElement("option");o.value=c;o.textContent=c;sel.appendChild(o);});
+  render();
+}).catch(function(){ $("gk-count").textContent="買取DBの読み込みに失敗しました"; });
+})();
+
 </script>
 </body>
 </html>
