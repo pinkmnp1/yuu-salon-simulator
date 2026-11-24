@@ -1359,8 +1359,8 @@ input:focus,select:focus,textarea:focus{outline:2px solid rgba(76,141,255,.55);o
 #gk-verdict .scrollx{overflow-x:auto}
 .gk-ann{display:inline-block;font-size:11.5px;font-weight:700;margin-left:6px;padding:0 6px;border-radius:99px;background:rgba(10,125,59,.16);color:#0a7d3b}
 .gk-ann.neg{background:rgba(194,39,39,.14);color:#c22727}
-#gk-list .db-item .p{font-size:16px}
-#gk-list .db-item.hot{border-left:4px solid #0a7d3b}
+#gkx-list .db-item .p{font-size:16px}
+#gkx-list .db-item.hot{border-left:4px solid #0a7d3b}
 </style>
 <div id="gk-verdict"></div>
 
@@ -1524,7 +1524,7 @@ input:focus,select:focus,textarea:focus{outline:2px solid rgba(76,141,255,.55);o
       <div class="row" style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:8px">
         <label class="hint">カテゴリ <select id="gk-cat"><option value="">全部</option></select></label>
         <label class="hint">最低実質利益 <input type="number" id="gk-minp" value="0" step="500" style="width:96px"></label>
-        <label class="hint">並び順 <select id="gk-sort">
+        <label class="hint">並び順 <select id="gkx-sort">
           <option value="profit">実質利益が高い順</option>
           <option value="margin">利益率が高い順</option>
           <option value="price">買取額が高い順</option>
@@ -1535,7 +1535,7 @@ input:focus,select:focus,textarea:focus{outline:2px solid rgba(76,141,255,.55);o
       </div>
       <p class="scan-status" id="gk-count">読み込み中…</p>
       <div id="gk-detail"></div>
-      <div class="db-wrap" id="gk-list"></div>
+      <div class="db-wrap" id="gkx-list"></div>
       <div class="actions"><button class="btn" id="gk-more" hidden>さらに表示</button></div>
       <p class="tip">実質仕入 = 定価 − ポイント価値（量販8社の中で最安の店で計算）。還元率：ヨドバシ／ビックは現金10%・カード8%（公式確認）、エディオンはカテゴリ別（家電1%／ゲーム関連3%／ゲームソフト新品5%、他社クレカは付与なし・公式確認）。ヤマダ／ジョーシン／ノジマ／ソフマップは商品別表示制のため想定値、ケーズデンキはポイント制なし（現金値引・率非公表のため0%）。ゲーム機本体・Apple製品・トレカの還元率は各店の商品別表示が基準なので、店頭表示と違う場合は判定が変わります。</p>
     </div>
@@ -8951,6 +8951,7 @@ var RETAILERS=[
  {id:"ks",name:"ケーズデンキ",type:"discount",cash:0,card:0,conf:"公式（率は非公表）"}
 ];
 var DB=null,LIMIT=200,state={pay:"cash",pv:1};
+var GK_DIRECT=/多言語対応|多言語版/;
 function $(id){return document.getElementById(id);}
 function yen(n){return (n===null||n===undefined||isNaN(n))?"—":"¥"+Math.round(n).toLocaleString("ja-JP");}
 function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}
@@ -8985,10 +8986,10 @@ function badges(item,c){
 }
 function filtered(){
   var cat=$("gk-cat").value, minp=Number($("gk-minp").value||0);
-  var multi=$("gk-multi").checked, nodisc=$("gk-nodisc").checked, sort=$("gk-sort").value;
+  var multi=$("gk-multi").checked, nodisc=$("gk-nodisc").checked, sort=$("gkx-sort").value;
   var out=[];
   for(var i=0;i<DB.items.length;i++){
-    var it=DB.items[i]; if(!(it.msrp>0))continue;
+    var it=DB.items[i]; if(!(it.msrp>0)||GK_DIRECT.test(it.name||""))continue;
     var c=compute(it);
     if(cat&&it.cat!==cat)continue;
     if(multi&&c.nq<2)continue;
@@ -9017,7 +9018,7 @@ function render(){
       +'<span>実質仕入 '+yen(c.bestEff)+'（'+esc(c.bestShop)+' '+c.bestRate+'%）</span></div>'
       +'<div class="p">'+yen(c.profit)+'<span style="display:block;font-size:11px;opacity:.7">実質利益'+(c.margin===null?"":" "+c.margin.toFixed(1)+"%")+'</span></div></div>';
   }
-  $("gk-list").innerHTML=h||'<p class="empty">該当なし。条件を緩めてください。</p>';
+  $("gkx-list").innerHTML=h||'<p class="empty">該当なし。条件を緩めてください。</p>';
   $("gk-more").hidden=rows.length<=LIMIT;
   var items=document.querySelectorAll(".gk-item");
   for(var j=0;j<items.length;j++){items[j].addEventListener("click",function(){showDetail(this.getAttribute("data-gk"));});}
@@ -9054,7 +9055,7 @@ function seg(id,fn){var el=$(id);if(!el)return;var bs=el.querySelectorAll("butto
   });})(bs[i]);}}
 seg("gk-payseg",function(v){state.pay=v;});
 seg("gk-pvseg",function(v){state.pv=Number(v);});
-["gk-cat","gk-minp","gk-sort","gk-multi","gk-nodisc"].forEach(function(id){
+["gk-cat","gk-minp","gkx-sort","gk-multi","gk-nodisc"].forEach(function(id){
   var el=$(id); if(!el)return;
   el.addEventListener("input",function(){LIMIT=200;render();});
   el.addEventListener("change",function(){LIMIT=200;render();});});
@@ -9084,6 +9085,7 @@ var R=[
  {id:"ks",name:"ケーズデンキ",type:"discount",cash:0,card:0,conf:"公式（率は非公表）"}
 ];
 var DBMAP=null, lastAutoId=null;
+var GK2_DIRECT=/多言語対応|多言語版/;
 function $(id){return document.getElementById(id);}
 function yen(n){return (n===null||n===undefined||isNaN(n))?"—":"¥"+Math.round(n).toLocaleString("ja-JP");}
 function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}
@@ -9111,7 +9113,7 @@ function annotate(box){
   var rows=box.querySelectorAll("[data-pick]:not([data-gkdone])");
   for(var i=0;i<rows.length;i++){
     rows[i].setAttribute("data-gkdone","1");
-    var f=full(rows[i].getAttribute("data-pick")); if(!f||!(f.msrp>0))continue;
+    var f=full(rows[i].getAttribute("data-pick")); if(!f||!(f.msrp>0)||GK2_DIRECT.test(f.name||""))continue;
     var c=compute(f); if(c.profit===null)continue;
     var s=document.createElement("span");
     s.className="gk-ann"+(c.profit<0?" neg":"");
@@ -9134,6 +9136,7 @@ function setField(id,v){
 function verdictPanel(item){
   var box=$("gk-verdict"); if(!box)return;
   var f=full(item.id)||item; var c=compute(f);
+  if(GK2_DIRECT.test(f.name||"")){ box.innerHTML='<div class="gk2-box"><div class="gk2-title">量販ポイント計算の対象外</div>'+'<div class="gk-warn">この商品はメーカー直販のみの販売で、量販店の店頭では販売されていません。ポイント還元を前提にした実質仕入は計算しません。</div></div>'; return; }
   if(!(f.msrp>0)||c.bestEff===null){ box.innerHTML=""; return; }
   var warns="";
   if(c.nq===1)warns+='<div class="gk-warn">買取クオートが1店舗のみ。その店の価格変動・誤登録の影響を受けやすいので店舗ページで再確認を。</div>';
@@ -9159,6 +9162,7 @@ function verdictPanel(item){
 function syncChips(id){var el=$(id);if(!el)return;var v=String(el.value);var chips=document.querySelectorAll('[data-q="'+id+'"]');for(var i=0;i<chips.length;i++){chips[i].setAttribute("aria-pressed",chips[i].getAttribute("data-v")===v?"true":"false");}}
 function autoFill(item){
   var f=full(item.id)||item; if(!(f.msrp>0))return;
+  if(GK2_DIRECT.test(f.name||"")){ verdictPanel(item); return; }
   var c=compute(f); if(c.bestEff===null)return;
   setField("sc-cost",f.msrp);
   setField("sc-pct",c.bestRate);
@@ -9181,6 +9185,38 @@ fetch("./scan_db.json").then(function(r){return r.json();}).then(function(d){
   observe("sc-list"); observe("sc-db");
   try{ if(typeof scanItem!=="undefined"&&scanItem){ verdictPanel(scanItem); if(scanItem.id!==lastAutoId){lastAutoId=scanItem.id; autoFill(scanItem);} } }catch(e){}
 }).catch(function(){});
+})();
+
+</script>
+<script>
+(function(){
+"use strict";
+/* 同期完了後にデータ依存タブを再描画する（先にタブを開くと空表示のまま固まる問題の是正） */
+function rerenderDataTabs(){
+  try{ if(typeof renderGenka==="function")renderGenka(); }catch(e){}
+  try{ if(typeof renderTrend==="function")renderTrend(); }catch(e){}
+  try{ if(typeof renderBudget==="function")renderBudget(); }catch(e){}
+}
+if(window.YS&&typeof YS.scanAfterSync==="function"){
+  var origAfter=YS.scanAfterSync;
+  YS.scanAfterSync=function(){ origAfter(); rerenderDataTabs(); };
+}
+/* 同期が失敗/未達のままなら、無言で空表示にせず通知する */
+function syncNotice(){
+  try{
+    var st=(window.YS&&YS.SCAN_SYNC)?YS.SCAN_SYNC.state:"";
+    if(st==="ok"||st==="same")return;
+    var panel=document.getElementById("panel-scan"); if(!panel)return;
+    if(document.getElementById("gk-sync-note"))return;
+    var d=document.createElement("div");
+    d.id="gk-sync-note";
+    d.setAttribute("style","background:rgba(240,86,74,.12);border:1px solid rgba(240,86,74,.45);color:#F0564A;border-radius:10px;padding:10px 12px;font-size:13px;margin-bottom:12px");
+    d.innerHTML="最新データを取得できていません（内蔵データで表示中）。通信を確認して <a href=\"javascript:location.reload()\" style=\"color:#4C8DFF;font-weight:700\">再読み込み</a> してください。";
+    panel.insertBefore(d,panel.firstChild);
+  }catch(e){}
+}
+setTimeout(syncNotice,9000);
+setTimeout(syncNotice,20000);
 })();
 
 </script>
