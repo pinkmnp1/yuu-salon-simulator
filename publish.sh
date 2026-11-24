@@ -22,8 +22,8 @@ git config user.name "kaitori-price-bot"
 git config user.email "actions@users.noreply.github.com"
 
 # 未コミットの差分があればコミット（cron_hourly.sh から毎時呼ばれる）
-if ! git diff --quiet -- scan_db.json; then
-  git add scan_db.json
+if [ -n "$(git status --porcelain -- scan_db.json price_history.json)" ]; then
+  git add scan_db.json price_history.json
   git commit -m "価格を自動更新 $(TZ=Asia/Tokyo date +%F\ %H:%M)" >>"$LOG" 2>&1 || true
 fi
 

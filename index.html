@@ -1343,6 +1343,7 @@ input:focus,select:focus,textarea:focus{outline:2px solid rgba(76,141,255,.55);o
           <div class="v pos" id="sc-price">—</div>
           <div class="shop" id="sc-shop">—</div>
         </div>
+        <div id="gk6-meta"><span id="gk6-fresh"></span><button type="button" id="gk6-hist-btn" class="qchip">📈 価格推移を見る</button></div>
 
         <div class="verdict-line">
           <span class="grade na" id="sc-grade">—</span>
@@ -9373,6 +9374,192 @@ setTimeout(syncNotice,20000);
   }
   if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",build);
   else build();
+})();
+</script>
+<style>
+#gk6-meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:8px}
+#gk6-fresh{font-size:11.5px;color:var(--muted);font-weight:700}
+#gk6-fresh.gk6-stale{color:#E5B83B}
+.shop-btn .gk6-sd{display:block;font-size:9.5px;font-weight:700;color:var(--muted);letter-spacing:0}
+.shop-btn .gk6-sd.gk6-best{color:var(--green)}
+#gk6-modal{position:fixed;inset:0;z-index:9999}
+#gk6-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.62)}
+#gk6-panel{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(680px,94vw);max-height:88vh;overflow:auto;background:#141922;border:1px solid var(--line);border-radius:14px;padding:14px 16px;color:var(--txt);box-shadow:0 18px 50px rgba(0,0,0,.55)}
+#gk6-mhead{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+#gk6-mtitle{font-weight:800;font-size:14px;line-height:1.35}
+#gk6-close{flex:none;background:rgba(255,255,255,.07);border:1px solid var(--line);color:var(--txt);border-radius:8px;width:32px;height:32px;font-size:14px;cursor:pointer}
+#gk6-msg{font-size:12.5px;color:var(--muted);margin-top:6px}
+#gk6-canvas{width:100%;height:260px;display:block;margin-top:8px}
+#gk6-legend{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:8px;font-size:12px;font-weight:700}
+.gk6-lg{display:inline-flex;align-items:center;gap:5px}
+.gk6-dot{width:10px;height:10px;border-radius:50%;display:inline-block;flex:none}
+.gk6-note{font-size:11px;color:var(--muted);margin-top:8px}
+</style>
+<div id="gk6-modal" hidden>
+  <div id="gk6-backdrop"></div>
+  <div id="gk6-panel" role="dialog" aria-modal="true" aria-label="価格推移">
+    <div id="gk6-mhead"><div id="gk6-mtitle">価格推移</div><button type="button" id="gk6-close" aria-label="閉じる">✕</button></div>
+    <div id="gk6-msg"></div>
+    <canvas id="gk6-canvas"></canvas>
+    <div id="gk6-legend"></div>
+    <p class="gk6-note">日次スナップショット（直近最大21日）から生成。最高買取と、直近で価格の高い上位3店のみを表示します。価格が変動した商品だけが記録されます。</p>
+  </div>
+</div>
+<script>
+/* gk6: 差額表示＋鮮度表示＋価格推移モーダル (v10) */
+(function(){
+"use strict";
+function $(id){return document.getElementById(id);}
+function yen(n){return Math.round(n).toLocaleString("ja-JP");}
+function esc(t){return String(t==null?"":t).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c];});}
+
+/* ---- 1) 買取店ボタンの差額表示（#sc-shops を監視して後付け） ---- */
+function annotateShops(){
+  var box=$("sc-shops"); if(!box)return;
+  var btns=box.querySelectorAll("a.shop-btn"), max=0, i, p;
+  for(i=0;i<btns.length;i++){ p=parseInt(btns[i].getAttribute("data-price")||"0",10)||0; if(p>max)max=p; }
+  if(max<=0)return;
+  for(i=0;i<btns.length;i++){
+    var b=btns[i];
+    if(b.getAttribute("data-gk6done"))continue;
+    b.setAttribute("data-gk6done","1");
+    p=parseInt(b.getAttribute("data-price")||"0",10)||0;
+    if(!(p>0))continue;
+    var sp=document.createElement("span");
+    if(p>=max){ sp.className="gk6-sd gk6-best"; sp.textContent="最高値"; }
+    else{ sp.className="gk6-sd"; sp.textContent="−"+yen(max-p); }
+    b.appendChild(sp);
+  }
+}
+var shopsBox=$("sc-shops");
+if(shopsBox){
+  annotateShops();
+  if(window.MutationObserver){ new MutationObserver(function(){ annotateShops(); }).observe(shopsBox,{childList:true}); }
+}
+
+/* ---- 2) 鮮度表示（item.date の相対表示。店舗別の取得時刻はデータに無いため商品単位） ---- */
+function relFresh(item){
+  var el=$("gk6-fresh"); if(!el)return;
+  el.textContent=""; el.className="";
+  if(!item||!(Number(item.price||0)>0)||!item.date)return;
+  var m=/^(\d{4})-(\d{2})-(\d{2})/.exec(String(item.date));
+  if(!m)return;
+  var d=new Date(+m[1],+m[2]-1,+m[3]);
+  var now=new Date(); var today=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+  var days=Math.round((today.getTime()-d.getTime())/86400000);
+  if(days<=0){ el.textContent="価格データ：今日更新"; }
+  else if(days===1){ el.textContent="価格データ：昨日更新"; }
+  else{ el.textContent="価格データ："+days+"日前の更新（"+item.date+"）"; }
+  if(days>=3){ el.className="gk6-stale"; }
+}
+if(typeof showScanItem==="function"){
+  var prevShow=showScanItem;
+  showScanItem=function(item){ prevShow(item); try{ relFresh(item); }catch(e){} };
+}
+try{ if(typeof scanItem!=="undefined"&&scanItem) relFresh(scanItem); }catch(e){}
+
+/* ---- 3) 価格推移モーダル（price_history.json を初回タップ時に遅延fetch） ---- */
+var HIST=null, HIST_LOADING=false, HIST_WAITERS=[];
+function loadHist(cb){
+  if(HIST){ cb(HIST); return; }
+  HIST_WAITERS.push(cb);
+  if(HIST_LOADING)return;
+  HIST_LOADING=true;
+  fetch("./price_history.json").then(function(r){ return r.json(); }).then(function(d){
+    HIST=d||{}; HIST_LOADING=false;
+    var w=HIST_WAITERS; HIST_WAITERS=[];
+    for(var i=0;i<w.length;i++) w[i](HIST);
+  }).catch(function(){
+    HIST={}; HIST_LOADING=false;
+    var w=HIST_WAITERS; HIST_WAITERS=[];
+    for(var i=0;i<w.length;i++) w[i](HIST);
+  });
+}
+function drawChart(days, rec){
+  var cv=$("gk6-canvas"); if(!cv)return;
+  var series=[{name:"最高買取", data:rec.m||[], color:"#2bff88", w:2.4}];
+  var colors=["#4C8DFF","#E5B83B","#FF5CC8"];
+  var shops=Object.keys(rec.s||{});
+  for(var si=0;si<shops.length;si++){ series.push({name:shops[si], data:rec.s[shops[si]], color:colors[si%colors.length], w:1.4}); }
+  var W=cv.clientWidth||320, H=260;
+  var dpr=window.devicePixelRatio||1;
+  cv.width=Math.round(W*dpr); cv.height=Math.round(H*dpr);
+  var ctx=cv.getContext("2d"); ctx.setTransform(dpr,0,0,dpr,0,0);
+  ctx.clearRect(0,0,W,H);
+  var min=Infinity, max=-Infinity, i, j, v;
+  for(i=0;i<series.length;i++){ var dd=series[i].data||[]; for(j=0;j<dd.length;j++){ v=dd[j]; if(v){ if(v<min)min=v; if(v>max)max=v; } } }
+  if(!isFinite(min)){ $("gk6-msg").textContent="表示できる価格データがありません"; return; }
+  if(min===max){ min=min*0.95; max=max*1.05; }
+  var pad=(max-min)*0.08; min-=pad; max+=pad;
+  var L=64,R=8,T=10,B=22, iw=W-L-R, ih=H-T-B, n=days.length;
+  function X(k){ return L+(n<=1?iw/2:iw*k/(n-1)); }
+  function Y(vv){ return T+ih-(vv-min)/(max-min)*ih; }
+  ctx.font="10px sans-serif";
+  for(var g=0;g<=4;g++){
+    var gv=min+(max-min)*g/4, gy=Y(gv);
+    ctx.strokeStyle="rgba(127,127,127,.18)";
+    ctx.beginPath(); ctx.moveTo(L,gy); ctx.lineTo(W-R,gy); ctx.stroke();
+    ctx.fillStyle="rgba(154,163,199,.95)";
+    ctx.fillText("¥"+yen(gv), 4, gy+3);
+  }
+  ctx.fillStyle="rgba(154,163,199,.95)";
+  var xidx=[0, Math.floor((n-1)/2), n-1];
+  for(i=0;i<xidx.length;i++){
+    var xi=xidx[i]; if(xi<0||xi>=n)continue;
+    ctx.fillText(String(days[xi]).slice(5), Math.min(Math.max(X(xi)-12,L), Math.max(L,W-32)), H-6);
+  }
+  for(i=0;i<series.length;i++){
+    var s=series[i], data=s.data||[], started=false;
+    ctx.strokeStyle=s.color; ctx.fillStyle=s.color; ctx.lineWidth=s.w;
+    ctx.beginPath();
+    for(j=0;j<data.length;j++){
+      v=data[j];
+      if(!v){ started=false; continue; }
+      if(!started){ ctx.moveTo(X(j),Y(v)); started=true; } else { ctx.lineTo(X(j),Y(v)); }
+    }
+    ctx.stroke();
+    for(j=0;j<data.length;j++){
+      v=data[j]; if(!v)continue;
+      ctx.beginPath(); ctx.arc(X(j),Y(v),2.4,0,Math.PI*2); ctx.fill();
+    }
+  }
+  $("gk6-msg").textContent=days[0]+" 〜 "+days[n-1]+" の推移（"+n+"日分）";
+  var lg=$("gk6-legend"); lg.innerHTML="";
+  for(i=0;i<series.length;i++){
+    var last=null, d2=series[i].data||[];
+    for(j=0;j<d2.length;j++){ if(d2[j]) last=d2[j]; }
+    var span=document.createElement("span");
+    span.className="gk6-lg";
+    span.innerHTML='<span class="gk6-dot" style="background:'+series[i].color+'"></span>'+esc(series[i].name)+(last?(" ¥"+yen(last)):"");
+    lg.appendChild(span);
+  }
+}
+function openHist(){
+  var modal=$("gk6-modal"); if(!modal)return;
+  modal.hidden=false;
+  var item=null;
+  try{ item=(typeof scanItem!=="undefined")?scanItem:null; }catch(e){}
+  $("gk6-mtitle").textContent=item?("価格推移："+item.name):"価格推移";
+  $("gk6-msg").textContent="読み込み中…";
+  $("gk6-legend").innerHTML="";
+  var cv=$("gk6-canvas"); if(cv){ var c2=cv.getContext("2d"); if(c2) c2.clearRect(0,0,cv.width,cv.height); }
+  if(!item){ $("gk6-msg").textContent="商品が選択されていません"; return; }
+  var myId=item.id;
+  loadHist(function(h){
+    var cur=null;
+    try{ cur=(typeof scanItem!=="undefined")?scanItem:null; }catch(e){}
+    if(!cur||cur.id!==myId) return;
+    var days=(h&&h.days)||[];
+    var rec=(h&&h.items&&h.items[myId])||null;
+    if(!rec||!days.length){ $("gk6-msg").textContent="この商品の推移データはまだありません（価格が変動した商品のみ記録されます）"; return; }
+    drawChart(days, rec);
+  });
+}
+function closeHist(){ var m=$("gk6-modal"); if(m) m.hidden=true; }
+var hb=$("gk6-hist-btn"); if(hb) hb.addEventListener("click", openHist);
+var cb=$("gk6-close"); if(cb) cb.addEventListener("click", closeHist);
+var bd=$("gk6-backdrop"); if(bd) bd.addEventListener("click", closeHist);
+document.addEventListener("keydown", function(ev){ if(ev.key==="Escape") closeHist(); });
 })();
 </script>
 </body>

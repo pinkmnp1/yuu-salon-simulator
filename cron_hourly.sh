@@ -23,6 +23,10 @@ echo "=== $(TZ=Asia/Tokyo date '+%F %T') 終了 rc=$rc" >> "$LOG"
 if [ "$rc" -ne 0 ]; then
   echo "更新失敗（rc=$rc）。前回の scan_db.json を保持しています。" >> "$LOG"
 fi
+# 2.5) 定価マスタのマージ＋買取クオート乖離の是正（2026-11-24 追加）
+/opt/pwenv/bin/python merge_master.py >> "$LOG" 2>&1 || true
+# 2.6) 価格推移データ（price_history.json）を生成（2026-11-24 v10）
+/opt/pwenv/bin/python gen_price_history.py >> "$LOG" 2>&1 || true
 # 3) 更新後に GitHub へ push（公開URLの毎時更新）
 if [ -x /opt/scanner/publish.sh ]; then
   /opt/scanner/publish.sh
